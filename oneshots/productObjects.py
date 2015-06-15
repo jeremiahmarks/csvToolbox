@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-14 18:49:15
-# @Last Modified 2015-06-14>
-# @Last Modified time: 2015-06-14 18:54:49
+# @Last Modified 2015-06-14
+# @Last Modified time: 2015-06-14 22:58:33
 ############################################################
 ##
 ##  This is a series of products meant to take a dictionary
@@ -26,118 +26,118 @@ class Product(object):
 
     def __init__(self, values):
         self.values=values
-
+        global products
         if 'products' not in globals():
             print "Products now exist as an empty set"
             products=[]
 
         if ("BottomHTML" in values.keys()):
-            self.BottomHTML = options["BottomHTML"]#String
+            self.BottomHTML = values["BottomHTML"]
         else:
             self.BottomHTML=None
 
         if ("CityTaxable" in values.keys()):
-            self.CityTaxable = options["CityTaxable"]#Integer
+            self.CityTaxable = values["CityTaxable"]
         else:
             self.CityTaxable=None
 
         if ("CountryTaxable" in values.keys()):
-            self.CountryTaxable = options["CountryTaxable"]#Integer
+            self.CountryTaxable = values["CountryTaxable"]
         else:
             self.CountryTaxable=None
 
         if ("Description" in values.keys()):
-            self.Description = options["Description"]#String
+            self.Description = values["Description"]
         else:
             self.Description=None
 
         if ("HideInStore" in values.keys()):
-            self.HideInStore = options["HideInStore"]#Integer
+            self.HideInStore = values["HideInStore"]
         else:
             self.HideInStore=None
 
         if ("Id" in values.keys()):
-            self.Id = options["Id"]#Id
+            self.Id = values["Id"]
         else:
             self.Id=None
 
         if ("InventoryLimit" in values.keys()):
-            self.InventoryLimit = options["InventoryLimit"]#Integer
+            self.InventoryLimit = values["InventoryLimit"]
         else:
             self.InventoryLimit=None
 
         if ("InventoryNotifiee" in values.keys()):
-            self.InventoryNotifiee = options["InventoryNotifiee"]#String
+            self.InventoryNotifiee = values["InventoryNotifiee"]
         else:
             self.InventoryNotifiee=None
 
         if ("IsPackage" in values.keys()):
-            self.IsPackage = options["IsPackage"]#Integer
+            self.IsPackage = values["IsPackage"]
         else:
             self.IsPackage=None
 
         if ("LargeImage" in values.keys()):
-            self.LargeImage = options["LargeImage"]#Blob
+            self.LargeImage = values["LargeImage"]
         else:
             self.LargeImage=None
 
         if ("NeedsDigitalDelivery" in values.keys()):
-            self.NeedsDigitalDelivery = options["NeedsDigitalDelivery"]#Integer
+            self.NeedsDigitalDelivery = values["NeedsDigitalDelivery"]
         else:
             self.NeedsDigitalDelivery=None
 
         if ("ProductName" in values.keys()):
-            self.ProductName = options["ProductName"]#String
+            self.ProductName = values["ProductName"]
         else:
             self.ProductName=None
 
         if ("ProductPrice" in values.keys()):
-            self.ProductPrice = options["ProductPrice"]#Double
+            self.ProductPrice = values["ProductPrice"]
         else:
             self.ProductPrice=None
 
         if ("Shippable" in values.keys()):
-            self.Shippable = options["Shippable"]#Integer
+            self.Shippable = values["Shippable"]
         else:
             self.Shippable=None
 
         if ("ShippingTime" in values.keys()):
-            self.ShippingTime = options["ShippingTime"]#String
+            self.ShippingTime = values["ShippingTime"]
         else:
             self.ShippingTime=None
 
         if ("ShortDescription" in values.keys()):
-            self.ShortDescription = options["ShortDescription"]#String
+            self.ShortDescription = values["ShortDescription"]
         else:
             self.ShortDescription=None
 
         if ("Sku" in values.keys()):
-            self.Sku = options["Sku"]#String
+            self.Sku = values["Sku"]
         else:
             self.Sku=None
 
         if ("StateTaxable" in values.keys()):
-            self.StateTaxable = options["StateTaxable"]#Integer
+            self.StateTaxable = values["StateTaxable"]
         else:
             self.StateTaxable=None
 
         if ("Status" in values.keys()):
-            self.Status = options["Status"]#Integer
+            self.Status = values["Status"]
         else:
             self.Status=None
 
         if ("Taxable" in values.keys()):
-            self.Taxable = options["Taxable"]#Integer
+            self.Taxable = values["Taxable"]
         else:
             self.Taxable=None
 
         if ("TopHTML" in values.keys()):
-            self.TopHTML = options["TopHTML"]#String
+            self.TopHTML = values["TopHTML"]
         else:
             self.TopHTML=None
 
         if ("Weight" in values.keys()):
-            self.Weight = options["Weight"]#Double
+            self.Weight = values["Weight"]
         else:
             self.Weight=None
 
@@ -195,6 +195,14 @@ class Product(object):
             vals["TopHTML"] = self.TopHTML
         if self.Weight is not None:
             vals["Weight"] = self.Weight
+        for eachitem in vals.keys():
+            # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
+            if type('str')==type(vals[eachitem]):
+                for eachchr in vals[eachitem]:
+                    if ord(eachchr)>127:
+                        print "Error " + str(vals[eachitem])
+                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
+
         return vals
 
     def setAppName(self, appname):
@@ -254,11 +262,12 @@ class ProductCategory(object):
             self.ParentId=values["ParentId"]
         else:
             self.ParentId=None
+        self.register()
 
     def prepare(self):
         vals={}
         if self.CategoryDisplayName is not None:
-            vals["CategoryDisplayName"]
+            vals["CategoryDisplayName"] = self.CategoryDisplayName
         if self.CategoryImage is not None:
             vals["CategoryImage"] = self.CategoryImage
         if self.CategoryOrder is not None:
@@ -267,6 +276,15 @@ class ProductCategory(object):
             vals["Id"] = self.Id
         if self.ParentId is not None:
             vals["ParentId"] = self.ParentId
+        for eachitem in vals.keys():
+            # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
+            if type(u'str')==type(vals[eachitem]):
+                for eachchr in vals[eachitem]:
+                    if ord(eachchr)>0:
+                        print eachchr
+                    if ord(eachchr)>127:
+                        print "Error " + str(ord(eachchr))
+                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
         return vals
 
     def register(self):
@@ -293,6 +311,7 @@ class ProductCategoryAssign(object):
             self.ProductId=values["ProductId"]
         else:
             self.ProductId=None
+        self.register()
 
     def prepare(self):
         vals={}
@@ -302,6 +321,13 @@ class ProductCategoryAssign(object):
             vals["ProductCategoryId"] = self.ProductCategoryId
         if self.ProductId is not None:
             vals["ProductId"] = self.ProductId
+        for eachitem in vals.keys():
+            # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
+            if type('str')==type(vals[eachitem]):
+                for eachchr in vals[eachitem]:
+                    if ord(eachchr)>127:
+                        print "Error " + str(vals[eachitem])
+                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
         return vals
 
     def register(self):
@@ -353,6 +379,7 @@ class ProductOptValue(object):
             self.Sku=values["Sku"]
         else:
             self.Sku=None
+        self.register()
 
     def prepare(self):
         vals={}
@@ -372,6 +399,12 @@ class ProductOptValue(object):
             vals["ProductOptionId"] = self.ProductOptionId
         if self.Sku is not None:
             vals["Sku"] = self.Sku
+        for eachitem in vals.keys():
+            # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
+            if type('str')==type(vals[eachitem]):
+                for eachchr in vals[eachitem]:
+                    if ord(eachchr)>128:
+                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
         return vals
 
     def register(self):
@@ -453,6 +486,7 @@ class ProductOption(object):
             self.TextMessage=values["TextMessage"]
         else:
             self.TextMessage=None
+        self.register()
 
     def prepare(self):
         vals={}
@@ -484,8 +518,16 @@ class ProductOption(object):
             vals["ProductId"] = self.ProductId
         if self.TextMessage is not None:
             vals["TextMessage"] = self.TextMessage
+        for eachitem in vals.keys():
+            # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
+            if type('str')==type(vals[eachitem]):
+                for eachchr in vals[eachitem]:
+                    if ord(eachchr)>128:
+                        print "Error " + str(vals[eachitem])
+                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
         return vals
 
     def register(self):
         if self not in productoptions:
             productoptions.append(self)
+            
