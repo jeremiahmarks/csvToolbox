@@ -1,4 +1,9 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+# @Author: Jeremiah Marks
+# @Date:   2015-06-14 18:49:15
+# @Last Modified 2015-06-16
+# @Last Modified time: 2015-06-16 03:42:13
 # This is the oneshot code for this product import
 
 # Flow of operations:
@@ -40,6 +45,8 @@
 import simpleIS
 import productObjects
 import csv
+temhousingqueue={}
+temhousingqueuecounter=0
 
 try:
     from my_pw import pw
@@ -52,6 +59,315 @@ tables['ProductOptValue'] = ["Id", "IsDefault", "Label", "Name", "OptionIndex", 
 tables['ProductOption'] = ["AllowSpaces", "CanContain", "CanEndWith", "CanStartWith", "Id", "IsRequired", "Label", "MaxChars", "MinChars", "Name", "OptionType", "Order", "ProductId", "TextMessage"]
 tables['ProductCategory'] = ["CategoryDisplayName", "CategoryImage", "CategoryOrder", "Id", "ParentId"]
 tables["ProductCategoryAssign"]=["Id","ProductCategoryId","ProductId"]
+
+class temphousing(object):
+    """This is just a simple class. It gives you a location
+    to hold data. It will then process the data and crate the 
+    appropriate records.
+    """
+    def __init__(self, productrow):
+        global temhousingqueue
+        global temhousingqueuecounter
+        temhousingqueuecounter+=1
+        temhousingqueue[temhousingqueuecounter]=self
+        self.productrow=productrow
+        self.childrow=0
+        self.optionsrows={}
+        self.pricingrulerows={}
+        self.options={}
+        self.processSelf()
+
+
+    def addoptionsrow(self, optionsrow):
+        self.optionsrows.append(optionsrow)
+
+    def addpricingrulerow(self, pricingrulerow):
+        self.pricingrulerows.append(pricingrulerow)
+
+    def processSelf(self):
+        self.productValues={}
+
+        if len(self.productrow['SKU']) > 0:
+            # something exists in  'SKU',
+            self.productValues["Sku"] = self.productrow["SKU"]
+
+        if len(self.productrow['Allow Purchases']) > 0:
+            # something exists in  'Allow Purchases',
+            if self.productrow["Allow Purchases"] == "1":
+                self.productValues['Status']='1'
+
+        if len(self.productrow['Meta Description']) > 0:
+            # something exists in  'Meta Description',
+            self.productValues["ShortDescription"]=self.productrow['Meta Description']
+
+        if len(self.productrow['GPS Manufacturer Part Number']) > 0:
+            # something exists in  'GPS Manufacturer Part Number',
+            # check with email and verify how to process
+            # until then
+            pass
+
+        if len(self.productrow['Brand']) > 0:
+            # something exists in  'Brand',
+            # check if there is a category created callend
+            # "Brands". If there is not, create it.
+            # Create the category "Brands"/self.productrow['Brand']
+            # and assign self to that category
+            pass
+
+        if len(self.productrow['Product Images']) > 0:
+            # something exists in  'Product Images',
+            self.imagurl=self.productrow["Product Images"][self.productrow["Product Images"].find('URL:')+4: self.productrow["Product Images"].find(',',self.productrow["Product Images"].find('URL:'))]
+
+        if len(self.productrow['GPS Category']) > 0:
+            # something exists in  'GPS Category',
+            # check if there is a category created callend
+            # "GPS Category". If there is not, create it.
+            # Create the category "GPS Category"/self.productrow['GPS Category']
+            # and assign self to that category
+            pass
+
+        if len(self.productrow['Category String']) > 0:
+            # something exists in  'Category String',
+            # This breaks down all of the categories
+            # Process these as categories
+            ##
+            pass
+
+        if len(self.productrow['Product Files']) > 0:
+            # something exists in  'Product Files',
+            ##unknown
+            pass
+
+        if len(self.productrow['Option Set']) > 0:
+            # something exists in  'Option Set',
+            # potential categories or options related.
+            pass
+
+        if len(self.productrow['Description']) > 0:
+            # something exists in  'Description',
+            self.productValues["Description"]=self.productrow['Description']
+
+        if len(self.productrow['Price']) > 0:
+            self.productValues["ProductPrice"] = self.productrow['Price']
+
+        if len(self.productrow['Name']) > 0:
+            # something exists in  'Name'
+            self.productValues["ProductName"] = self.productrow['Name']
+
+    def processoptions(self):
+        for eachnum, eachoptionrow in enumerate(self.optionsrows):
+            self.options[eachnum]={}
+            if len(eachoptionrow['SKU']) > 0:
+                # something exists in  'SKU',
+                self.options[eachnum]['SKU']= eachoptionrow['SKU']
+
+            if len(eachoptionrow['Allow Purchases']) > 0:
+                # something exists in  'Allow Purchases',
+                self.options[eachnum]['Allow Purchases']= eachoptionrow['Allow Purchases']
+
+            if len(eachoptionrow['Meta Description']) > 0:
+                # something exists in  'Meta Description',
+                self.options[eachnum]['Meta Description']= eachoptionrow['Meta Description']
+
+            if len(eachoptionrow['GPS Manufacturer Part Number']) > 0:
+                # something exists in  'GPS Manufacturer Part Number',
+                # check with email and verify how to process
+                # until then
+                self.options[eachnum]['GPS Manufacturer Part Number']= eachoptionrow['GPS Manufacturer Part Number']
+
+            if len(eachoptionrow['Brand']) > 0:
+                # something exists in  'Brand',
+                # check if there is a category created callend
+                # "Brands". If there is not, create it.
+                # Create the category "Brands"/eachoptionrow['Brand']
+                # and assign self to that category
+                self.options[eachnum]['Brand']= eachoptionrow['Brand']
+
+            if len(eachoptionrow['Product Images']) > 0:
+                # something exists in  'Product Images',
+                self.options[eachnum]['Product Images']= eachoptionrow['Product Images']
+
+            if len(eachoptionrow['GPS Category']) > 0:
+                # something exists in  'GPS Category',
+                # check if there is a category created callend
+                # "GPS Category". If there is not, create it.
+                # Create the category "GPS Category"/eachoptionrow['GPS Category']
+                # and assign self to that category
+                self.options[eachnum]['GPS Category']= eachoptionrow['GPS Category']
+
+            if len(eachoptionrow['Category String']) > 0:
+                # something exists in  'Category String',
+                # This breaks down all of the categories
+                # Process these as categories
+                ##
+                self.options[eachnum]['Category String']= eachoptionrow['Category String']
+
+            if len(eachoptionrow['Product Files']) > 0:
+                # something exists in  'Product Files',
+                ##unknown
+                self.options[eachnum]['Product Files']= eachoptionrow['Product Files']
+
+            if len(eachoptionrow['Option Set']) > 0:
+                # something exists in  'Option Set',
+                # potential categories or options related.
+                self.options[eachnum]['Option Set']= eachoptionrow['Option Set']
+
+            if len(eachoptionrow['Description']) > 0:
+                # something exists in  'Description',
+                self.options[eachnum]['Description']= eachoptionrow['Description']
+
+            if len(eachoptionrow['Price']) > 0:
+                self.options[eachnum]['Price']= eachoptionrow['Price']
+
+            if len(eachoptionrow['Name']) > 0:
+                # something exists in  'Name'
+                self.options[eachnum]['Name']= eachoptionrow['Name']
+
+
+def processproductsfile(pathtoproductfile):
+    global temhousingqueue
+    """This method will open a the specified file. 
+    This method expects the file to be in a very particular format.
+    """
+    ########################################################
+    ##
+    ##  TL:DR - I established what the patterns where in the data
+    ##  by making it binary , and then established three
+    ##  basic types.
+    ##
+    ##
+    ##  These are the various patterns that are anywhere
+    ##  In the document.  
+    ## A column with a "1" indicates there was data in the 
+    ##  cell. A "0" indicates there is not. 
+    ## This can be replicated using the "replacefieldnames"
+    ##  function in this file:  
+    ##  https://github.com/jeremiahmarks/csvToolbox/blob/e434bef57f254876848bed190656c5196fc00764/reduceCSVToFindPattern.py
+    ##
+    # product         01110111101010101110
+    # product         01110111101010111110
+    # product         01110111101110111110
+    # product         01111111101110111110
+    # product         11110011100010011110
+    # product         11110111001010111110
+    # product         11110111101010111110
+    # product         11110111101110011110
+    # product         11110111101110111110
+    # product         11110111111010111110
+    # product         11111011000110011110
+    # product         11111011101110111110
+    # product         11111111001110011110
+    # product         11111111001110111110
+    # product         11111111011110011110
+    # product         11111111101110011110
+    # product         11111111101110111110
+    # product         11111111110110111110
+    # product         11111111111110011110
+    # product         11111111111110111110
+    # product-DATED   11111111111111011110
+    # product-TESTING 01110011001010011110
+    # products meet this pattern. Basically,
+    # if it is a product row it will meet 
+    # this scheme
+    #                 -111--11----1---1110
+    # 
+    # category        01110011001010001100
+    # The category is a singluar item. It will get dropped
+    # 
+    # onlysku         11000000001010000100
+    # These appear to be back up images for the main product
+    #
+    # option          01000000000010000101
+    # option          01000000001010000101
+    # option          10000000000010000101
+    # option          11000000000010000101
+    # All of these are options.
+    # If it is an option, it will fit this
+    # pattern         --00000000-010000101
+    #
+    # pricingrule    11000000000010000110
+    # pricingrule     01000000000010000111
+    # pricingrule     01000000001010000111
+    # pricingrule     11000000000010000111
+    # pricingrule     11000000001010000110
+    # Here is this pattern:
+    #                 -100000000-01000011-
+    # Compare the four patterns   0 1 0
+    #   product       - 1 1 1 - - 1 1 - - - - 1 - - - 1 1 1 0
+    #   product       - - - - - - - - - - - - - - - - 1 - 1 -
+    #   category      0 1 1 1 0 0 1 1 0 0 1 0 1 0 0 0 1 1 0 0
+    #   option        - - 0 0 0 0 0 0 0 0 - 0 1 0 0 0 0 1 0 1
+    #   option        - - - - - - - - - - - - - - - - 0 1 0 -
+    #   pricingrule   - 1 0 0 0 0 0 0 0 0 - 0 1 0 0 0 0 1 1 -
+    #   pricingrule   - - - - - - - - - - - - - - - - 0 1 1 -
+    # note that product and category are the exact same
+    # except for the name field
+    #
+    # These are our final templates to determine which type
+    # of row we are working on. 
+    #   product       ----------------1-1-
+    #   category      01110011001010001100
+    #   option        ----------------010-
+    #   pricingrule   ----------------011-
+    #
+    # product: len(Product Images)>0 and len(Product Condition)>0
+    # option: len(Product Images)==0 and len(Meta Description)>0  and len(Product Condition)==0
+    # pricingrule: len(Product Images)==0 and len(Meta Description)>0  and len(Product Condition)==1
+
+
+    csvColumns=[
+                 'SKU',
+                 'Allow Purchases',
+                 'Product Condition',
+                 'GPS Enabled',
+                 'GPS Manufacturer Part Number',
+                 'Meta Description',
+                 'Category Details',
+                 'Product URL',
+                 'Brand',
+                 'Product Availability',
+                 'Product Images',
+                 'GPS Category',
+                 'Category String',
+                 'Product Files',
+                 'Option Set',
+                 'Description',
+                 'NameID',
+                 'Price',
+                 'Name'
+                 ]
+
+
+
+    with open(pathtoproductfile) as inputfile:
+        thisreader=csv.DictReader(inputfile)
+        thisproduct=None
+        for eachrow in thisreader:
+            print eachrow["NameID"], "NameID"
+            print eachrow["Price"], "Price"
+            print eachrow["Name"], "Name"
+            if len(eachrow["NameID"]) > 0 and len(eachrow["Name"])>0 :
+                thisproduct=temphousing(eachrow)
+                print "product"
+            if len(eachrow["NameID"])==0 and len(eachrow["Price"])>0  and len(eachrow["Name"])==0:
+                thisproduct.addoptionsrow(eachrow)
+                print "Images"
+            if len(eachrow["NameID"])==0 and len(eachrow["Price"])>0  and len(eachrow["Name"])==1:
+                thisproduct.addpricingrulerow(eachrow)
+                print "pImagesp"
+            else:
+                print eachrow['SKU']
+    return temhousingqueue
+
+    # for eachproduct in temhousingqueue:
+    #     if len(eachproduct.productrow["SKU"]) > 0:
+    #         eachproduct.Sku=eachproduct.productrow["SKU"]
+
+
+
+
+
+
 
 def collectcredentials():
     global pw
