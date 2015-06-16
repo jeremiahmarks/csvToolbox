@@ -1,5 +1,11 @@
 # Personal
 *_pw*
+
+# in order to keep working files out of the git
+*.csv
+*.csv.*
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
