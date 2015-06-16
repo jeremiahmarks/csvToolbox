@@ -3,7 +3,15 @@
 # @Author: jeremiah.marks
 # @Date:   2015-06-15 17:46:35
 # @Last Modified by:   jeremiah.marks
-# @Last Modified time: 2015-06-15 17:52:51
+# @Last Modified time: 2015-06-15 18:13:38
+
+# This script will open a csv file and go through it
+# cell-by-cell, row-by-row and count the number of characters
+# in each cell.  If the cell is empty, it will put a zero.
+# If there is content in the cell, it will put a 1
+#  This can then be opened in excel using conditional formatting
+# to get a color coded, visual representation of where data is in the file.
+
 
 import csv
 
