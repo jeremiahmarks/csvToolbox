@@ -3,28 +3,28 @@
 # @Author: Jeremiah Marks
 # @Date:   2015-06-14 18:49:15
 # @Last Modified 2015-06-16
-# @Last Modified time: 2015-06-16 03:42:13
+# @Last Modified time: 2015-06-16 18:06:29
 # This is the oneshot code for this product import
 
 # Flow of operations:
     # Collect appname, apikey, username, password
         # Note: This will either assume that you have login
         # credentials to the account, or will automate image
-        # upload based on internal access. This version, 
-        # being public, will probably assume that you have 
+        # upload based on internal access. This version,
+        # being public, will probably assume that you have
         # access to the account. If you have internal access
         # contact me and we will talk about how to automate
         # that.
     # Retrieve current list of products via the API
         # Data needed: productID, productName, categories that
-        #   product is assigned to, and produtSku. 
-        #       TODO later: If the sku is NONE the program 
-        #       should set the actual sku to ''. This would 
+        #   product is assigned to, and produtSku.
+        #       TODO later: If the sku is NONE the program
+        #       should set the actual sku to ''. This would
         #       allow it to change the SKU if desired
         #  Note that the sku is an optional identifier, however
         #  due to the concept of having a copy of a product
         #  show on your homepage, the categories are not.
-    # Parse the csv file into a dictionaries that equate to SQL tables for 
+    # Parse the csv file into a dictionaries that equate to SQL tables for
     # Products, Product Categories, Product options, Products to product categories relationships, and product options to product relationships.
     # Dupe check the existing products based on SKU, Category assignment, and Name
     # Move found duplicates to a created dictionary which will include their ProductID
@@ -35,8 +35,8 @@
             # If there is a path to an image, add the item
             #   to an imageupload dictionary.
         # If options exist:
-            # check if any of the product options have  
-            #   been created. 
+            # check if any of the product options have
+            #   been created.
             # Create product options which have not been created
             # If there is an image path, add the item to the
             #   imageupload dictionary.
@@ -45,11 +45,13 @@
 import simpleIS
 import productObjects
 import csv
+import random
+
 temhousingqueue={}
 temhousingqueuecounter=0
 
 try:
-    from my_pw import pw
+    from my_pw  import passwords
 except:
     collectcredentials()
 
@@ -62,7 +64,7 @@ tables["ProductCategoryAssign"]=["Id","ProductCategoryId","ProductId"]
 
 class temphousing(object):
     """This is just a simple class. It gives you a location
-    to hold data. It will then process the data and crate the 
+    to hold data. It will then process the data and crate the
     appropriate records.
     """
     def __init__(self, productrow):
@@ -78,11 +80,15 @@ class temphousing(object):
         self.processSelf()
 
 
-    def addoptionsrow(self, optionsrow):
-        self.optionsrows.append(optionsrow)
+    def addoptionsrow(self, optionsrow, rownum=None):
+        if rownum is None:
+            rownum=random.randint(500,500**2)
+        self.optionsrows[rownum]=(optionsrow)
 
-    def addpricingrulerow(self, pricingrulerow):
-        self.pricingrulerows.append(pricingrulerow)
+    def addpricingrulerow(self, pricingrulerow, rownum=None):
+        if rownum is None:
+            rownum=random.randint(500,500**2)
+        self.pricingrulerows[rownum]=(pricingrulerow)
 
     def processSelf(self):
         self.productValues={}
@@ -226,7 +232,7 @@ class temphousing(object):
 
 def processproductsfile(pathtoproductfile):
     global temhousingqueue
-    """This method will open a the specified file. 
+    """This method will open a the specified file.
     This method expects the file to be in a very particular format.
     """
     ########################################################
@@ -237,11 +243,11 @@ def processproductsfile(pathtoproductfile):
     ##
     ##
     ##  These are the various patterns that are anywhere
-    ##  In the document.  
-    ## A column with a "1" indicates there was data in the 
-    ##  cell. A "0" indicates there is not. 
+    ##  In the document.
+    ## A column with a "1" indicates there was data in the
+    ##  cell. A "0" indicates there is not.
     ## This can be replicated using the "replacefieldnames"
-    ##  function in this file:  
+    ##  function in this file:
     ##  https://github.com/jeremiahmarks/csvToolbox/blob/e434bef57f254876848bed190656c5196fc00764/reduceCSVToFindPattern.py
     ##
     # product         01110111101010101110
@@ -267,13 +273,13 @@ def processproductsfile(pathtoproductfile):
     # product-DATED   11111111111111011110
     # product-TESTING 01110011001010011110
     # products meet this pattern. Basically,
-    # if it is a product row it will meet 
+    # if it is a product row it will meet
     # this scheme
     #                 -111--11----1---1110
-    # 
+    #
     # category        01110011001010001100
     # The category is a singluar item. It will get dropped
-    # 
+    #
     # onlysku         11000000001010000100
     # These appear to be back up images for the main product
     #
@@ -285,7 +291,7 @@ def processproductsfile(pathtoproductfile):
     # If it is an option, it will fit this
     # pattern         --00000000-010000101
     #
-    # pricingrule    11000000000010000110
+    # pricingrule     11000000000010000110
     # pricingrule     01000000000010000111
     # pricingrule     01000000001010000111
     # pricingrule     11000000000010000111
@@ -304,7 +310,7 @@ def processproductsfile(pathtoproductfile):
     # except for the name field
     #
     # These are our final templates to determine which type
-    # of row we are working on. 
+    # of row we are working on.
     #   product       ----------------1-1-
     #   category      01110011001010001100
     #   option        ----------------010-
@@ -316,47 +322,42 @@ def processproductsfile(pathtoproductfile):
 
 
     csvColumns=[
-                 'SKU',
-                 'Allow Purchases',
-                 'Product Condition',
-                 'GPS Enabled',
-                 'GPS Manufacturer Part Number',
-                 'Meta Description',
-                 'Category Details',
-                 'Product URL',
-                 'Brand',
-                 'Product Availability',
-                 'Product Images',
-                 'GPS Category',
-                 'Category String',
-                 'Product Files',
-                 'Option Set',
-                 'Description',
-                 'NameID',
-                 'Price',
-                 'Name'
-                 ]
+        "Name",
+        "SKU",
+        "GPS Manufacturer Part Number",
+        "GPS Category",
+        "GPS Enabled",
+        "Name",
+        "Product URL",
+        "Brand",
+        "Option Set",
+        "Description",
+        "Price",
+        "Allow Purchases",
+        "Product Availability",
+        "Category String",
+        "Category Details",
+        "Product Files",
+        "Product Images",
+        "Meta Description",
+        "Product Condition",
+        "valuesOutsideOfTable",
+        ]
 
 
 
     with open(pathtoproductfile) as inputfile:
         thisreader=csv.DictReader(inputfile)
         thisproduct=None
-        for eachrow in thisreader:
-            print eachrow["NameID"], "NameID"
-            print eachrow["Price"], "Price"
-            print eachrow["Name"], "Name"
-            if len(eachrow["NameID"]) > 0 and len(eachrow["Name"])>0 :
+        for rownum, eachrow in enumerate(thisreader):
+            if len(eachrow["Product Images"]) > 0 and len(eachrow["Product Condition"])>0 :
                 thisproduct=temphousing(eachrow)
-                print "product"
-            if len(eachrow["NameID"])==0 and len(eachrow["Price"])>0  and len(eachrow["Name"])==0:
-                thisproduct.addoptionsrow(eachrow)
-                print "Images"
-            if len(eachrow["NameID"])==0 and len(eachrow["Price"])>0  and len(eachrow["Name"])==1:
-                thisproduct.addpricingrulerow(eachrow)
-                print "pImagesp"
+            elif len(eachrow["Meta Description"])==0  and len(eachrow["Price"])==0 and eachrow["Name"] and eachrow["Name"][0]=='[':
+                thisproduct.addoptionsrow(eachrow, rownum)
+            elif eachrow["Price"] and eachrow["Price"][0]=='[':
+                thisproduct.addpricingrulerow(eachrow, rownum)
             else:
-                print eachrow['SKU']
+                print "I must have missed something on line " + str(rownum)
     return temhousingqueue
 
     # for eachproduct in temhousingqueue:
@@ -370,21 +371,21 @@ def processproductsfile(pathtoproductfile):
 
 
 def collectcredentials():
-    global pw
+     globalpasswords
     if 'pw' not in globals():
-        pw={}
-    pw['appname']=raw_input("\nAppname: ").strip(' \n')
-    pw['apikey']=raw_input('\napikey: ').strip(' \n')
-    pw['un']=raw_input('\nUsername: ').strip(' \n')
-    pw['pw']=raw_input('\nPassword: ').strip(' \n')
-    pw['inputfilepath']=raw_input('\nFull path to inputFile: ').strip(' \n')
+        passwords={}
+    passwords['appname']=raw_input("\nAppname: ").strip(' \n')
+    passwords['apikey']=raw_input('\napikey: ').strip(' \n')
+    passwords['un']=raw_input('\nUsername: ').strip(' \n')
+    passwords['pw']=raw_input('\nPassword: ').strip(' \n')
+    passwords['inputfilepath']=raw_input('\nFull path to inputFile: ').strip(' \n')
 
 def getAllProducts():
     """
         This method expects a dictionary containing ['appname'] and ['apikey'] is
-        available in the global pw variable.
+        available in the  globalpasswords variable.
         If there is not a global dictionary named "productsbyid". If there is
-        not it will create one. 
+        not it will create one.
         This global variable will allow other methods to access the products by ID
         It will also create a global dictionary named categories, options, category assignment
         and option assignement. It will populate those as though they were a sql database.
@@ -406,7 +407,7 @@ def getAllProducts():
     global integration
     global products
     if 'integration' not in globals():
-        integration=simpleIS.ISinteract(pw['appname'], pw['apikey'])
+        integration=simpleIS.ISinteract(passwords['appname'], passwords['apikey'])
     if 'products' not in globals():
         products={}
         products['Id']={}
@@ -427,7 +428,7 @@ def getAllProducts():
         products['ProductName'][thisproduct.ProductName].append(thisproduct)
 
 def getallcategories():
-    """This method executes (as will all of the getall* methods) in 
+    """This method executes (as will all of the getall* methods) in
     a manner very similar to the getAllProducts method.
     product categories contain:
     [
@@ -439,7 +440,7 @@ def getallcategories():
      ]
     """
     # The first thing we are going to do is ensure that the
-    # the data structures that we need are in place. I am 
+    # the data structures that we need are in place. I am
     # making the assumption that the variable is the correct
     # data structure before working with it, which could
     # be bad especially since these are globals, but this
@@ -530,7 +531,7 @@ def getallcatassign():
 def getallproductoptions():
     """
     This method does what you expect it to.
-    tables['ProductOption'] = 
+    tables['ProductOption'] =
     [
      "AllowSpaces"
      "CanContain"
@@ -581,7 +582,7 @@ def getallproductoptions():
 def getprooptval():
     """
     this works as expected. Available values are
-    tables['ProductOptValue'] = 
+    tables['ProductOptValue'] =
     [
          "Id"
          "IsDefault"
@@ -621,7 +622,7 @@ def getprooptval():
             prooptvals['Id'][thisproductoptionvalue.Id]=thisproductoptionvalue
             prooptvals['ProductOptionId'][thisproductoptionvalue.ProductOptionId]=thisproductoptionvalue
             # I expect ID to be unique to this product option value.
-            # I also expect that it will only be associated with one product option id. 
+            # I also expect that it will only be associated with one product option id.
             # If I am wrong on this, you may need to let me know.
             if thisproductoptionvalue.Name not in prooptvals["Name"].keys():
                 prooptvals['Name'][thisproductoptionvalue.Name]=[]
@@ -682,7 +683,7 @@ def writeToCsv():
             prooptvalswriter.writerow(prooptvals['Id'][eachprooptvalsid].prepare())
 
 def openinputcsv():
-    with open(pw['inputfilepath']) as inputfile:
+    with open(passwords['inputfilepath']) as inputfile:
         inputReader=csv.DictReader(inputfile, restkey="unkeyed", restval=" ")
         for row in inputReader:
         if (len(row["Name"])>0 and row["Name"][0]=="["):
@@ -741,8 +742,8 @@ def openinputcsv():
         else:
             #this is a product
             if thisProduct is not None:
-                # This is to save the just completed product. 
-                # so that we can access it later, and assign its variable to 
+                # This is to save the just completed product.
+                # so that we can access it later, and assign its variable to
                 # a different object. (Okay, really assign a different object
                 # to this variable ) We do not want to call it before the first
                 # product is created, hence the if to check.
@@ -769,16 +770,16 @@ def openinputcsv():
 
             thisProduct.id = server.cnp(thisProduct.prepare())
             values=thisProduct.prepare()
-            print "Product Created: " + str(thisProduct.id) 
+            print "Product Created: " + str(thisProduct.id)
             for x in values:
                 print(x + ":"+ str(values[x]))
-            print "Product Created: " + str(thisProduct.id) 
+            print "Product Created: " + str(thisProduct.id)
             print thisProduct.getPublicPage()
             print thisProduct.getInternalPage()
             # if thisProduct.images:
             #     productImage.addImageToProduct(thisProduct.id, thisProduct.images[0])
             # thisProduct.id=iditerator.next()
-# we need to save the last product somewhere after it gets created. 
+# we need to save the last product somewhere after it gets created.
 products.append(thisProduct)
 
 
