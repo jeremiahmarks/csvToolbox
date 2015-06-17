@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: jeremiah.marks
 # @Date:   2015-06-15 17:46:35
-# @Last Modified 2015-06-15
-# @Last Modified time: 2015-06-15 23:19:30
+# @Last Modified 2015-06-17
+# @Last Modified time: 2015-06-17 04:35:26
 
 # This script will open a csv file and go through it
 # cell-by-cell, row-by-row and count the number of characters
@@ -105,8 +105,38 @@ def checkrowtypes():
     return [k.close() for k in filekeeper.values()]
 
 
-
-
+def expandcells():
+    """This method will add whitespace to every cell until 
+    every cell in the column is the same width. 
+    """
+    import csv
+    infilename='./droppings/products.csv'
+    outfilename='./droppings/productsBin.csv'
+    fillchar=' '
+    longestcell={}
+    with open(infilename) as infile:
+        reader=csv.DictReader(infile)
+        for eachrow in reader:
+            for eachcell in reader.fieldnames:
+                celllength=len(eachcell)
+                if eachcell not in longestcell.keys():
+                    longestcell[eachcell]=celllength
+                if celllength > longestcell[eachcell]:
+                    longestcell[eachcell]=celllength
+    with open(infilename) as infile:
+        reader=csv.DictReader(infile)
+        with open(outfilename, 'wb') as outfile:
+            thesefieldnames=reader.fieldnames
+            for nameloc, afieldname in enumerate(thesefieldnames):
+                offset=longestcell[afieldname]
+                thesefieldnames[nameloc]=thesefieldnames[nameloc].ljust(offset)
+            writer=csv.DictWriter(outfile, thesefieldnames)
+            writer.writeheader()
+            for eachline in reader:
+                thisline={}
+                for eachfname in thesefieldnames:
+                    thisline[eachfname]=eachline[eachfname.strip(' ')]
+                writer.writerow(thisline)
 
 
 

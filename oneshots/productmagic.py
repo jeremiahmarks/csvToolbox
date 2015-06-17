@@ -3,7 +3,7 @@
 # @Author: Jeremiah Marks
 # @Date:   2015-06-14 18:49:15
 # @Last Modified 2015-06-16
-# @Last Modified time: 2015-06-16 18:06:29
+# @Last Modified time: 2015-06-16 19:13:05
 # This is the oneshot code for this product import
 
 # Flow of operations:
@@ -42,10 +42,10 @@
             #   imageupload dictionary.
         # remove the item from created dictionary.
     # upload image
-import simpleIS
-import productObjects
 import csv
 import random
+import simpleIS
+import productObjects
 
 temhousingqueue={}
 temhousingqueuecounter=0
