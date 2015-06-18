@@ -3,8 +3,8 @@
 # @Author: Jeremiah Marks
 # @Date:   2015-06-16 19:15:29
 # @Last Modified 2015-06-17
-# @Last Modified time: 2015-06-17 03:59:46
-
+# @Last Modified time: 2015-06-17 17:43:52
+import datetime
 import random
 import string
 import xmlrpclib
@@ -15,6 +15,8 @@ import productObjects
 import my_pw as pw
 
 global products
+
+localids=set()
 
 productCatagories={}
 products=[]
@@ -27,7 +29,7 @@ tables["ProductCategoryAssign"]=["Id","ProductCategoryId","ProductId"]
 
 # This is the SKU scheme, as I have figured out.
 # GP  [RB]Attachment Type=Standard 3- Hole System"
-# GPM  [RB]Attachment Type=Polar Magnetic System"  
+# GPM  [RB]Attachment Type=Polar Magnetic System"
 # GPP  [RB]Attachment Type=Standard 3- Hole System"
 # GPPX  [RB]Attachment Type=Standard 3- Hole System"
 
@@ -48,8 +50,8 @@ class Product(object):
     def __init__(self, values):
         self.values=values
         global products
+        self.internalid=id_generator()
         if 'products' not in globals():
-            print "Products now exist as an empty set"
             products=[]
         if ("BottomHTML" in values.keys()):
             self.BottomHTML = values["BottomHTML"]
@@ -139,14 +141,49 @@ class Product(object):
             self.Weight = values["Weight"]
         else:
             self.Weight=None
-        self.categories=None
+        self.categories={}
         self.catStrings=[]
         self.images=[]
         self.imageStrings=[]
-        self.options=None
+        self.options={}
+        self.optionrows=[]
         self.optionsSettings=None
         self.optionsPriceChange={}
+        self.pricingrows=[]
+        self.rowdata=[]
         self.register()
+
+    def getid(self):
+        """Doing functionality like this allows things to be
+        saved by a unique id, even if there is not one available
+        """
+        if self.Id is None:
+            return self.internalid
+        else:
+            return self.Id
+
+    def __eq__(self, other):
+        if self.getid()==other.getid() or self.internalid==other.internalid:
+            return True
+        catsmatch= len(self.categories.keys())>0 is len(other.categories.keys())>0   # Basically,
+        # this checks to see if both of the products have categories or if
+        # they both do not. Basically the statment says
+        #               [T/F] is [T/F]
+        # and returns that.
+        if self.ProductName and other.ProductName:
+            namesmatch=self.ProductName.lower().strip(' \n') is other.ProductName.lower().strip(' \n')
+            return namesmatch and catsmatch
+        else:
+            return False
+
+    def getid(self):
+        """Doing functionality like this allows things to be
+        saved by a unique id, even if there is not one available
+        """
+        if self.Id is None:
+            return self.internalid
+        else:
+            return self.Id
 
     def prepare(self):
         vals={}
@@ -194,13 +231,13 @@ class Product(object):
             vals["TopHTML"] = self.TopHTML
         if self.Weight is not None:
             vals["Weight"] = self.Weight
-        for eachitem in vals.keys():
-            # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
-            if type('str')==type(vals[eachitem]):
-                for eachchr in vals[eachitem]:
-                    if ord(eachchr)>127:
-                        print "Error " + str(vals[eachitem])
-                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
+        # for eachitem in vals.keys():
+        #     # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
+        #     if type('str')==type(vals[eachitem]):
+        #         for eachchr in vals[eachitem]:
+        #             if ord(eachchr)>127:
+        #                 print "Error " + str(ord(eachchr))
+        #                 vals[eachitem]=vals[eachitem].replace(eachchr, 'RR'+str(ord(eachchr)))
         return vals
 
     def setAppName(self, appname):
@@ -237,8 +274,10 @@ class ProductCategory(object):
     global productcategorys
     if 'productcategorys' not in globals():
         productcategorys = []
+
     def __init__(self,values):
         self.values=values
+        self.internalid = id_generator()
         if "CategoryDisplayName" in values.keys():
             self.CategoryDisplayName=values["CategoryDisplayName"]
         else:
@@ -260,6 +299,16 @@ class ProductCategory(object):
         else:
             self.ParentId=None
         self.register()
+
+    def getid(self):
+        """Doing functionality like this allows things to be
+        saved by a unique id, even if there is not one available
+        """
+        if self.Id is None:
+            return self.internalid
+        else:
+            return self.Id
+
     def prepare(self):
         vals={}
         if self.CategoryDisplayName is not None:
@@ -272,16 +321,15 @@ class ProductCategory(object):
             vals["Id"] = self.Id
         if self.ParentId is not None:
             vals["ParentId"] = self.ParentId
-        for eachitem in vals.keys():
+        # for eachitem in vals.keys():
             # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
-            if type(u'str')==type(vals[eachitem]):
-                for eachchr in vals[eachitem]:
-                    if ord(eachchr)>0:
-                        print eachchr
-                    if ord(eachchr)>127:
-                        print "Error " + str(ord(eachchr))
-                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
+            # if type(u'str')==type(vals[eachitem]):
+            #     for eachchr in vals[eachitem]:
+            #         if ord(eachchr)>127:
+            #             print "Error " + str(ord(eachchr))
+            #             vals[eachitem]=vals[eachitem].replace(eachchr, 'RR'+str(ord(eachchr)))
         return vals
+
     def register(self):
         if self not in productcategorys:
             productcategorys.append(self)
@@ -290,8 +338,10 @@ class ProductCategoryAssign(object):
     global productcategoryassigns
     if 'productcategoryassigns' not in globals():
         productcategoryassigns = []
+
     def __init__(self,values):
         self.values=values
+        self.internalid=id_generator()
         if "Id" in values.keys():
             self.Id=values["Id"]
         else:
@@ -305,6 +355,16 @@ class ProductCategoryAssign(object):
         else:
             self.ProductId=None
         self.register()
+
+    def getid(self):
+        """Doing functionality like this allows things to be
+        saved by a unique id, even if there is not one available
+        """
+        if self.Id is None:
+            return self.internalid
+        else:
+            return self.Id
+
     def prepare(self):
         vals={}
         if self.Id is not None:
@@ -313,14 +373,15 @@ class ProductCategoryAssign(object):
             vals["ProductCategoryId"] = self.ProductCategoryId
         if self.ProductId is not None:
             vals["ProductId"] = self.ProductId
-        for eachitem in vals.keys():
+        # for eachitem in vals.keys():
             # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
-            if type('str')==type(vals[eachitem]):
-                for eachchr in vals[eachitem]:
-                    if ord(eachchr)>127:
-                        print "Error " + str(vals[eachitem])
-                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
+            # if type('str')==type(vals[eachitem]):
+            #     for eachchr in vals[eachitem]:
+            #         if ord(eachchr)>127:
+            #             print "Error " + str(ord(eachchr))
+            #             vals[eachitem]=vals[eachitem].replace(eachchr, 'RR'+str(ord(eachchr)))
         return vals
+
     def register(self):
         if self not in productcategoryassigns:
             productcategoryassigns.append(self)
@@ -329,8 +390,10 @@ class ProductOptValue(object):
     global productoptvalues
     if 'productoptvalues' not in globals():
         productoptvalues = []
+
     def __init__(self,values):
         self.values=values
+        self.internalid=id_generator()
         if "Id" in values.keys():
             self.Id=values["Id"]
         else:
@@ -364,6 +427,25 @@ class ProductOptValue(object):
         else:
             self.Sku=None
         self.register()
+
+    def __eq__(self, other):
+        if self.getid()==other.getid() or self.internalid==other.internalid:
+            return True
+        if self.Name and other.Name:
+            namesmatch=self.Name.lower().strip(' \n') is other.Name.lower().strip(' \n')
+            return namesmatch and (self.ProductOptionId is other.ProductOptionId)
+        else:
+            return False
+
+    def getid(self):
+        """Doing functionality like this allows things to be
+        saved by a unique id, even if there is not one available
+        """
+        if self.Id is None:
+            return self.internalid
+        else:
+            return self.Id
+
     def prepare(self):
         vals={}
         if self.Id is not None:
@@ -382,13 +464,14 @@ class ProductOptValue(object):
             vals["ProductOptionId"] = self.ProductOptionId
         if self.Sku is not None:
             vals["Sku"] = self.Sku
-        for eachitem in vals.keys():
-            # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
-            if type('str')==type(vals[eachitem]):
-                for eachchr in vals[eachitem]:
-                    if ord(eachchr)>128:
-                        vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
+        # for eachitem in vals.keys():
+        #     # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
+        #     if type('str')==type(vals[eachitem]):
+        #         for eachchr in vals[eachitem]:
+        #             if ord(eachchr)>128:
+        #                 vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
         return vals
+
     def register(self):
         if self not in productoptvalues:
             productoptvalues.append(self)
@@ -397,8 +480,10 @@ class ProductOption(object):
     global productoptions
     if 'productoptions' not in globals():
         productoptions = []
+
     def __init__(self,values):
         self.values=values
+        self.internalid=id_generator()
         if "AllowSpaces" in values.keys():
             self.AllowSpaces=values["AllowSpaces"]
         else:
@@ -468,6 +553,16 @@ class ProductOption(object):
             self.TextMessage=values["TextMessage"]
         else:
             self.TextMessage=None
+        self.optionvalues=[]
+
+    def getid(self):
+        """Doing functionality like this allows things to be
+        saved by a unique id, even if there is not one available
+        """
+        if self.Id is None:
+            return self.internalid
+        else:
+            return self.Id
 
     def prepare(self):
         vals={}
@@ -569,7 +664,6 @@ class ISServer:
     ## Methods to get meta-data about records
     def getCount(self, tableName, query):
         return self.connection.DataService.count(self.infusionsoftAPIKey, tableName, query)
-
     def verifyConnection(self):
         try:
             listOfDicts=self.connection.DataService.query(self.infusionsoftAPIKey, "User", 1000, 0,{},["Email"],"Email",True)
@@ -610,7 +704,7 @@ def buildCategories(force=False):
 
 def getBuildRemote(force=False):
     global server
-    server = ISServer(pw.pw['appname'], pw.pw['apikey'])
+    server = ISServer(pw.passwords['appname'], pw.passwords['apikey'])
     global remotevalues
 
     tablesneeded={}
@@ -650,7 +744,7 @@ def getBuildRemote(force=False):
     remotevalues['ProductOption']['ProductId']={}
 
     for eachtable in tablesneeded.keys():
-        with open('/home/jlmarks/' + eachtable + eachtable + ".csv", 'wb') as outfile:
+        with open('C:\\users\\jeremiah.marks\\desktop\\portable python 2.7.6.1\\' + eachtable + eachtable + ".csv", 'wb') as outfile:
             thiswriter=csv.DictWriter(outfile, tables[eachtable])
             thiswriter.writeheader()
             if 'Product' == eachtable:
@@ -672,7 +766,6 @@ def getBuildRemote(force=False):
                     if eachidentifier in thesevalues.keys():
                         remotevalues[eachtable][eachidentifier][thesevalues[eachidentifier]]=eachRecordObject
             outfile.close()
-
 
 def getCatId(pathToCat):
     global productCatagories
@@ -703,85 +796,97 @@ def getCatAssiggnId(productCatAssRecord):
     else:
         return server.createNewRecord("ProductCategoryAssign", productCatAssRecord.prepare())
 
-def processImport(productsfile=pw.pw['inputfilepath']):
+def processImport(productsfile=pw.passwords['inputfilepath']):
 
     global server
     global products
     global productCatagories
-    server = ISServer(pw.pw['appname'], pw.pw['apikey'])
+    server = ISServer(pw.passwords['appname'], pw.passwords['apikey'])
 
     getBuildRemote()
-
     thisProduct=None
     with open(productsfile) as datas:
         reader = csv.DictReader(datas)
-
+        filefields=reader.fieldnames
         for row in reader:
-            if (len(row["Name"])>0 and row["Name"][0]=="["):
+            thisrow={}
+            for eachheading in filefields:
+                thisrow[eachheading] = row[eachheading].strip(" \n")
+            if (len(thisrow["Name"]) == 0) or (len(thisrow["Name"])>0 and thisrow["Name"][0]=="["):
                 #This indicates that it is not a product
-                if (row["Price"]==""):
-                    # If the price value is blank, this means
-                    # that it is an option, not a pricing rule
-                    mycopy=row['Name']
-                    while len(mycopy) > 0:
-                        mycopy=mycopy[ mycopy.find(']') + 1 : ]
-                        if '[' in mycopy:
-                            thisoption=mycopy[:mycopy.find('[')]
-                            mycopy=mycopy[mycopy.find('['):]
-                        else:
-                            thisoption=mycopy
-                            mycopy=mycopy[0:0]
-                            # Since we are using slices, we may
-                            # as well kill a string with a slice
-                        #Theoretically we should only have a comma separated list of different variations 
-                        # on available options.
-                        for eachoptionvaluepair in mycopy.split(','):
-                            # optionname, optionvalue = eachoptionvaluepair.split("=")
-                            optionname = eachoptionvaluepair.split("=")
-                            if len(optionname)==1:
-                                optionname=optionname[0]
-                            else:
-                                optionname, optionvalue = optionname[0],optionname[1]
-                            if thisProduct.optionsSettings is None:
-                                thisProduct.optionsSettings={}
-                            if optionname not in thisProduct.optionsSettings.keys():
-                                thisProduct.optionsSettings[optionname] = set()
-                            thisProduct.optionsSettings[optionname].add(optionvalue)
+                if (thisrow["Price"]==""):
+                    thisProduct.optionrows.append(thisrow)
+                    ########################################
+                    ## For now we are going to just store the
+                    ## entire row in the correct product.
+                    ## after we parse the document, we will
+                    ## come back and parse them
+                    ##
+                    ##
+                    # # If the price value is blank, this means
+                    # # that it is an option, not a pricing rule
+                    # mycopy=row['Name']
+                    # while len(mycopy) > 0:
+                    #     mycopy=mycopy[ mycopy.find(']') + 1 : ]
+                    #     if '[' in mycopy:
+                    #         thisoption=mycopy[:mycopy.find('[')]
+                    #         mycopy=mycopy[mycopy.find('['):]
+                    #     else:
+                    #         thisoption=mycopy
+                    #         mycopy=mycopy[0:0]
+                    #         # Since we are using slices, we may
+                    #         # as well kill a string with a slice
+                    #     #Theoretically we should only have a comma separated list of different variations
+                    #     # on available options.
+                    #     for eachoptionvaluepair in mycopy.split(','):
+                    #         # optionname, optionvalue = eachoptionvaluepair.split("=")
+                    #         optionname = eachoptionvaluepair.split("=")
+                    #         if len(optionname)==1:
+                    #             optionname=optionname[0]
+                    #         else:
+                    #             optionname, optionvalue = optionname[0],optionname[1]
+                    #         if thisProduct.optionsSettings is None:
+                    #             thisProduct.optionsSettings={}
+                    #         if optionname not in thisProduct.optionsSettings.keys():
+                    #             thisProduct.optionsSettings[optionname] = set()
+                    #         thisProduct.optionsSettings[optionname].add(optionvalue)
                 else:
                     # This is a pricing rule
-                    changetype=row["Price"][1:row["Price"].find(']')]
-                    priceChange = row["Price"][row["Price"].find(']')+1:]
-                    optionChoice, optionChoiceValue = row["Name"][4:].split("=",1)
-                    if thisProduct.optionsPriceChange is None:
-                        thisProduct.optionsPriceChange={}
-                    if optionChoice not in thisProduct.optionsPriceChange.keys():
-                        thisProduct.optionsPriceChange[optionChoice]={}
-                    thisProduct.optionsPriceChange[optionChoice][optionChoiceValue] = priceChange
-                    thisProduct.optionsPriceChange[optionChoice][changetype]=changetype
+                    thisProduct.pricingrows.append(thisrow)
+                    # changetype=row["Price"][1:row["Price"].find(']')]
+                    # priceChange = thisrow["Price"][row["Price"].find(']')+1:]
+                    # optionChoice, optionChoiceValue = thisrow["Name"][4:].split("=",1)
+                    # if thisProduct.optionsPriceChange is None:
+                    #     thisProduct.optionsPriceChange={}
+                    # if optionChoice not in thisProduct.optionsPriceChange.keys():
+                    #     thisProduct.optionsPriceChange[optionChoice]={}
+                    # thisProduct.optionsPriceChange[optionChoice][optionChoiceValue] = priceChange
+                    # thisProduct.optionsPriceChange[optionChoice][changetype]=changetype
             else:
                 #this is a product
                 if thisProduct is not None:
-                    # This is to save the just completed product. 
-                    # so that we can access it later, and assign its variable to 
+                    # This is to save the just completed product.
+                    # so that we can access it later, and assign its variable to
                     # a different object. (Okay, really assign a different object
                     # to this variable ) We do not want to call it before the first
                     # product is created, hence the if to check.
                     products.append(thisProduct)
-                thisProduct = Product({"ProductName" : row["Name"]})
+                thisProduct = Product({"ProductName" : thisrow["Name"].strip(' \n')})
+                thisProduct.rowdata.append(thisrow)
                 for column in ["GPS Category", "Brand", "Category String"]:
-                    thisProduct.catStrings.append(row[column])
-                if row["SKU"]:
-                    thisProduct.Sku = row["SKU"]
-                if row['Description']:
+                    thisProduct.catStrings.append(thisrow[column])
+                if thisrow["SKU"]:
+                    thisProduct.Sku = thisrow["SKU"]
+                if thisrow['Description']:
                     thisProduct.Description=row['Description']
-                if row["Price"]:
-                    thisProduct.ProductPrice = row["Price"]
-                if row["Product Images"]:
+                if thisrow["Price"]:
+                    thisProduct.ProductPrice = thisrow["Price"]
+                if thisrow["Product Images"]:
                     thisProduct.imageStrings.append(row["Product Images"])
-                if row["Meta Description"]:
-                    thisProduct.ShortDescription = row["Meta Description"]
-                if row["Product Images"]:
-                    imageStrings=row["Product Images"].split("|")
+                if thisrow["Meta Description"]:
+                    thisProduct.ShortDescription = thisrow["Meta Description"]
+                if thisrow["Product Images"]:
+                    imageStrings=thisrow["Product Images"].split("|")
                     for eachS in imageStrings:
                         for eachVal in eachS.split(","):
                             if "Product Image URL: " in eachVal:
@@ -798,101 +903,126 @@ def processImport(productsfile=pw.pw['inputfilepath']):
 
                 ## Now to check for the product and see if it exists
 
-                if thisProduct.ProductName in remotevalues['Product']["ProductName"].keys():
+                if thisProduct.ProductName.strip(' \n') in remotevalues['Product']["ProductName"].keys():
                     thisProduct.Id = remotevalues['Product']["ProductName"][thisProduct.ProductName].Id
                 else:
                     thisProduct.Id = server.cnp(thisProduct.prepare())
                 values=thisProduct.prepare()
-                print thisProduct.getPublicPage(server.infusionsoftapp)
-                print thisProduct.getInternalPage()
+
+
                 # if thisProduct.images:
                 #     productImage.addImageToProduct(thisProduct.Id, thisProduct.images[0])
                 # thisProduct.Id=iditerator.next()
-    # we need to save the last product somewhere after it gets created. 
+    # we need to save the last product somewhere after it gets created.
     products.append(thisProduct)
+    # Now that all of the rows have been processed into their
+    # appropriate product object, lets take those apart and
+    # put them together again.
+    # with open('productsoptionspricing.csv', 'wb') as sampleout:
+    #     samplewriter=csv.DictWriter(sampleout, filefields)
+    #     samplewriter.writeheader()
+    #     for eachproduct in products:
+    #         thisrow={}
+    #         samplewriter.writerow(eachproduct.rowdata)
+    #     for eachproduct in products:
+    #         thisrow={}
+    #         for eachoptionrow in eachproduct.optionrows:
+    #             samplewriter.write(eachoptionrow)
+    #     for eachproduct in products:
+    #         thisrow={}
+    #         for eachpricingrow in eachproduct.pricingrows:
+    #             samplewriter.write(eachpricingrow)
+
+    for eachproduct in products:
+        for eachoption in eachproduct.optionrows:
+            if eachproduct.optionsSettings is None:
+                eachproduct.optionsSettings={}
+            thisnamecol=eachoption['Name']
+            while len(thisnamecol)>0:
+                thisnamecol=thisnamecol[thisnamecol.find(']')+1:]
+                # This Basically strips off the first option class tag
+                # thing
+                if thisnamecol.count('[')>0:
+                    # basically if there is another option tag
+                    # thing we are going to deal with
+                    thisoptionvalue=thisnamecol[:thisnamecol.find('[')].strip(',\n ')
+                    thisnamecol=thisnamecol[thisnamecol.find('['):]
+                else:
+                    thisoptionvalue=thisnamecol.strip(',\n ')
+                    thisnamecol=''
+                ############################################
+                ## thisoptionvalue should be expected to be a coma separated
+                ## list of product options and option values
+                ##
+                if '\\,' in thisoptionvalue:
+                    thisoptionvalue = thisoptionvalue.replace('\\,', '\\coma')
+                    ########################################
+                    ## This is because we are going to split the
+                    ##  string with a coma and we do not want to lose
+                    ##  values when we do that.
+                theseoptions=thisoptionvalue.split(',')
+                ############################################
+                ## theseoptions should look like this:
+                ## theseoptions =[
+                ##                 "op1=val",
+                ##                 "op2=val",
+                ##                 "op3=val",
+                ##               ]
+                for eachpair in theseoptions:
+                    eachpair.replace('\\coma', '\\,')
+                    # as a note, these pairs should still be
+                    # joined with a "="
+                    eqcount=eachpair.count("=")
+                    if eqcount==0:
+                        print "this pair sucked ", eachpair
+                    elif eqcount>1:
+                        print "this pair has more then one! ", eachpair
+                    else:
+                        optionname, optionvalue = eachpair.split("=")
+                        optionvalue = optionvalue.split(':')[0]
+                        if optionname not in eachproduct.optionsSettings.keys():
+                            eachproduct.optionsSettings[optionname] = set()
+                            thisoptionvalues={}
+                            thisoptionvalues['Name']=optionname
+                            thisoptionvalues['IsRequired'] = '1'
+                            thisoptionvalues['Label'] = optionname
+                            thisoptionvalues['OptionType'] = 'FixedList'
+                            thisoptionvalues['Order'] = len(eachproduct.options)
+                            thisoptionvalues['ProductId'] = eachproduct.getid()
+                            thispo = ProductOption(thisoptionvalues)
+                            eachproduct.options[optionname]=thispo
+                        eachproduct.optionsSettings[optionname].add(optionvalue)
+                        thispo = eachproduct.options[optionname]
+                        optval={}
+                        optval["Name"]=optionvalue
+                        optval["Label"]=optionvalue
+                        if eachoption['SKU'] and len(eachoption['SKU'])>0:
+                            optval['Sku'] = eachoption['SKU']
+                        else:
+                            optval['Sku']=None
+                        optval['ProductOptionId']=thispo.getid()
+                        optval['OptionIndex']=len(thispo.optionvalues)
+                        thispo.optionvalues.append(ProductOptValue(optval))
     return products
 
 
-
-
-
-
-    #                 optionString=row["Name"]
-    #                 while(len(optionString)>0):
-    #                     optionString = optionString[4:]
-    #                     # This should remove the original tag
-    #                     optionName, optionString = optionString.split("=",1)
-    #                     if thisProduct.optionsSettings is None:
-    #                         thisProduct.optionsSettings={}
-    #                     if optionName not in thisProduct.optionsSettings.keys():
-    #                         thisProduct.optionsSettings[optionName] = set()
-    #                     try:
-    #                         optionsValue, optionString = optionString.split(",",1)
-    #                     except ValueError:
-    #                         optionsValue = optionString
-    #                         optionString = ""
-    #                     thisProduct.optionsSettings[optionName.replace('-_-',",")].add(optionsValue.replace('-_-',","))
-    # ####
-    # ##
-    # # Products have been created and have their optionsp set up.
-    # # Let's create the actual optionsp.
-    # for eachProduct in products:
-    #     if eachProduct.optionsSettings:
-    #         if eachProduct.options is None:
-    #             eachProduct.options = {}
-    #         counter=0
-    #         for eachOption in eachProduct.optionsSettings.keys():
-    #             counter+=1
-    #             thisOption = prodOption(eachProduct.Id)
-    #             thisOption.name=eachOption
-    #             thisOption.label = eachOption
-    #             thisOption.required = 1
-    #             thisOption.order = counter
-    #             thisOption.optionType='FixedList'
-    #             thisOption.Id = server.createNewRecord("ProductOption", thisOption.prepare())
-    #             # thisOption.Id=iditerator.next()
-    #             eachProduct.options[eachOption] = thisOption
-    #             optionCounter=0
-    #             for eachValue in eachProduct.optionsSettings[eachOption]:
-    #                 optionCounter+=1
-    #                 newOptionValue=prodOptVal(thisOption.Id)
-    #                 newOptionValue.optionIndex=optionCounter
-    #                 newOptionValue.label = eachValue
-    #                 newOptionValue.isdefault=0
-    #                 newOptionValue.name=eachValue
-    #                 if eachOption in eachProduct.optionsPriceChange.keys():
-    #                     if eachValue in eachProduct.optionsPriceChange[eachOption].keys():
-    #                         newOptionValue.adjustment=eachProduct.optionsPriceChange[eachOption][eachValue]
-    #                 newOptionValue.Id = server.createNewRecord("ProductOptValue", newOptionValue.prepare())
-    #                 # newOptionValue.Id = iditerator.next()
-    #                 thisOption.values.append(newOptionValue)
-    #     # each product option has been created and assigned. 
-    #     # lets take care of the categories.
-    #     for eachString in eachProduct.catStrings:
-    #         if eachProduct.categories is None:
-    #             eachProduct.categories={}
-    #         eachString.replace("\\/", " - ")
-    #         for eachSubstring in eachString.split(";"):
-    #             #The string should now be something like
-    #             # ParentCat/ChildCat/grandChildCat
-    #             thiscatid=getCatId(eachSubstring)
-    #             thisAssignment=prodCatAss(eachProduct.Id, thiscatid)
-    #             thisAssignment.Id=getCatAssiggnId(thisAssignment)
-    #             eachProduct.categories[eachSubstring]=eachProduct.categories[int(thiscatid)]=thisAssignment
-    #     for lastEachProduct in products:
-    #         if lastEachProduct.images:
-    #             print "uploading image from " + lastEachProduct.images[0]
-    #             productImage.addImageToProduct(lastEachProduct.Id, lastEachProduct.images[0])
-    # return products
-
 if __name__ == '__main__':
-    server=ISServer(pw.pw['appname'], pw.pw['apikey'])
+    server=ISServer(pw.passwords['appname'], pw.passwords['apikey'])
     getBuildRemote()
 
 
 
 
 
+# OptionValue
+# self.Id=values["Id"]
+# self.IsDefault=values["IsDefault"]
+# self.Label=values["Label"]
+# self.Name=values["Name"]
+# self.OptionIndex=values["OptionIndex"]
+# self.PriceAdjustment=values["PriceAdjustment"]
+# self.ProductOptionId=values["ProductOptionId"]
+# self.Sku=values["Sku"]
 
 
 
@@ -905,465 +1035,26 @@ if __name__ == '__main__':
 
 
 
+                    #             optionname, optionvalue = optionname[0],optionname[1]
+                    #         if thisProduct.optionsSettings is None:
+                    #             thisProduct.optionsSettings={}
+                    #         if optionname not in thisProduct.optionsSettings.keys():
+                    #             thisProduct.optionsSettings[optionname] = set()
+                    #         thisProduct.optionsSettings[optionname].add(optionvalue)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# global temhousingqueue
-# global temoptionqueue
-# global localids
-# localids=set()
-# temhousingqueue={}
-# temoptionqueue={}
-# temhousingqueuecounter=0
-# temoptionqueuecounter=0
-
-
-# ############################################################
-# ##
-# ## Since we want this to be reusable,  we are going to add
-# ## in a random unique id generator.  When working with the 
-# ## api we will have ID numbers in place to check for things,
-# ## we could hash the item, but that is a topic for another 
-# ## day
-# ##
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class temphousing(object):
-#     """This is just a simple class. It gives you a location
-#     to hold data. It will then process the data and crate the
-#     appropriate records.
-#     """
-#     def __init__(self, productrow):
-#         global temhousingqueue
-#         global temhousingqueuecounter
-#         temhousingqueuecounter+=1
-#         temhousingqueue[temhousingqueuecounter]=self
-#         self.productrow=productrow
-#         self.childrow=0
-#         self.optionsrows={}
-#         self.pricingrulerows={}
-#         self.options={}
-#         self.processSelf()
-#         self.houseid=id_generator()
-#         self.Idset=False
-#         self.getid()
-
-#     def getid(self):
-#         """Doing functionality like this allows things to be
-#         saved by a unique id, even if there is not one available
-#         """
-#         return self.houseid
-
-#     def addoptionsrow(self, optionsrow, rownum=None):
-#         if rownum is None:
-#             rownum=random.randint(500,500**2)
-#         self.optionsrows[rownum]=(optionsrow)
-
-#     def addpricingrulerow(self, pricingrulerow, rownum=None):
-#         if rownum is None:
-#             rownum=random.randint(500,500**2)
-#         self.pricingrulerows[rownum]=(pricingrulerow)
-
-#     def processSelf(self):
-#         self.productValues={}
-
-#         if len(self.productrow['SKU']) > 0:
-#             # something exists in  'SKU',
-#             self.productValues["Sku"] = self.productrow["SKU"]
-
-#         if len(self.productrow['Allow Purchases']) > 0:
-#             # something exists in  'Allow Purchases',
-#             if self.productrow["Allow Purchases"] == "1":
-#                 self.productValues['Status']='1'
-#             else:
-#                 self.productValues['Status']='0'
-
-#         if len(self.productrow['Meta Description']) > 0:
-#             # something exists in  'Meta Description',
-#             self.productValues["ShortDescription"]=self.productrow['Meta Description']
-
-#         if len(self.productrow['GPS Manufacturer Part Number']) > 0:
-#             # something exists in  'GPS Manufacturer Part Number',
-#             # check with email and verify how to process
-#             # until then
-#             pass
-
-#         if len(self.productrow['Brand']) > 0:
-#             # something exists in  'Brand',
-#             # check if there is a category created callend
-#             # "Brands". If there is not, create it.
-#             # Create the category "Brands"/self.productrow['Brand']
-#             # and assign self to that category
-#             pass
-
-#         if len(self.productrow['Product Images']) > 0:
-#             # something exists in  'Product Images',
-#             self.imagurl=self.productrow["Product Images"][self.productrow["Product Images"].find('URL:')+4: self.productrow["Product Images"].find(',',self.productrow["Product Images"].find('URL:'))]
-
-#         if len(self.productrow['GPS Category']) > 0:
-#             # something exists in  'GPS Category',
-#             # check if there is a category created callend
-#             # "GPS Category". If there is not, create it.
-#             # Create the category "GPS Category"/self.productrow['GPS Category']
-#             # and assign self to that category
-#             pass
-
-#         if len(self.productrow['Category String']) > 0:
-#             # something exists in  'Category String',
-#             # This breaks down all of the categories
-#             # Process these as categories
-#             ##
-#             pass
-
-#         if len(self.productrow['Product Files']) > 0:
-#             # something exists in  'Product Files',
-#             ##unknown
-#             pass
-
-#         if len(self.productrow['Option Set']) > 0:
-#             # something exists in  'Option Set',
-#             # potential categories or options related.
-#             pass
-
-#         if len(self.productrow['Description']) > 0:
-#             # something exists in  'Description',
-#             self.productValues["Description"]=self.productrow['Description']
-
-#         if len(self.productrow['Price']) > 0:
-#             self.productValues["ProductPrice"] = self.productrow['Price']
-
-#         if len(self.productrow['Name']) > 0:
-#             # something exists in  'Name'
-#             self.productValues["ProductName"] = self.productrow['Name']
-
-#     def processoptions(self):
-#         for eachnum, eachoptionrow in enumerate(self.optionsrows):
-
-#             self.options[eachnum]={}
-#             if len(eachoptionrow['SKU']) > 0:
-#                 # something exists in  'SKU',
-#                 self.options[eachnum]['SKU']= eachoptionrow['SKU']
-
-#             if len(eachoptionrow['Allow Purchases']) > 0:
-#                 # something exists in  'Allow Purchases',
-#                 self.options[eachnum]['Allow Purchases']= eachoptionrow['Allow Purchases']
-
-#             if len(eachoptionrow['Meta Description']) > 0:
-#                 # something exists in  'Meta Description',
-#                 self.options[eachnum]['Meta Description']= eachoptionrow['Meta Description']
-
-#             if len(eachoptionrow['GPS Manufacturer Part Number']) > 0:
-#                 # something exists in  'GPS Manufacturer Part Number',
-#                 # check with email and verify how to process
-#                 # until then
-#                 self.options[eachnum]['GPS Manufacturer Part Number']= eachoptionrow['GPS Manufacturer Part Number']
-
-#             if len(eachoptionrow['Brand']) > 0:
-#                 # something exists in  'Brand',
-#                 # check if there is a category created callend
-#                 # "Brands". If there is not, create it.
-#                 # Create the category "Brands"/eachoptionrow['Brand']
-#                 # and assign self to that category
-#                 self.options[eachnum]['Brand']= eachoptionrow['Brand']
-
-#             if len(eachoptionrow['Product Images']) > 0:
-#                 # something exists in  'Product Images',
-#                 self.options[eachnum]['Product Images']= eachoptionrow['Product Images']
-
-#             if len(eachoptionrow['GPS Category']) > 0:
-#                 # something exists in  'GPS Category',
-#                 # check if there is a category created callend
-#                 # "GPS Category". If there is not, create it.
-#                 # Create the category "GPS Category"/eachoptionrow['GPS Category']
-#                 # and assign self to that category
-#                 self.options[eachnum]['GPS Category']= eachoptionrow['GPS Category']
-
-#             if len(eachoptionrow['Category String']) > 0:
-#                 # something exists in  'Category String',
-#                 # This breaks down all of the categories
-#                 # Process these as categories
-#                 ##
-#                 self.options[eachnum]['Category String']= eachoptionrow['Category String']
-
-#             if len(eachoptionrow['Product Files']) > 0:
-#                 # something exists in  'Product Files',
-#                 ##unknown
-#                 self.options[eachnum]['Product Files']= eachoptionrow['Product Files']
-
-#             if len(eachoptionrow['Option Set']) > 0:
-#                 # something exists in  'Option Set',
-#                 # potential categories or options related.
-#                 self.options[eachnum]['Option Set']= eachoptionrow['Option Set']
-
-#             if len(eachoptionrow['Description']) > 0:
-#                 # something exists in  'Description',
-#                 self.options[eachnum]['Description']= eachoptionrow['Description']
-
-#             if len(eachoptionrow['Price']) > 0:
-#                 self.options[eachnum]['Price']= eachoptionrow['Price']
-
-#             if len(eachoptionrow['Name']) > 0:
-#                 # something exists in  'Name'
-#                 # In an option, the "Name" is where the actual options are listed.
-#                 # Their format is:
-#                 #    [somecode]This Option=thisvalue:someimagedatapotentially, This Option=thisvalue:someimagedatapotentially, This Option=thisvalue:someimagedatapotentially, [SOMEID]Other Option=otherValue
-#                 #
-#                 # We are going to handle this by recursively stripping off everything to and 
-#                 # including the first "]". We will then break off everything before the first '['
-#                 # We will work with that string and allow the loop to handle the next iteration.
-#                 mycopy=eachoptionrow['Name']
-#                 while len(mycopy) > 0:
-#                     mycopy=[mycopy.find(']')+1:]
-#                     if '[' in mycopy:
-#                         thisoption=mycopy[:mycopy.find('[')]
-#                         mycopy=mycopy[mycopy.find('['):]
-#                     else:
-#                         thisoption=mycopy
-#                         mycopy=mycopy[0:0]
-#                         # Since we are using slices, we may
-#                         # as well kill a string with a slice
-#                     #Theoretically we should only have a comma separated list of different variations 
-#                     # on available options.
-#                     for eachoptionvaluepair in mycopy.split(','):
-#                         optionname, optionvalue = eachoptionvaluepair.split("=")
-#                         ############################################################################
-#                         ############################################################################
-#                         ############################################################################
-#                         ## This is where you are.
-#                         ## I will be back after writing a good place to house and
-#                         ## sort the options
-#                         ##
-#                 self.options[eachnum]['Name']= eachoptionrow['Name']
-
-
-
-# class temoption(object):
-
-#     def __init__(self, optionname, ProductId):
-#         global temoptionqueue
-#         global temoptionqueuecounter
-#         self.ProductId=ProductId
-#         self.internalid=id_generator()
-#         self.Name=optionname
-#         self.Id=None
-#         self.Idset=False
-#         self.getid()
-
-#     def getid(self):
-#         """Doing functionality like this allows things to be
-#         saved by a unique id, even if there is not one available
-#         """
-#         if self.Id is None:
-#             return self.internalid
-#         else:
-#             return self.Id
-
-
-# class temproduct(object):
-#     """This class is meant as a way to store information about
-#     a product as well as include the ability to notify child
-#     objects of a status change.
-#     """
-#     def __init__(self, productName):
-#         """
-#         I expect that every product will have a name. If a 
-#         product tries to get created without a name, we will
-#         report in it ... maybe
-#         """
-#         self.categories={} # (This is intended to store categories that the 
-#                            #  product is assigned to  
-#                            #        like self.categories["CategoryId"]=categoryPath)
-#         # Id           This will ID a unique product    
-#         # ProductName  This in conjunction with categories will define a unique category.
-#         #       As a note, there can only be two products with the same name/Sku, one with no category
-#         #       And one with a category.
-#         # Sku          This may factor in to play.     
-#         if productName is None:
-#             return "This attempt was a failure"
-#         self.ProductName=productName
-#         self.internalid=id_generator()
-#         self.Id=None
-#         self.Idset=False
-#         self.getid()
-
-
-#     def getid(self):
-#         """Doing functionality like this allows things to be
-#         saved by a unique id, even if there is not one available
-#         """
-#         if self.Id is None:
-#             return self.internalid
-#         else:
-#             return self.Id
-
-#     def __eq__(self, other):
-#         if self.getid()==other.getid():
-#             return True
-#         catsmatch= len(self.categories.keys())>0 is len(other.categories.keys())>0   # Basically, 
-#         # this checks to see if both of the products have categories or if
-#         # they both do not. Basically the statment says 
-#         #               [T/F] is [T/F]
-#         # and returns that.
-#         namesmatch=self.ProductName.lower().strip(' \n') is other.ProductName.lower().strip(' \n')
-#         return namesmatch and catsmatch
-
-
-
-
-
-
-
-
-# ####################################################################################################
-# ########        So, if you are reading down here, this is a place for my frequently used references
-# ########
-# ########           tables["ProductOptValue"]        tables["ProductOption"]
-# ########           ["Id"                            ["AllowSpaces"
-# ########           "IsDefault"                       "CanContain"
-# ########           "Label"                           "CanEndWith"
-# ########           "Name"                            "CanStartWith"
-# ########           "OptionIndex"                     "Id"
-# ########           "PriceAdjustment"                 "IsRequired"
-# ########           "ProductOptionId"                 "Label"
-# ########           "Sku"]                            "MaxChars"
-# ########                                             "MinChars"
-# ########                                             "Name"
-# ########                                             "OptionType"
-# ########                                             "Order"
-# ########                                             "ProductId"
-# ########                                             "TextMessage"]
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
-# ########
+# Option                                # OptionValue
+# if self.AllowSpaces is not None:      # self.Id=values["Id"]
+# if self.CanContain is not None:       # self.IsDefault=values["IsDefault"]
+# if self.CanEndWith is not None:       # self.Label=values["Label"]
+# if self.CanStartWith is not None:     # self.Name=values["Name"]
+# if self.Id is not None:               # self.OptionIndex=values["OptionIndex"]
+# if self.IsRequired is not None:       # self.PriceAdjustment=values["PriceAdjustment"]
+# if self.Label is not None:            # self.ProductOptionId=values["ProductOptionId"]
+# if self.MaxChars is not None:         # self.Sku=values["Sku"]
+# if self.MinChars is not None:
+# if self.Name is not None:
+# if self.OptionType is not None:
+# if self.Order is not None:
+# if self.ProductId is not None:
+# if self.TextMessage is not None:
