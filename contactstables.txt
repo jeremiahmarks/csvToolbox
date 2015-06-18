@@ -1,0 +1,77 @@
+                                                                    "Contact. A ddress1Type" : { "related" : [], "type" : ""String",                'permissions' : [   , "Read" ]  }
+                                                                 "Contact. A ddress2Street1" : { "related" : [], "type" : ""String",                'permissions' : , "Read" ]  }
+                                                                 "Contact. A ddress2Street2" : { "related" : [], "type" : ""String",                'permissions' : , "Read" ]  }
+                                                                    "Contact. A ddress2Type" : { "related" : [], "type" : ""String",                'permissions' : [  , "Read" ]  }
+                                                                 "Contact. A ddress3Street1" : { "related" : [], "type" : ""String",                'permissions' : , "Read" ]  }
+                                                                 "Contact. A ddress3Street2" : { "related" : [], "type" : ""String",                'permissions' : , "Read" ]  }
+                                                                    "Contact. A ddress3Type" : { "related" : [], "type" : ""String",                'permissions' : [  , "Read" ]  }
+                                                                     "Contact. A nniversary" : { "related" : [], "type" : ""Date",                'permissions' : [   , "Read" ]  }
+                                                                   "Contact. A ssistantName" : { "related" : [], "type" : ""String",                'permissions' : [ , "Read" ]  }
+                                                                  "Contact. A ssistantPhone" : { "related" : [], "type" : ""String",                'permissions' : [, "Read" ]  }
+                                                              "Contact. B illingInformation" : { "related" : [], "type" : ""String",                'permissions',  [ "Read"        ]  }
+                                                                        "Contact. B irthday" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                            "Contact. C ity" : { "related" : [], "type" : ""Sring",                'permissions' : [          , "Read" ]  }
+                                                                           "Contact. C ity2" : { "related" : [], "type" : ""tring",                'permissions' : [         , "Read" ]  }
+                                                                           "Contact. C ity3" : { "related" : [], "type" : ""tring",                'permissions' : [         , "Read" ]  }
+                                                                         "Contact. C ompany" : { "related" : [], "type" : ""String",                'permissions' : [       , "Read" ]  }
+                                                                       "Contact. C ompanyID" : { "related" : [], "type" : ""Id",                'permissions' : [     , "Read" ]  }
+                                                                    "Contact. C ontactNotes" : { "related" : [], "type" : ""String",                'permissions' : [  , "Read" ]  }
+                                                                     "Contact. C ontactType" : { "related" : [], "type" : ""String",                'permissions' : [   , "Read" ]  }
+                                                                         "Contact. C ountry" : { "related" : [], "type" : ""String",                'permissions' : [       , "Read" ]  }
+                                                                        "Contact. C ountry2" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                        "Contact. C ountry3" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                       "Contact. C reatedBy" : { "related" : [], "type" : ""Id",                'permissions' : [     , "Read" ]  }
+                                                                     "Contact. D ateCreated" : { "related" : [], "type" : "DateTime",                  'permissions' : [   , "Read" ]  }
+                                                                           "Contact. E mail" : { "related" : [], "type" : ""tring",                'permissions' : [         , "Read" ]  }
+                                                                   "Contact. E mailAddress2" : { "related" : [], "type" : ""String",                'permissions' : [ , "Read" ]  }
+                                                                   "Contact. E mailAddress3" : { "related" : [], "type" : ""String",                'permissions' : [ , "Read" ]  }
+                                                                            "Contact. F ax1" : { "related" : [], "type" : ""Sring",                'permissions' : [          , "Read" ]  }
+                                                                        "Contact. F ax1Type" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                            "Contact. F ax2" : { "related" : [], "type" : ""Sring",                'permissions' : [          , "Read" ]  }
+                                                                        "Contact. F ax2Type" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                       "Contact. F irstName" : { "related" : [], "type" : ""String",                'permissions' : [     , "Read" ]  }
+                                                                          "Contact. G roups" : { "related" : [], "type" :"" String",                  'permissions' : [        , "Read" ]  }
+                                                                               "Contact. Id" : { "related" : [], "type" :"" Id",                  'permissions' : [            , "Read" ]  }
+                                                                        "Contact. J obTitle" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                        "Contact. L astName" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                     "Contact. L astUpdated" : { "related" : [], "type" : ""String",                'permissions' : [   , "Read" ]  }
+                                                                   "Contact. L astUpdatedBy" : { "related" : [], "type" : ""String",                'permissions' : [ , "Read" ]  }
+                                                                      "Contact. L eadsource" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                      "Contact. M iddleName" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                        "Contact. N ickname" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                         "Contact. O wnerID" : { "related" : [], "type" : ""Id",                'permissions' : [       , "Read" ]  }
+                                                                          "Contact. P hone1" : { "related" : [], "type" :"" String",                  'permissions' : [        , "Read" ]  }
+                                                                       "Contact. P hone1Ext" : { "related" : [], "type" : ""String",                'permissions' : [     , "Read" ]  }
+                                                                      "Contact. P hone1Type" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                          "Contact. P hone2" : { "related" : [], "type" :"" String",                  'permissions' : [        , "Read" ]  }
+                                                                       "Contact. P hone2Ext" : { "related" : [], "type" : ""String",                'permissions' : [     , "Read" ]  }
+                                                                      "Contact. P hone2Type" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                          "Contact. P hone3" : { "related" : [], "type" :"" String",                  'permissions' : [        , "Read" ]  }
+                                                                       "Contact. P hone3Ext" : { "related" : [], "type" : ""String",                'permissions' : [     , "Read" ]  }
+                                                                      "Contact. P hone3Type" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                          "Contact. P hone4" : { "related" : [], "type" :"" String",                  'permissions' : [        , "Read" ]  }
+                                                                       "Contact. P hone4Ext" : { "related" : [], "type" : ""String",                'permissions' : [     , "Read" ]  }
+                                                                      "Contact. P hone4Type" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                          "Contact. P hone5" : { "related" : [], "type" : ""String",                  'permissions' : [        , "Read" ]  }
+                                                                       "Contact. P hone5Ext" : { "related" : [], "type" : ""String",                'permissions' : [     , "Read" ]  }
+                                                                      "Contact. P hone5Type" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                      "Contact. P ostalCode" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                     "Contact. P ostalCode2" : { "related" : [], "type" : ""String",                'permissions' : [   , "Read" ]  }
+                                                                     "Contact. P ostalCode3" : { "related" : [], "type" : ""String",                'permissions' : [   , "Read" ]  }
+                                                                    "Contact. R eferralCode" : { "related" : [], "type" : ""String",                'permissions' : [  , "Read" ]  }
+                                                                      "Contact. S pouseName" : { "related" : [], "type" : ""String",                'permissions' : [    , "Read" ]  }
+                                                                           "Contact. S tate" : { "related" : [], "type" : ""tring",                'permissions' : [         , "Read" ]  }
+                                                                          "Contact. S tate2" : { "related" : [], "type" : ""String",                  'permissions' : [        , "Read" ]  }
+                                                                          "Contact. S tate3" : { "related" : [], "type" : ""String",                  'permissions' : [        , "Read" ]  }
+                                                                  "Contact. S treetAddress1" : { "related" : [], "type" : ""String",                'permissions' : [, "Read" ]  }
+                                                                  "Contact. S treetAddress2" : { "related" : [], "type" : ""String",                'permissions' : [, "Read" ]  }
+                                                                          "Contact. S uffix" : { "related" : [], "type" : ""String",                  'permissions' : [        , "Read" ]  }
+                                                                           "Contact. T itle" : { "related" : [], "type" : ""tring",                'permissions' : [         , "Read" ]  }
+                                                                         "Contact. W ebsite" : { "related" : [], "type" : ""String",                'permissions' : [       , "Read" ]  }
+                                                                        "Contact. Z ipFour1" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                        "Contact. Z ipFour2" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                        "Contact. Z ipFour3" : { "related" : [], "type" : ""String",                'permissions' : [      , "Read" ]  }
+                                                                          "ContactGroup      : { related   " : [], "type": ""St                ring",'permissions' : [                         "Read"    ]  }
+                                                                          "      ContactId   : { "relate   d" : [], "type"" : "                Id",'permissions' : [                         "Read"    ]  }
+                                                                      "      DateCreated     : { rela te   d" : [], "type"" : "                DateTime",'permissions' : [                         "Read"    ]  }
+                                                                              "      GroupId : { "relate   d" : [], "type"" : "                Id",'permissions' : [                         "Read"    ]  }       

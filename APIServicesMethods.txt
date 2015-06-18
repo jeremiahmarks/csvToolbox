@@ -1,0 +1,119 @@
+      AffiliateProgramService                      getAffiliatesByProgram
+      AffiliateProgramService                     getProgramsForAffiliate
+      AffiliateProgramService             getResourcesForAffiliateProgram
+
+             AffiliateService                getRedirectLinksForAffiliate
+
+          APIAffiliateService                                affClawbacks
+          APIAffiliateService                              affCommissions
+          APIAffiliateService                                  affPayouts
+          APIAffiliateService                            affRunningTotals
+          APIAffiliateService                                  affSummary
+
+              APIEmailService                            addEmailTemplate
+              APIEmailService                                 attachEmail
+              APIEmailService                            getEmailTemplate
+              APIEmailService                                getOptStatus
+              APIEmailService                                       optIn
+              APIEmailService                                      optOut
+              APIEmailService                                   sendEmail
+              APIEmailService                                   sendEmail
+              APIEmailService                         updateEmailTemplate
+
+               ContactService                                         add
+               ContactService                               addToCampaign
+               ContactService                                  addToGroup
+               ContactService                             addWithDupCheck
+               ContactService                                 findByEmail
+               ContactService                         getNextCampaignStep
+               ContactService                                        load
+               ContactService                                       merge
+               ContactService                               pauseCampaign
+               ContactService                          removeFromCampaign
+               ContactService                             removeFromGroup
+               ContactService                      rescheduleCampaignStep
+               ContactService                    resumeCampaignForContact
+               ContactService                           runActionSequence
+               ContactService                                      update
+
+                  DataService                                         add
+                  DataService                              addCustomField
+                  DataService                            authenticateUser
+                  DataService                                       count
+                  DataService                                      delete
+                  DataService                                 findByField
+                  DataService                          getAppointmentICal
+                  DataService                               getAppSetting
+                  DataService                                        load
+                  DataService                                       query
+                  DataService                                      update
+                  DataService                           updateCustomField
+
+              DiscountService     addCategoryAssignmentToCategoryDiscount
+              DiscountService                         addCategoryDiscount
+              DiscountService                                addFreeTrial
+              DiscountService                       addOrderTotalDiscount
+              DiscountService                     addProductTotalDiscount
+              DiscountService                    addShippingTotalDiscount
+              DiscountService   getCategoryAssignmentsForCategoryDiscount
+              DiscountService                         getCategoryDiscount
+              DiscountService                                getFreeTrial
+              DiscountService                       getOrderTotalDiscount
+              DiscountService                     getProductTotalDiscount
+              DiscountService                    getShippingTotalDiscount
+
+                  FileService                              getDownloadUrl
+                  FileService                                     getFile
+                  FileService                                  renameFile
+                  FileService                                 replaceFile
+                  FileService                                  uploadFile
+
+                FunnelService                                 achieveGoal
+
+               InvoiceService                            addManualPayment
+               InvoiceService                  addOrderCommissionOverride
+               InvoiceService                                addOrderItem
+               InvoiceService                              addPaymentPlan
+               InvoiceService                           addRecurringOrder
+               InvoiceService                         calculateAmountOwed
+               InvoiceService                               chargeInvoice
+               InvoiceService                            createBlankOrder
+               InvoiceService                   createInvoiceForRecurring
+               InvoiceService                               deleteInvoice
+               InvoiceService                          deleteSubscription
+               InvoiceService                        getAllPaymentOptions
+               InvoiceService                       getAllShippingOptions
+               InvoiceService                                 getPayments
+               InvoiceService                          locateExistingCard
+               InvoiceService                              recalculateTax
+               InvoiceService              updateJobRecurringNextBillDate
+               InvoiceService                          validateCreditCard
+               InvoiceService                          validateCreditCard
+
+                 OrderService                                  placeOrder
+
+               ProductService                        deactivateCreditCard
+               ProductService                           decreaseInventory
+               ProductService                          decrementInventory
+               ProductService                                getInventory
+               ProductService                           increaseInventory
+               ProductService                          incrementInventory
+
+                SearchService                         getAllReportColumns
+                SearchService                   getAvailableQuickSearches
+                SearchService                       getDefaultQuickSearch
+                SearchService                       getSavedSearchResults
+                SearchService              getSavedSearchResultsAllFields
+                SearchService                                 quickSearch
+
+              ShippingService                       getAllShippingOptions
+              ShippingService                   getFlatRateShippingOption
+              ShippingService              getOrderQuantityShippingOption
+              ShippingService                 getOrderTotalShippingOption
+              ShippingService                 getOrderTotalShippingRanges
+              ShippingService               getProductBasedShippingOption
+              ShippingService                        getUpsShippingOption
+              ShippingService                getWeightBasedShippingOption
+
+               WebFormService                                     getHTML
+               WebFormService                                      getMap

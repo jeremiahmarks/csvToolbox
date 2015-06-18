@@ -1,0 +1,2178 @@
+
+
+def notimplementedinameaningfulwayyet(sorry):
+    class Authentication(object):
+        """Authentication
+        <p>The Infusionsoft XML-RPC API uses a fairly standard implementation of OAuth 2.0 in order to provide authentication to all API endpoints. In the past, the Infusionsoft API has relied on a simple token based system; while those tokens will remain active until some date in the future, any new implementations will be required to use OAuth for all requests. Rather than re-explain OAuth again, it is more useful to provide a series of documents that have already been created and demonstrate the OAuth protocol, how to implement it in your code, how to troubleshoot, and how to ease development. Before that, though, it is important to have the authorization destinations and necessary details.</p>
+                """
+
+        ["Authentication"].request-permission():   
+                            <h4>Arguments</h4>
+
+                                    <b>client_id:</b>   string  (required)
+                                    <p>Application client ID  </p>
+                                    <b>redirect_uri:</b>   string  (required)
+                                    <p>This is the callback URL that Infusionsoft will redirect the users back to after authorization (must be HTTPS). The redirect_uri must be a registered URL in your application. We will not redirect users to any other URLs, so it is important this be properly setup before any authentication attempts.  </p>
+                                    <b>response_type:</b>   string  (required)
+                                    <p>The desired grant type, as per the OAuth 2.0 spec. The only current valid value is response_type=code  Defaults to code<br>
+
+                                    <b>scope:</b>   string
+                                    <p>The scopes required by your application. The only current valid value is scope=full  Defaults to full<br>
+
+                                    <h4>Returns</h4>
+                                    <p>Once the user has logged into their Infusionsoft account and authorized your application, they will be redirected back to your application at your specified redirect_uri with a code URL parameter that is used to request an access token.</p>
+        ["Authentication"].request-an-access-token():  
+                            <h4>Arguments</h4>
+
+                                    <b>client_id:</b>   string  (required)
+                                    <p>Your application's client ID  </p>
+                                    <b>client_secret:</b>   string  (required)
+                                    <p>Your application's client secret  </p>
+                                    <b>code:</b>   string  (required)
+                                    <p>The code returned when the user was redirected back to your application  </p>
+                                    <b>grant_type:</b>   string  (required)
+                                    <p>The desired grant type, as per the OAuth 2.0 spec. The only current valid value is grant_type=authorization_code  Defaults to authorization_code<br>
+
+                                    <b>redirect_uri:</b>   string  (required)
+                                    <p>The redirect URL from the original authorization request  </p>
+                                    <h4>Returns</h4>
+                                    <p>The <code>access_token</code> is the token you will use to authenticate requests to the Infusionsoft API, and it expires after the time in the <code>expires_in</code> field (in seconds). In order to get a new valid access token after one has expired, you must use the <code>refresh_token</code> to request a new access token.</p>
+
+
+
+        ["Authentication"].refresh-an-access-token():  
+                            <br>
+                            <h4>Arguments</h4>
+
+                                    <b>grant_type:</b>   string  (required)
+                                    <p>The desired grant type, as per the OAuth 2.0 spec. The only current valid value is <code>refresh_token</code>  Defaults to refresh_token<br>
+
+                                    <b>refresh_token:</b>   string  (required)
+                                    <p>The refresh token provided when the most recent <code>access_token</code> was granted  </p>
+                                    <b>Header: Authorization:</b>   string  (required)
+                                    <p>The word "Basic" concatenated with a base64 encoded string of your <code>client_id</code>, a colon, and your <code>client_secret</code> passed via the <code>Authorization</code> header. <br><br>Example pseudo code: <code>'Basic' + base64_encode(CLIENT_ID + ':' + CLIENT_SECRET)</code>  </p>
+                                    <h4>Returns</h4>
+                                    <p>Provides a new <code>access_token</code> that you will use to authenticate subsequent requests to the Infusionsoft API. Like the originally granted token, this expires after the amount of time in the <code>expires_in</code> field (in seconds). You must use the newly provided <code>refresh_token</code> to request a subsequent new access token.
+
+class Affiliate(object):
+    """Affiliate
+    <p>The Affiliate Service is used to pull commission data and activities for affiliates. With this service, you have access to Clawbacks, Commissions, Payouts, Running Totals, and the Activity Summary. The methods in the Affiliate Service mirror the reports produced inside Infusionsoft. To manage affiliate information (ie Name, Phone, etc.) you will need to use the DataService.</p>
+            """
+
+["Affiliate"].retrieve-clawbacks():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>affiliateId:</b>   integer  (required)
+                            <p>The Id number for the affiliate record you would like the claw backs for  </p>
+                            <b>filterStartDate:</b>   dateTime  (required)
+                            <p>The starting date for the date range which you would like affiliate claw backs for  </p>
+                            <b>filterEndDate:</b>   dateTime  (required)
+                            <p>The ending date for the date range which you would like the affiliate claw backs for  </p>
+
+                        args = {
+                            "affiliateId"                               : ""
+                            "filterStartDate"                           : ""
+                            "filterEndDate"                             : ""
+                            }
+                        ISServer.APIAffiliateService(affClawbacks, args)
+
+["Affiliate"].retrieve-commissions():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>affiliateId:</b>   integer  (required)
+                            <p>The Id number for the affiliate record you would like the commissions for  </p>
+                            <b>filterStartDate:</b>   dateTime  (required)
+                            <p>The starting date for the date range which you would like affiliate commissions for  </p>
+                            <b>filterEndDate:</b>   dateTime  (required)
+                            <p>The ending date for the date range which you would like the affiliate commissions for  </p>
+
+                        args = {
+                            "affiliateId"                               : ""
+                            "filterStartDate"                           : ""
+                            "filterEndDate"                             : ""
+                            }
+                        ISServer.APIAffiliateService(affCommissions, args)
+
+["Affiliate"].retrieve-payments(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>affiliateId:</b>   integer  (required)
+                            <p>The Id number for the affiliate record you would like the claw backs for  </p>
+                            <b>filterStartDate:</b>   dateTime  (required)
+                            <p>The starting date for the date range which you would like affiliate payments for  </p>
+                            <b>filterEndDate:</b>   dateTime  (required)
+                            <p>The ending date for the date range which you would like the affiliate payments for  </p>
+
+                        args = {
+                            "affiliateId"                               : ""
+                            "filterStartDate"                           : ""
+                            "filterEndDate"                             : ""
+                            }
+                        ISServer.APIAffiliateService(affPayouts, args)
+
+["Affiliate"].retrieve-redirect-links():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>affiliateId:</b>   integer  (required)
+                            <p>The Id number for the affiliate record you would like the redirect links for  </p>
+
+                        args = {
+         "affiliateId" : ""}                         
+                            }
+                        ISServer.AffiliateService(getRedirectLinksForAffiliate, args)
+
+["Affiliate"].retrieve-a-summary-of-affiliate-statistics():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>affiliateId:</b>   integer  (required)
+                            <p>An array of Affiliate Id numbers you would like stats for  </p>
+                            <b>filterStartDate:</b>   string  (required)
+                            <p>The starting date for the date range which you would like affiliate stats for  </p>
+                            <b>filterEndDate:</b>   string  (required)
+                            <p>The ending date for the date range which you would like the affiliate stats for  </p>
+
+                        args = {
+                            "affiliateId"                               : ""
+                            "filterStartDate"                           : ""
+                            "filterEndDate"                             : ""
+                            }
+                        ISServer.APIAffiliateService(affSummary, args)
+
+["Affiliate"].retrieve-running-totals():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>affiliateIds:</b>   array  (required)
+                            <p>An integer array of the affiliate ID numbers that you would like balances for  </p>
+
+                        args = {
+        "affiliateIds" : ""}                         
+                            }
+                        ISServer.APIAffiliateService(affRunningTotals, args)
+
+
+class Affiliate(object):
+    """Affiliate
+    <p>The Affiliate Program Service allows access to some of features in the Referral Partner Center</p>
+            """
+["Affiliate"].program-retrieve-all-programs(): 
+["Affiliate"].program-retrieve-a-program-s-affiliates():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>programId:</b>   integer  (required)
+                            <p>The Referral Partner Commission Program ID  </p>
+
+                        args = {
+           "programId" : ""}                         
+                            }
+                        ISServer.AffiliateProgramService(getAffiliatesByProgram, args)
+
+["Affiliate"].program-retrieve-an-affiliate-s-programs():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>affiliateId:</b>   integer  (required)
+                            <p>The affiliate you want to get the programs for  </p>
+
+                        args = {
+         "affiliateId" : ""}                         
+                            }
+                        ISServer.AffiliateProgramService(getProgramsForAffiliate, args)
+
+["Affiliate"].program-retrieve-program-resources():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>programId:</b>   integer  (required)
+                            <p>The commission program you want resources from  </p>
+
+                        args = {
+           "programId" : ""}                         
+                            }
+                        ISServer.AffiliateProgramService(getResourcesForAffiliateProgram, args)
+
+
+class Contact(object):
+    """Contact
+    <p>The Contact service is used to manage contacts. You can add, update and find contacts in addition to managing follow up sequences, tags and action sets.</p>
+            """
+
+["Contact"].create-a-contact():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>data:</b>   array  (required)
+                            <p>An associative array of the data for this new contact record. The array key is the field name to store the value within  </p>
+
+                        args = {
+                "data" : ""}                         
+                            }
+                        ISServer.ContactService(add, args)
+
+["Contact"].create-a-contact-and-check-for-duplicates():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>data:</b>   array  (required)
+                            <p>An associative array of the data for this new contact record. The array key is the field name to store the value within.  </p>
+                            <b>dupCheckType:</b>   string  (required)
+                            <p>Determines how to consider a duplicate record. Options are: 'Email', 'EmailAndName', or 'EmailAndNameAndCompany'
+
+                        args = {
+                            "data"                                      : ""
+                            "dupCheckType"                              : ""
+                            }
+                        ISServer.ContactService(addWithDupCheck, args)
+
+["Contact"].retrieve-a-contact():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The Id number of the contact you would like to load data from  </p>
+                            <b>selectedFields:</b>   array  (required)
+                            <p>An array of strings where each string is the database field name of the field you would like sent back  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "selectedFields"                            : ""
+                            }
+                        ISServer.ContactService(load, args)
+
+["Contact"].update-a-contact():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The ID of the contact you wish to update  </p>
+                            <b>data:</b>   array  (required)
+                            <p>An associate array of the data for this contact. The array keys should be the field names you wish to update.  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "data"                                      : ""
+                            }
+                        ISServer.ContactService(update, args)
+
+["Contact"].merge-two-contacts():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The contact ID number you want to merge into  </p>
+                            <b>duplicateContactId:</b>   integer  (required)
+                            <p>The contact ID of the duplicate contact you would like to merge  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "duplicateContactId"                        : ""
+                            }
+                        ISServer.ContactService(merge, args)
+
+["Contact"].search-for-a-contact-by-an-email-address():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>email:</b>   string  (required)
+                            <p>The email address to search with  </p>
+                            <b>selectedFields:</b>   array  (required)
+                            <p>The contact fields you would like returned  </p>
+
+                        args = {
+                            "email"                                     : ""
+                            "selectedFields"                            : ""
+                            }
+                        ISServer.ContactService(findByEmail, args)
+
+["Contact"].add-a-tag-to-a-contact():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The ID of the contact you would like to add to a group  </p>
+                            <b>tagId:</b>   integer  (required)
+                            <p>The ID of the tag to add to the contact  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "tagId"                                     : ""
+                            }
+                        ISServer.ContactService(addToGroup, args)
+
+["Contact"].remove-a-tag-from-a-contact(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The Id number of the contact you would like to remove the tag from  </p>
+                            <b>tagId:</b>   integer  (required)
+                            <p>The tag ID. This is found on the Setup &gt; Tags menu  </p>
+                <div class="method-example">
+
+                    args = {
+                            "contactId"                                 : ""
+                            "tagId"                                     : ""
+                            }
+                        ISServer.ContactService(removeFromGroup, args)
+
+["Contact"].add-a-contact-to-a-follow-up-sequence():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The ID of the contact you would like to start the follow-up sequence for.  </p>
+                            <b>campaignId:</b>   integer  (required)
+                            <p>The ID of the follow-up sequence to start the contact on.  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "campaignId"                                : ""
+                            }
+                        ISServer.ContactService(addToCampaign, args)
+
+["Contact"].retrieve-a-contact-s-next-follow-up-sequence-step():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The Id number of the contact record you would like to get the next sequence step for  </p>
+                            <b>followUpSequenceId:</b>   integer  (required)
+                            <p>The follow-up sequence Id number you would like to get the next step for the given contact  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "followUpSequenceId"                        : ""
+                            }
+                        ISServer.ContactService(getNextCampaignStep, args)
+
+["Contact"].immediately-execute-a-follow-up-sequence-step-for-multiple-contacts(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactIds:</b>   array  (required)
+                            <p>An array of contact Id numbers you would like to reschedule the step for  </p>
+                            <b>sequenceStepId:</b>   integer  (required)
+                            <p>The ID of the particular sequence step you would like to reschedule  </p>
+
+                        args = {
+                            "contactIds"                                : ""
+                            "sequenceStepId"                            : ""
+                            }
+                        ISServer.ContactService(rescheduleCampaignStep, args)
+
+["Contact"].pause-a-follow-up-sequence-for-a-contact():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The Id number of the contact record you are pausing the sequence on  </p>
+                            <b>sequenceId:</b>   integer  (required)
+                            <p>The follow-up sequence Id number  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "sequenceId"                                : ""
+                            }
+                        ISServer.ContactService(pauseCampaign, args)
+
+["Contact"].resume-a-follow-up-sequence-for-a-contact():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The ID of the contact you would like to resume the campaign for  </p>
+                            <b>seqId:</b>   integer  (required)
+                            <p>The ID of the follow-up sequence to resume  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "seqId"                                     : ""
+                            }
+                        ISServer.ContactService(resumeCampaignForContact, args)
+
+["Contact"].remove-a-contact-from-a-follow-up-sequence():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The Id number of the contact you want to remove the sequence from  </p>
+                            <b>followUpSequenceId:</b>   integer  (required)
+                            <p>The ID number of the campaign sequence you would like to remove the contact from  </p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "followUpSequenceId"                        : ""
+                            }
+                        ISServer.ContactService(removeFromCampaign, args)
+
+["Contact"].run-an-action-set-for-a-contact(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The ID of the contact record you want to run the action set on  </p>
+                            <b>actionSetId:</b>   integer  (required)
+                            <p>The Id number of the action set you would like to run. This is found on the Setup &gt; Action Sets menu
+
+                        args = {
+                            "contactId"                                 : ""
+                            "actionSetId"                               : ""
+                            }
+                        ISServer.ContactService(runActionSequence, args)
+
+
+
+class Data(object):
+    """Data
+    <p>The Data service is used to manipulate most data in Infusionsoft. It permits you to work on any available tables and has a wide range of uses.
+                    To manage affiliate information (i.e. Name, Phone, etc.) you will need to use the Data service.</p>
+                """
+
+["Data"].create-a-record():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>table:</b>   string  (required)
+                            <p>The Infusionsoft database table name  </p>
+                            <b>values:</b>   struct  (required)
+                            <p>An associative array of data you would like stored in this new row in the table  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an integer representing the ID of the new record.</p>
+
+
+
+                        args = {
+                            "table"                                     : ""
+                            "values"                                    : ""
+                            }
+                        ISServer.DataService(add, args)
+
+["Data"].retrieve-a-record():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>table:</b>   string  (required)
+                            <p>Infusionsoft database table name from which you want to load a record  </p>
+                            <b>recordID:</b>   integer  (required)
+                            <p>The unique Id number for the record you would like to load  </p>
+                            <b>fields:</b>   array  (required)
+                            <p>The fields you would like returned from this row in the database  </p>
+                            <h4>Returns</h4>
+                            <p>The specified fields for the given record.</p>
+
+                        args = {
+                            "table"                                     : ""
+                            "recordID"                                  : ""
+                            "fields"                                    : ""
+                            }
+                        ISServer.DataService(load, args)
+
+["Data"].find-a-record-by-matching-a-specific-field(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>table:</b>   string  (required)
+                            <p>The Infusionsoft database table name  </p>
+                            <b>limit:</b>   integer  (required)
+                            <p>The number of records you would like returned. The maximum possible is 1000.  </p>
+                            <b>page:</b>   integer  (required)
+                            <p>The page of results you would like returned. The first page is page 0 (loop through pages to get more than 1000 records).  </p>
+                            <b>fieldName:</b>   string  (required)
+                            <p>The name of the field to search on  </p>
+                            <b>fieldValue:</b>   string  (required)
+                            <p>The value stored in the field you would like to search on  </p>
+                            <b>returnFields:</b>   array  (required)
+                            <p>The fields you would like returned from the table you are searching on  </p>
+                            <h4>Returns</h4>
+                            <p>Returns one object per result found. The result will contain all fields specified in the request along with their corresponding value.</p>
+
+
+
+                        args = {
+                            "table"                                     : ""
+                            "limit"                                     : ""
+                            "page"                                      : ""
+                            "fieldName"                                 : ""
+                            "fieldValue"                                : ""
+                            "returnFields"                              : ""
+                            }
+                        ISServer.DataService(findByField, args)
+
+["Data"].query-a-data-table(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>table:</b>   string  (required)
+                            <p>The table to query on  </p>
+                            <b>limit:</b>   integer  (required)
+                            <p>The number of records to retrieve, a maximum of 1000  </p>
+                            <b>page:</b>   integer  (required)
+                            <p>Page of data to request (in case there are more than 1000 records).Paging starts with 0.  </p>
+                            <b>queryData:</b>   struct  (required)
+                            <p>A struct containing query data. The key is the field to search on, and the value is the data to look for. % is the wild card operator and all searches are case insensitive. If you would like to query for an empty(null) field, use ~null~ in your query parameter, such as ‘FirstName' =&gt; ‘~null~'  </p>
+                            <b>selectedFields:</b>   array  (required)
+                            <p>Fields the query should return  </p>
+                            <b>orderBy:</b>   string
+                            <p>The field which the results should be sorted by  </p>
+                            <b>ascending:</b>   boolean
+                            <p>Changes the order of results to ascending instead of descending  Defaults to false<br>
+                            <h4>Returns</h4>
+                            <p>Returns an array of objects, one per result found by the query. The object will contain all fields specified by the selected fields along with their corresponding values.</p>
+
+                        args = {
+                            "table"                                     : ""
+                            "limit"                                     : ""
+                            "page"                                      : ""
+                            "queryData"                                 : ""
+                            "selectedFields"                            : ""
+                            "orderBy"                                   : ""
+                            "ascending"                                 : ""
+                            }
+                        ISServer.DataService(query, args)
+
+["Data"].update-a-record():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>table:</b>   string  (required)
+                            <p>The Infusionsoft database table name  </p>
+                            <b>recordID:</b>   integer  (required)
+                            <p>The ID of the record to update  </p>
+                            <b>values:</b>   struct  (required)
+                            <p>An associative array of data to update  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an ID of the successfully updated record.</p>
+
+                        args = {
+                            "table"                                     : ""
+                            "recordID"                                  : ""
+                            "values"                                    : ""
+                            }
+                        ISServer.DataService(update, args)
+
+["Data"].delete-a-record():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>table:</b>   string  (required)
+                            <p>The table you would like to delete the record from  </p>
+                            <b>ID:</b>   integer  (required)
+                            <p>The ID of the record to delete  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a boolean true if successful; false otherwise.</p>
+
+
+
+                        args = {
+                            "table"                                     : ""
+                            "ID"                                        : ""
+                            }
+                        ISServer.DataService(delete, args)
+
+["Data"].count-a-data-table-s-records():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>table:</b>   string  (required)
+                            <p>The table to count the records on  </p>
+                            <b>queryData:</b>   struct  (required)
+                            <p>A struct containing query data. The key is the field to search on, and the value is the data to look for. % is the wild card operator and all searches are case insensitive. If you would like to query for an empty(null) field, use ~null~ in your query parameter, such as ‘FirstName' =&gt; ‘~null~'  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an integer count of the number of records that match the query.</p>
+
+                        args = {
+                            "table"                                     : ""
+                            "queryData"                                 : ""
+                            }
+                        ISServer.DataService(count, args)
+
+["Data"].create-a-custom-field():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>customFieldType:</b>   string  (required)
+                            <p>Where the custom field will be used inside Infusionsoft. Options include Contact, Company, Affiliate, Task/Appt/Note, Order, Subscription, or Opportunity  </p>
+                            <b>displayName:</b>   string  (required)
+                            <p>The label/name of this new custom field  </p>
+                            <b>dataType:</b>   string  (required)
+                            <p>What type of data this field will support. Text, Dropdown, TextArea, etc.  </p>
+                            <b>headerID:</b>   integer  (required)
+                            <p>The ID of the custom field header you want this field to appear under. Customer headers are located on custom tabs.  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the ID of the new field</p>
+
+                        args = {
+                            "customFieldType"                           : ""
+                            "displayName"                               : ""
+                            "dataType"                                  : ""
+                            "headerID"                                  : ""
+                            }
+                        ISServer.DataService(addCustomField, args)
+
+["Data"].update-a-custom-field():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>customFieldId:</b>   integer  (required)
+                            <p>ID number of the custom field you would like to update  </p>
+                            <b>values:</b>   struct  (required)
+                            <p>The values for the given custom field  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a boolean true if successfully updated.</p>
+
+                        args = {
+                            "customFieldId"                             : ""
+                            "values"                                    : ""
+                            }
+                        ISServer.DataService(updateCustomField, args)
+
+["Data"].retrieve-an-appointment-s-icalendar-file():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>appointmentId:</b>   integer  (required)
+                            <p>The ID of the appointment to retrieve an iCalendar file for  </p>
+
+                        args = {
+                            "appointmentId"                             : ""
+                            }
+                        ISServer.DataService(getAppointmentICal, args)
+
+["Data"].retrieve-application-setting():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>module:</b>   string  (required)
+                            <p>The application module this setting belongs to  </p>
+                            <b>setting:</b>   string  (required)
+                            <p>The database name of the setting to retrieve  </p>
+
+                        args = {
+                            "module"                                    : ""
+                            "setting"                                   : ""
+                            }
+                        ISServer.DataService(getAppSetting, args)
+
+["Data"].validate-a-user-s-credentials():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>username:</b>   string  (required)
+                            <p>The username of the user to validate  </p>
+                            <b>passwordHash:</b>   string  (required)
+                            <p>An MD5 hash of the Infusionsoft user's password  </p>
+                            <h4>Returns</h4>
+                            <p>Valid credentials will return a user ID; otherwise returns an error.</p>
+
+
+
+                        args = {
+                            "username"                                  : ""
+                            "passwordHash"                              : ""
+                            }
+                        ISServer.DataService(authenticateUser, args)
+
+class Discount(object):
+    """Discount
+    <p>The Discount service is used to manage products. You can add, update and find products in addition to managing follow up sequences, tags and action sets.</p>
+            """
+
+["Discount"].create-an-order-discount():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>name:</b>   string  (required)
+                            <p>Description for commission  </p>
+                            <b>applyDiscountToCommission:</b>   integer  (required)
+                            <p>Boolean of whether to apply the discount to the commission  </p>
+                            <b>percentOrAmt:</b>   integer  (required)
+                            <p>A value of 1 is for percentage, whereas a value of 0 is for an amount  </p>
+                            <b>payType:</b>   string  (required)
+                            <p>Value of either "gross" or "net" determines how to apply the discount  </p>
+
+
+                        argsrgs= {       
+                            "name"         : "",                        ":                                "percentOrAmt":                                "                                                      payType":   
+ 
+                            }
+                        ISServer.DiscountService(addOrderTotalDiscount, args)
+
+["Discount"].retrieve-an-order-s-total-discount(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>ID:</b>   integer  (required)
+                            <p>The ID of the discount to retrieve  </p>
+
+                        args = {
+                  "ID" : ""}                         
+                            }
+                        ISServer.DiscountService(getOrderTotalDiscount, args)
+
+["Discount"].create-a-free-trial-on-a-subscription():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>name:</b>   string  (required)
+                            <p>The name of the free trial  </p>
+                            <b>description:</b>   string  (required)
+                            <p>The description for free trial  </p>
+                            <b>freeTrialDays:</b>   integer  (required)
+                            <p>The number of days free trial last  </p>
+                            <b>hidePrice:</b>   integer  (required)
+                            <p>The option to show or hide price  </p>
+                            <b>subscriptionPlanID:</b>   integer  (required)
+                            <p>The ID of the subscription to add the free trial to  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a boolean "true" if successful </p>
+
+                        args = {
+                            "name"                                      : ""
+                            "description"                               : ""
+                            "freeTrialDays"                             : ""
+                            "hidePrice"                                 : ""
+                            "subscriptionPlanID"                        : ""
+                            }
+                        ISServer.DiscountService(addFreeTrial, args)
+
+["Discount"].retrieve-a-subscription-s-free-trial():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>trialId:</b>   integer  (required)
+                            <p>ID of the free trial to retrieve  </p>
+
+                        args = {
+             "trialId" : ""}                         
+                            }
+                        ISServer.DiscountService(getFreeTrial, args)
+
+["Discount"].create-a-shipping-discount(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>name:</b>   string  (required)
+                            <p>Name of the discount  </p>
+                            <b>description:</b>   string  (required)
+                            <p>Description of the shipping discount  </p>
+                            <b>applyDiscountToCommission:</b>   integer  (required)
+                            <p>Integer value of 1 for true and 0 for false  </p>
+                            <b>percentOrAmt:</b>   integer  (required)
+                            <p>Integer value of 1 for percent and 0 for amount  </p>
+                            <b>amt:</b>   double  (required)
+                            <p>Amount of the discount  </p>
+
+                        args = {
+                            "name"                                      : ""
+                            "description"                               : ""
+                            "applyDiscountToCommission"                 : ""
+                            "percentOrAmt"                              : ""
+                            "amt"                                       : ""
+                            }
+                        ISServer.DiscountService(addShippingTotalDiscount, args)
+
+["Discount"].retrieve-a-shipping-discount():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>shippingDiscountID:</b>   integer  (required)
+                            <p>ID of the shipping discount to retrieve  </p>
+
+                        args = {
+  "shippingDiscountID" : ""}                         
+                            }
+                        ISServer.DiscountService(getShippingTotalDiscount, args)
+
+["Discount"].create-a-product-discount():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>name:</b>   string  (required)
+                            <p>The name of the discount  </p>
+                            <b>description:</b>   string  (required)
+                            <p>A description of the discount  </p>
+                            <b>applyDiscountToCommission:</b>   integer  (required)
+                            <p>Boolean whether to apply the discount to any commission on the product  </p>
+                            <b>productID:</b>   integer  (required)
+                            <p>The ID of the product to assign the discount to  </p>
+                            <b>percentOrAmt:</b>   integer  (required)
+                            <p>Integer defining whether to handle the discount as a percent (1) or flat amount (0)  </p>
+                            <b>amt:</b>   double  (required)
+                            <p>An integer amount of the discount  </p>
+
+                        args = {
+                            "name"                                      : ""
+                            "description"                               : ""
+                            "applyDiscountToCommission"                 : ""
+                            "productID"                                 : ""
+                            "percentOrAmt"                              : ""
+                            "amt"                                       : ""
+                            }
+                        ISServer.DiscountService(addProductTotalDiscount, args)
+
+["Discount"].retrieve-a-product-total-discount():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>productDiscountID:</b>   string  (required)
+                            <p>ID of the product discount  </p>
+
+                        args = {
+   "productDiscountID" : ""}                         
+                            }
+                        ISServer.DiscountService(getProductTotalDiscount, args)
+
+["Discount"].create-a-category-discount(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>name:</b>   string  (required)
+                            <p>The category discount name  </p>
+                            <b>description:</b>   string  (required)
+                            <p>The description of the category discount  </p>
+                            <b>applyDiscountToCommission:</b>   integer  (required)
+                            <p>Boolean integer to determine whether or not a discount is applied to commission  </p>
+                            <b>amt:</b>   integer  (required)
+                            <p>The amount of the discount  </p>
+
+                        args = {
+                            "name"                                      : ""
+                            "description"                               : ""
+                            "applyDiscountToCommission"                 : ""
+                            "amt"                                       : ""
+                            }
+                        ISServer.DiscountService(addCategoryDiscount, args)
+
+["Discount"].retrieve-a-category-discount():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>ID:</b>   integer  (required)
+                            <p>The ID of the category discount to retrieve  </p>
+
+                        args = {
+                  "ID" : ""}                         
+                            }
+                        ISServer.DiscountService(getCategoryDiscount, args)
+
+["Discount"].retrieve-a-category-discount-s-category-assignments():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>ID:</b>   integer  (required)
+                            <p>ID of the category discount  </p>
+
+                        args = {
+                  "ID" : ""}                         
+                            }
+                        ISServer.DiscountService(getCategoryAssignmentsForCategoryDiscount, args)
+
+["Discount"].assign-a-product-to-a-category-discount():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>ID:</b>   integer  (required)
+                            <p>The ID of the category discount  </p>
+                            <b>productID:</b>   integer  (required)
+                            <p>The ID of the product to assign the discount to  </p>
+
+                        args = {
+                            "ID"                                        : ""
+                            "productID"                                 : ""
+                            }
+                        ISServer.DiscountService(addCategoryAssignmentToCategoryDiscount, args)
+class Email(object):
+    """Email
+    <p>The Email service allows you to email your contacts as well as attaching emails sent elsewhere (this lets you send email from multiple services and still see all communications inside of Infusionsoft).</p>
+            """
+
+["Email"].opt-in-an-email-address():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>email:</b>   string  (required)
+                            <p>The email address to opt-in  </p>
+                            <b>optInReason:</b>   string  (required)
+                            <p>Why/how this email was opted-in  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a boolean true upon successful opt-in.</p>
+
+
+                        args = {
+                            "email"                                     : ""
+                            "optInReason"                               : ""
+                            }
+                        ISServer.APIEmailService(optIn, args)
+
+["Email"].opt-out-an-email-address():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>email:</b>   string  (required)
+                            <p>The email address to opt-out  </p>
+                            <b>optOutReason:</b>   string  (required)
+                            <p>Reason the address is being opt-out  </p>
+
+                        args = {
+                            "email"                                     : ""
+                            "optOutReason"                              : ""
+                            }
+                        ISServer.APIEmailService(optOut, args)
+
+["Email"].retrieve-an-email-s-opt-in-status(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>email:</b>   string  (required)
+                            <p>The email address you wish to retrieve the status of  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an integer value of 0 for opt out/non-marketable/soft bounce/hard bounce, 1 for single opt-in, or 2 for double opt-in.</p>
+
+
+                        args = {
+               "email" : ""}                         
+                            }
+                        ISServer.APIEmailService(getOptStatus, args)
+
+["Email"].create-an-email-template():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>templateName:</b>   string  (required)
+                            <p>The name of the template. This will be displayed within the Infusionsoft template library.  </p>
+                            <b>categories:</b>   string  (required)
+                            <p>The category to assign this template to  </p>
+                            <b>fromAddress:</b>   string  (required)
+                            <p>The email address the email should be sent as  </p>
+                            <b>toAddress:</b>   string  (required)
+                            <p>The email address this template sends to. In most circumstances, you'll want to set this to "~Contact.Email~" so that the template delivers to the specified contact upon sending.  </p>
+                            <b>ccAddress:</b>   string  (required)
+                            <p>Any email addresses to CC when an email from this template is sent  </p>
+                            <b>bccAddress:</b>   string  (required)
+                            <p>Any email addresses to BCC when an email from this template is sent  </p>
+                            <b>subject:</b>   string  (required)
+                            <p>The subject line of the email template  </p>
+                            <b>textBody:</b>   string  (required)
+                            <p>The content you would like sent in the body of the plain text version of this email template  </p>
+                            <b>htmlBody:</b>   string  (required)
+                            <p>The content you would like sent in the body of the HTML version of this email template  </p>
+                            <b>contentType:</b>   string  (required)
+                            <p>One of three options - HTML, Text, or Multipart  </p>
+                            <b>mergeContext:</b>   string  (required)
+                            <p>One of four options - Contact, Opportunity, Invoice, or CreditCard  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an ID of the created template.</p>
+
+                        args = {
+                            "templateName"                              : ""
+                            "categories"                                : ""
+                            "fromAddress"                               : ""
+                            "toAddress"                                 : ""
+                            "ccAddress"                                 : ""
+                            "bccAddress"                                : ""
+                            "subject"                                   : ""
+                            "textBody"                                  : ""
+                            "htmlBody"                                  : ""
+                            "contentType"                               : ""
+                            "mergeContext"                              : ""
+                            }
+                        ISServer.APIEmailService(addEmailTemplate, args)
+
+["Email"].retrieve-an-email-template():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>templateId:</b>   string  (required)
+                            <p>The ID number for the template you wish to retrieve details about  </p>
+
+                        args = {
+          "templateId" : ""}                         
+                            }
+                        ISServer.APIEmailService(getEmailTemplate, args)
+
+["Email"].update-an-email-template():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>templateName:</b>   string  (required)
+                            <p>The name of the template. This will be displayed within the Infusionsoft template library.  </p>
+                            <b>categories:</b>   string  (required)
+                            <p>The category to assign this template to  </p>
+                            <b>fromAddress:</b>   string  (required)
+                            <p>The email address the email should be sent as  </p>
+                            <b>toAddress:</b>   string  (required)
+                            <p>The email address this template sends to. In most circumstances, you'll want to set this to "~Contact.Email~" so that the template delivers to the specified contact upon sending.  </p>
+                            <b>ccAddress:</b>   string  (required)
+                            <p>Any email addresses to CC when an email from this template is sent  </p>
+                            <b>bccAddress:</b>   string  (required)
+                            <p>Any email addresses to BCC when an email from this template is sent  </p>
+                            <b>subject:</b>   string  (required)
+                            <p>The subject line of the email template  </p>
+                            <b>textBody:</b>   string  (required)
+                            <p>The content you would like sent in the body of the plain text version of this email template  </p>
+                            <b>htmlBody:</b>   string  (required)
+                            <p>The content you would like sent in the body of the HTML version of this email template  </p>
+                            <b>contentType:</b>   string  (required)
+                            <p>One of three options - HTML, Text, or Multipart  </p>
+                            <b>mergeContext:</b>   string  (required)
+                            <p>One of four options - Contact, Opportunity, Invoice, or CreditCard  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an ID of the updated template.</p>
+
+                        args = {
+                            "templateName"                              : ""
+                            "categories"                                : ""
+                            "fromAddress"                               : ""
+                            "toAddress"                                 : ""
+                            "ccAddress"                                 : ""
+                            "bccAddress"                                : ""
+                            "subject"                                   : ""
+                            "textBody"                                  : ""
+                            "htmlBody"                                  : ""
+                            "contentType"                               : ""
+                            "mergeContext"                              : ""
+                            }
+                        ISServer.APIEmailService(updateEmailTemplate, args)
+
+["Email"].send-an-email-from-a-template(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactList:</b>   array  (required)
+                            <p>An integer array of Contact Id numbers you would like to send this email to  </p>
+                            <b>templateID:</b>   string  (required)
+                            <p>The ID of the template to send  </p>
+
+                        args = {
+                            "contactList"                               : ""
+                            "templateID"                                : ""
+                            }
+                        ISServer.APIEmailService(sendEmail, args)
+
+["Email"].send-an-email(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactList:</b>   array  (required)
+                            <p>An array of Contact IDs to send this email to  </p>
+                            <b>fromAddress:</b>   string  (required)
+                            <p>The address the email will be sent from  </p>
+                            <b>toAddress:</b>   string  (required)
+                            <p>The address this email will be sent to. This typically should be the merge field "~Contact.Email~"  </p>
+                            <b>ccAddresses:</b>   string  (required)
+                            <p>A comma-separated string of email addresses to CC  </p>
+                            <b>bccAddresses:</b>   string  (required)
+                            <p>A comma-separated string of email addresses to BCC  </p>
+                            <b>contentType:</b>   string  (required)
+                            <p>HTML, Text, or Multipart (case sensitive)  </p>
+                            <b>subject:</b>   string  (required)
+                            <p>The subject line of the email  </p>
+                            <b>htmlBody:</b>   string  (required)
+                            <p>The HTML body of the email  </p>
+                            <b>textBody:</b>   string  (required)
+                            <p>The plain text body of the email  </p>
+                            <b>templateID:</b>   string
+                            <p>The ID of the template to send.  </p>
+                            <h4>Returns</h4>
+                            <p>Returns boolean true if the email has been successfully sent.</p>
+
+                        args = {
+                            "contactList"                               : ""
+                            "fromAddress"                               : ""
+                            "toAddress"                                 : ""
+                            "ccAddresses"                               : ""
+                            "bccAddresses"                              : ""
+                            "contentType"                               : ""
+                            "subject"                                   : ""
+                            "htmlBody"                                  : ""
+                            "textBody"                                  : ""
+                            "templateID"                                : ""
+                            }
+                        ISServer.APIEmailService(sendEmail, args)
+
+["Email"].retrieve-available-merge-fields():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>mergeContext:</b>   string  (required)
+                            <p>Contact, Opportunity, Invoice, or CreditCard  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an array of the available merge fields.</p>
+
+
+["Email"].manually-log-a-sent-email(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactId:</b>   integer  (required)
+                            <p>The ID of the contact to add this email history to  </p>
+                            <b>fromName:</b>   string  (required)
+                            <p>The name of the email sender  </p>
+                            <b>fromAddress:</b>   string  (required)
+                            <p>The address the email was sent from  </p>
+                            <b>toAddress:</b>   string  (required)
+                            <p>The address the email was sent to  </p>
+                            <b>ccAddresses:</b>   string  (required)
+                            <p>The addresses the email was CC'd to  </p>
+                            <b>bccAddresses:</b>   string  (required)
+                            <p>The addresses the email was BCC'd to  </p>
+                            <b>contentType:</b>   string  (required)
+                            <p>The content type of the email (Text, HTML, or Multipart)  </p>
+                            <b>subject:</b>   string  (required)
+                            <p>The subject line of the email  </p>
+                            <b>htmlBody:</b>   string  (required)
+                            <p>The HTML body of the email  </p>
+                            <b>textBody:</b>   string  (required)
+                            <p>The plain text body of the email  </p>
+                            <b>header:</b>   string  (required)
+                            <p>The email header information  </p>
+                            <b>receivedDate:</b>   string  (required)
+                            <p>The date this email was received. This value determines where the email displays in comparison to other sent messages.  </p>
+                            <b>sentDate:</b>   string  (required)
+                            <p>The date the email was sent  </p>
+                            <b>emailSentType:</b>   integer  (required)
+                            <p>A boolean integer value of 1 is used for marking the email as sent inside the contact history and 0 is used for marking the email as received  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a boolean true upon success.</p>
+
+                        args = {
+                            "contactId"                                 : ""
+                            "fromName"                                  : ""
+                            "fromAddress"                               : ""
+                            "toAddress"                                 : ""
+                            "ccAddresses"                               : ""
+                            "bccAddresses"                              : ""
+                            "contentType"                               : ""
+                            "subject"                                   : ""
+                            "htmlBody"                                  : ""
+                            "textBody"                                  : ""
+                            "header"                                    : ""
+                            "receivedDate"                              : ""
+                            "sentDate"                                  : ""
+                            "emailSentType"                             : ""
+                            }
+                        ISServer.APIEmailService(attachEmail, args)
+
+
+
+class File(object):
+    """File
+    <p>The FileService methods allow you to create and modify files inside of Infusionsoft.</p>
+            """
+
+["File"].upload-a-file():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>fileNmae:</b>   string  (required)
+                            <p>The name of the file to be uploaded  </p>
+                            <b>base64EncodedData:</b>   string  (required)
+                            <p>A base64 encoded string of the file data  </p>
+                            <b>contactID:</b>   integer
+                            <p>ID of the Contact to associate the file with  </p>
+
+                        args = {
+                            "fileNmae"                                  : ""
+                            "base64EncodedData"                         : ""
+                            "contactID"                                 : ""
+                            }
+                        ISServer.FileService(uploadFile, args)
+
+["File"].retrieve-a-file():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>fileID:</b>   integer  (required)
+                            <p>The ID of the file to return  </p>
+
+                        args = {
+              "fileID" : ""}                         
+                            }
+                        ISServer.FileService(getFile, args)
+
+["File"].retrieve-a-file-download-url():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>fileID:</b>   string  (required)
+                            <p>The ID of the file url to be returned  </p>
+
+                        args = {
+              "fileID" : ""}                         
+                            }
+                        ISServer.FileService(getDownloadUrl, args)
+
+["File"].replace-a-file(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>fileName:</b>   string  (required)
+                            <p>The name of the file to be uploaded  </p>
+                            <b>base64EncodedData:</b>   string  (required)
+                            <p>A base64 encoded string of the file data  </p>
+
+                        args = {
+                            "fileName"                                  : ""
+                            "base64EncodedData"                         : ""
+                            }
+                        ISServer.FileService(replaceFile, args)
+
+["File"].rename-a-file():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>fileID:</b>   string  (required)
+                            <p>ID of the file to be renamed  </p>
+                            <b>fileName:</b>   string  (required)
+                            <p>New file name  </p>
+
+                        args = {
+                            "fileID"                                    : ""
+                            "fileName"                                  : ""
+                            }
+                        ISServer.FileService(renameFile, args)
+class Funnel(object):
+    """Funnel
+    <p>The Funnel Service is used to add contacts to marketing sequences.</p>
+            """
+
+["Funnel"].achieve-a-goal():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>integration:</b>   string  (required)
+                            <p>The integration name of the goal  </p>
+                            <b>callName:</b>   string  (required)
+                            <p>The call name of the goal  </p>
+                            <b>contactID:</b>   integer  (required)
+                            <p>ID of the applicable contact  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the result of a goal being achieved.</p>
+
+                        args = {
+                            "integration"                               : ""
+                            "callName"                                  : ""
+                            "contactID"                                 : ""
+                            }
+                        ISServer.FunnelService(achieveGoal, args)
+class Invoice(object):
+    """Invoice
+    <p>The Invoice Service allows you to manage Infusionsoft eCommerce transactions.</p>
+            """
+
+["Invoice"].create-an-invoice():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactID:</b>   string  (required)
+                            <p>The ID of the contact to be invoiced  </p>
+                            <b>name:</b>   string  (required)
+                            <p>The name of the invoice, also used as the link within the Infusionsoft order interface  </p>
+                            <b>orderDate:</b>   dateTime  (required)
+                            <p>Date and time of the invoice  </p>
+                            <b>leadAffiliateID:</b>   integer  (required)
+                            <p>ID of the lead affiliate  </p>
+                            <b>saleAffiliateID:</b>   integer  (required)
+                            <p>ID of the sale affiliate  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an ID representing the newly created invoice.</p>
+
+                        args = {
+                            "contactID"                                 : ""
+                            "name"                                      : ""
+                            "orderDate"                                 : ""
+                            "leadAffiliateID"                           : ""
+                            "saleAffiliateID"                           : ""
+                            }
+                        ISServer.InvoiceService(createBlankOrder, args)
+
+["Invoice"].pay-an-invoice():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   integer  (required)
+                            <p>The ID of the invoice to pay  </p>
+                            <b>notes:</b>   string  (required)
+                            <p>A note about the payment  </p>
+                            <b>creditCardID:</b>   integer  (required)
+                            <p>The ID of the credit card to charge  </p>
+                            <b>merchantAccountID:</b>   integer  (required)
+                            <p>The ID of the merchant account to use to process the payment  </p>
+                            <b>bypassComissions:</b>   boolean  (required)
+                            <p>Whether this payment should count towards affiliate commissions  Defaults to false<br>
+                    <br>
+                            <h4>Returns</h4>
+                            <p>Returns a struct containing payment details.
+
+                    </p><ul>
+                    <li><strong>Successful:</strong> a boolean value as to whether the charge was successful</li>
+                    <li><strong>Code:</strong> The approval code: APPROVED, DECLINED, ERROR, SKIPPED (there was no balance to charge)</li>
+                    <li><strong>RefNum:</strong> If charge was successful, this is the reference number passed back by the merchant account</li>
+                    <li><strong>Message:</strong> Error message for the transaction, if applicable</li>
+                    </ul><p></p>
+
+                        args = {
+                            "invoiceID"                                 : ""
+                            "notes"                                     : ""
+                            "creditCardID"                              : ""
+                            "merchantAccountID"                         : ""
+                            "bypassComissions"                          : ""
+                            }
+                        ISServer.InvoiceService(chargeInvoice, args)
+
+["Invoice"].retrieve-invoice-payments():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   integer  (required)
+                            <p>ID of the invoice to retrieve payments for  </p>
+
+                        args = {
+           "invoiceID" : ""}                         
+                            }
+                        ISServer.InvoiceService(getPayments, args)
+
+["Invoice"].retrieve-invoice-amount-due(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   integer  (required)
+                            <p>ID of the invoice to retrieve the amount due on  </p>
+
+                        args = {
+           "invoiceID" : ""}                         
+                            }
+                        ISServer.InvoiceService(calculateAmountOwed, args)
+
+["Invoice"].add-an-item-to-an-invoice():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   integer  (required)
+                            <p>The ID of the invoice this line item is to be added to  </p>
+                            <b>productID:</b>   integer  (required)
+                            <p>The ID of the product to add to the Invoice. For a non-product, set the value to 0.  </p>
+                            <b>type:</b>   integer  (required)
+                            <p>The invoice item type as defined below
+                                <table>
+                                    <thead>
+                                        <tr>   <th>Type ID</th> <th>Description             </th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>   <td>   1   </td> <td>                Shipping</td></tr>
+                                        <tr>   <td>   2   </td> <td>                     Tax</td></tr>
+                                        <tr>   <td>   3   </td> <td>      Service &amp; Misc</td></tr>
+                                        <tr>   <td>   4   </td> <td>                 Product</td></tr>
+                                        <tr>   <td>   5   </td> <td>          Upsell Product</td></tr>
+                                        <tr>   <td>   6   </td> <td>          Finance Charge</td></tr>
+                                        <tr>   <td>   7   </td> <td>                 Special</td></tr>
+                                        <tr>   <td>   8   </td> <td>                 Program</td></tr>
+                                        <tr>   <td>   9   </td> <td>       Subscription Plan</td></tr>
+                                        <tr>   <td>   10  </td> <td>Special: Free Trial Days</td></tr>
+                                        <tr>   <td>   12  </td> <td>    Special: Order Total</td></tr>
+                                        <tr>   <td>   12  </td> <td>        Special: Product</td></tr>
+                                        <tr>   <td>   13  </td> <td>       Special: Category</td></tr>
+                                        <tr>   <td>   14  </td> <td>       Special: Shipping</td></tr>
+                                    </tbody>
+                                </table>
+
+                            <b>price:</b>   double  (required)
+                            <p>The price of the invoice item  </p>
+                            <b>quantity:</b>   integer  (required)
+                            <p>The quantity of invoice items to be added  </p>
+                            <b>notes:</b>   string  (required)
+                            <p>A description of the invoice item  </p>
+                            <h4>Returns</h4>
+                            <p>Returns "true" upon success.</p>
+
+                        args = {
+                            "invoiceID"                                 : ""
+                            "productID"                                 : ""
+                            "type"                                      : ""
+                            "price"                                     : ""
+                            "quantity"                                  : ""
+                            "notes"                                     : ""
+                            }
+                        ISServer.InvoiceService(addOrderItem, args)
+
+["Invoice"].add-a-payment-to-an-invoice(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   integer  (required)
+                            <p>ID of the invoice to add the payment to  </p>
+                            <b>amount:</b>   double  (required)
+                            <p>Amount of payment to add to the invoice  </p>
+                            <b>date:</b>   dateTime  (required)
+                            <p>Date the payment is made  </p>
+                            <b>description:</b>   string  (required)
+                            <p>Description of the payment  </p>
+                            <b>bypassCommissions:</b>   boolean  (required)
+                            <p>Whether this payment should count towards affiliate commissions.  </p>
+                            <h4>Returns</h4>
+                            <p>Returns true on success.</p>
+
+                        args = {
+                            "invoiceID"                                 : ""
+                            "amount"                                    : ""
+                            "date"                                      : ""
+                            "description"                               : ""
+                            "bypassCommissions"                         : ""
+                            }
+                        ISServer.InvoiceService(addManualPayment, args)
+
+["Invoice"].add-a-commission-to-an-invoice():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   integer  (required)
+                            <p>ID of the invoice to add the commission to  </p>
+                            <b>affiliateID:</b>   integer  (required)
+                            <p>ID of the affiliate to send the commission to  </p>
+                            <b>productID:</b>   integer  (required)
+                            <p>ID of the product the commission is for  </p>
+                            <b>percent:</b>   integer  (required)
+                            <p>The percentage paid for the product being sold  </p>
+                            <b>amount:</b>   double  (required)
+                            <p>The amount of the commission  </p>
+                            <b>payoutType:</b>   integer  (required)
+                            <p>An ID defining how the commission should be earned. A value of "4" will pay the commission up front, and a value of "5" will pay the commission after the customer payment is received.  </p>
+                            <b>description:</b>   string  (required)
+                            <p>Description of the commission  </p>
+                            <b>date:</b>   dateTime  (required)
+                            <p>Date the commission was generated  </p>
+                            <h4>Returns</h4>
+                            <p>Returns true upon success</p>
+
+                        args = {
+                            "invoiceID"                                 : ""
+                            "affiliateID"                               : ""
+                            "productID"                                 : ""
+                            "percent"                                   : ""
+                            "amount"                                    : ""
+                            "payoutType"                                : ""
+                            "description"                               : ""
+                            "date"                                      : ""
+                            }
+                        ISServer.InvoiceService(addOrderCommissionOverride, args)
+
+["Invoice"].calculate-invoice-tax():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   integer  (required)
+                            <p>ID of the invoice to calculate tax on  </p>
+                            <h4>Returns</h4>
+                            <p>Returns true upon success</p>
+
+                        args = {
+           "invoiceID" : ""}                         
+                            }
+                        ISServer.InvoiceService(recalculateTax, args)
+
+["Invoice"].delete-an-invoice():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   string  (required)
+                            <p>ID of the invoice to delete  </p>
+                            <h4>Returns</h4>
+                            <p>Returns true upon successful deletion.</p>
+
+                        args = {
+           "invoiceID" : ""}                         
+                            }
+                        ISServer.InvoiceService(deleteInvoice, args)
+
+["Invoice"].create-a-contact-subscription():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactID:</b>   integer  (required)
+                            <p>ID of the contact the subscription will be attached to  </p>
+                            <b>Allow Duplicate:</b>   boolean  (required)
+                            <p>Allows a duplicate subscription or not  </p>
+                            <b>subscriptionID:</b>   string  (required)
+                            <p>ID of the subscription to attach to the Contact  </p>
+                            <b>quantity:</b>   integer  (required)
+                            <p>Quantity of the subscription to add to the contact  </p>
+                            <b>price:</b>   double  (required)
+                            <p>Price to charge for the subscription  </p>
+                            <b>taxable:</b>   boolean  (required)
+                            <p>Whether or not to charge tax on the subscription  </p>
+                            <b>merchantAccountID:</b>   integer  (required)
+                            <p>ID of the merchant account to use to charge the subscription  </p>
+                            <b>creditCardID:</b>   integer  (required)
+                            <p>ID of the card to charge the subscription to  </p>
+                            <b>affiliateID:</b>   integer  (required)
+                            <p>ID of the sale affiliate. Set to "0" if there is no affiliate on the order.  </p>
+                            <b>trialPeriod:</b>   integer  (required)
+                            <p>Number of days the subscription will trial  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the ID of the newly created subscription.</p>
+
+                        args = {
+                            "contactID"                                 : ""
+           "                             Duplicate"    : ""
+                            "subscriptionID"                            : ""
+                            "quantity"                                  : ""
+                            "price"                                     : ""
+                            "taxable"                                   : ""
+                            "merchantAccountID"                         : ""
+                            "creditCardID"                              : ""
+                            "affiliateID"                               : ""
+                            "trialPeriod"                               : ""
+                            }
+                        ISServer.InvoiceService(addRecurringOrder, args)
+
+["Invoice"].create-a-subscription-invoice():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>subscriptionID:</b>   integer  (required)
+                            <p>ID of the subscription to create an invoice for  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the ID of the newly created invoice. Returns 0 if no invoices were generated.</p>
+
+                        args = {
+      "subscriptionID" : ""}                         
+                            }
+                        ISServer.InvoiceService(createInvoiceForRecurring, args)
+
+["Invoice"].update-subscription-billing-date():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>subscriptionID:</b>   integer  (required)
+                            <p>ID of the subscription to update  </p>
+                            <b>nextBillDate:</b>   date  (required)
+                            <p>New billing date  </p>
+
+                        args = {
+                            "subscriptionID"                            : ""
+                            "nextBillDate"                              : ""
+                            }
+                        ISServer.InvoiceService(updateJobRecurringNextBillDate, args)
+
+["Invoice"].delete-a-subscription():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>subscriptionID:</b>   string  (required)
+                            <p>ID of the subscription to delete  </p>
+                            <h4>Returns</h4>
+                            <p>Returns true upon success.</p>
+
+                        args = {
+      "subscriptionID" : ""}                         
+                            }
+                        ISServer.InvoiceService(deleteSubscription, args)
+
+["Invoice"].validate-a-new-credit-card():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>cardType:</b>   string  (required)
+                            <p>Credit card type (Visa, American Express, etc)  </p>
+                            <b>contactID:</b>   integer  (required)
+                            <p>ID of the contact to own the credit card  </p>
+                            <b>cardNumber:</b>   string  (required)
+                            <p>The card account number  </p>
+                            <b>expirationMonth:</b>   string  (required)
+                            <p>Two digit card expiration month  </p>
+                            <b>expirationYear:</b>   string  (required)
+                            <p>Four digit card expiration year  </p>
+                            <b>securityCode:</b>   string  (required)
+                            <p>Card security code  </p>
+
+                        args = {
+                            "cardType"                                  : ""
+                            "contactID"                                 : ""
+                            "cardNumber"                                : ""
+                            "expirationMonth"                           : ""
+                            "expirationYear"                            : ""
+                            "securityCode"                              : ""
+                            }
+                        ISServer.InvoiceService(validateCreditCard, args)
+
+["Invoice"].validate-an-existing-credit-card():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>cardID:</b>   integer  (required)
+                            <p>ID of the credit card to validate  </p>
+
+                        args = {
+              "cardID" : ""}                         
+                            }
+                        ISServer.InvoiceService(validateCreditCard, args)
+
+["Invoice"].retrieve-credit-card():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactID:</b>   integer  (required)
+                            <p>Contact ID to retrieve the credit card for  </p>
+                            <b>lastFour:</b>   string  (required)
+                            <p>Last 4 digits of the card to retrieve  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the credit card ID on success; 0 upon failure.</p>
+
+                        args = {
+                            "contactID"                                 : ""
+                            "lastFour"                                  : ""
+                            }
+                        ISServer.InvoiceService(locateExistingCard, args)
+
+["Invoice"].retrieve-available-shipping-options():
+
+                        args = 
+                            [argsn
+                                voice"].retrieve-available-payment-options():
+
+                        args = 
+                            [argsn
+                                voice"].create-a-custom-recurring-payment():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>invoiceID:</b>   integer  (required)
+                            <p>ID of the invoice to apply the payment plan to  </p>
+                            <b>autoCharge:</b>   boolean  (required)
+                            <p>Whether or not the payment plan should automatically charge or not  </p>
+                            <b>creditCardID:</b>   integer  (required)
+                            <p>ID of the card to charge  </p>
+                            <b>merchantAccountID:</b>   integer  (required)
+                            <p>ID of the merchant account used to process the payment  </p>
+                            <b>daysUntilRetry:</b>   integer  (required)
+                            <p>Number of days to wait before re-attempting a failed payment  </p>
+                            <b>maxRetry:</b>   integer  (required)
+                            <p>Maximum number of attempts to retry a failed payment  </p>
+                            <b>initialPaymentAmount:</b>   double  (required)
+                            <p>Amount of the first charge on the payment plan  </p>
+                            <b>initialPaymentDate:</b>   dateTime  (required)
+                            <p>Date the first charge should occur  </p>
+                            <b>planStartDate:</b>   dateTime  (required)
+                            <p>Date the second, and subsequent, charge should occur. Note this does not include the first payment.  </p>
+                            <b>numberOfPayments:</b>   integer  (required)
+                            <p>The number of payments in the plan, not including the first payment  </p>
+                            <b>daysBetweenPayments:</b>   integer  (required)
+                            <p>Number of days between payments, starting with the second payment  </p>
+                            <h4>Returns</h4>
+                            <p>Returns true on successful creation</p>
+
+                        args = {
+                            "invoiceID"                                 : ""
+                            "autoCharge"                                : ""
+                            "creditCardID"                              : ""
+                            "merchantAccountID"                         : ""
+                            "daysUntilRetry"                            : ""
+                            "maxRetry"                                  : ""
+                            "initialPaymentAmount"                      : ""
+                            "initialPaymentDate"                        : ""
+                            "planStartDate"                             : ""
+                            "numberOfPayments"                          : ""
+                            "daysBetweenPayments"                       : ""
+                            }
+                        ISServer.InvoiceService(addPaymentPlan, args)
+
+
+
+class Order(object):
+    """Order
+    <p>The Order Service is used to create and charge an order.</p>
+            """
+
+["Order"].create-an-order():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>contactID:</b>   integer  (required)
+                            <p>ID of the order's Contact  </p>
+                            <b>cardID:</b>   integer  (required)
+                            <p>ID of the credit card to charge. To skip charging a card, set to "0"  </p>
+                            <b>planID:</b>   integer
+                            <p>ID of the payment plan to use when creating the order. If not specified, the default plan is used.  </p>
+                            <b>productIDs:</b>   array  (required)
+                            <p>A list of integers representing the products to be added to the order. This cannot be empty if a subscription is not specified.  </p>
+                            <b>subscriptionIDs:</b>   array  (required)
+                            <p>A list of integers representing the subscription(s) to be added to the order. This cannot be empty if a productID is not specified.  </p>
+                            <b>processSpecials:</b>   boolean  (required)
+                            <p>Whether or not the order should consider discounts that would normally be applied if this order was being placed through the shopping cart.  </p>
+                            <b>promoCodes:</b>   array  (required)
+                            <p>Promo codes to add to the cart; only used if processing of specials is turned on  </p>
+                            <b>leadAffiliateID:</b>   integer  (required)
+                            <p>ID of the lead affiliate  </p>
+                            <b>saleAffiliateID:</b>   integer  (required)
+                            <p>ID of the sale affiliate  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the result of order placement along with IDs of the order and invoice that were created and the status of a credit card charge (if applicable).</p>
+
+                        args = {
+                            "contactID"                                 : ""
+                            "cardID"                                    : ""
+                            "planID"                                    : ""
+                            "productIDs"                                : ""
+                            "subscriptionIDs"                           : ""
+                            "processSpecials"                           : ""
+                            "promoCodes"                                : ""
+                            "leadAffiliateID"                           : ""
+                            "saleAffiliateID"                           : ""
+                            }
+                        ISServer.OrderService(placeOrder, args)
+class Product(object):
+    """Product
+    <p>The Product Service is used to manage products stored in Infusionsoft. You can add, update and find products in addition to managing follow up sequences, tags and action sets.</p>
+            """
+
+["Product"].retrieve-available-product-inventory():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>productID:</b>   integer  (required)
+                            <p>The ID of the product to retrieve inventory levels for  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the available inventory for the requested product as an integer.</p>
+
+                        args = {
+           "productID" : ""}                         
+                            }
+                        ISServer.ProductService(getInventory, args)
+
+["Product"].increment-available-product-inventory():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>productID:</b>   integer  (required)
+                            <p>ID of the product to increment inventory on  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a boolean true on success.</p>
+
+                        args = {
+           "productID" : ""}                         
+                            }
+                        ISServer.ProductService(incrementInventory, args)
+
+["Product"].decrement-available-product-inventory():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>productID:</b>   string  (required)
+                            <p>ID of the product to decrement inventory on  </p>
+
+                        args = {
+           "productID" : ""}                         
+                            }
+                        ISServer.ProductService(decrementInventory, args)
+
+["Product"].increase-a-product-s-available-inventory():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>productID:</b>   integer  (required)
+                            <p>ID of the product to modify inventory of  </p>
+                            <b>quantity:</b>   integer  (required)
+                            <p>The amount to increase the product's inventory by  </p>
+
+                        args = {
+                            "productID"                                 : ""
+                            "quantity"                                  : ""
+                            }
+                        ISServer.ProductService(increaseInventory, args)
+
+["Product"].decrease-a-product-s-available-inventory():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>productID:</b>   integer  (required)
+                            <p>ID of the product to modify inventory of  </p>
+                            <b>quantity:</b>   integer  (required)
+                            <p>The amount to decrease the product's inventory by  </p>
+
+                        args = {
+                            "productID"                                 : ""
+                            "quantity"                                  : ""
+                            }
+                        ISServer.ProductService(decreaseInventory, args)
+
+["Product"].deactivate-a-credit-card():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>cardID:</b>   integer  (required)
+                            <p>ID of the credit card to deactivate  </p>
+                            <h4>Returns</h4>
+                            <p>Returns boolean true if the card is successfully deactivated.</p>
+                <div class="method-example">
+                    <pre><code style="display: none;" class="method-request lang-bash hljs ">
+                        $app 
+               = new iSDK();                                                 // perform authorization tasks
+                        $app-
+ &gt;deactivateCreditCard(1)                                               />                         
+                        args = {
+              "cardID" : ""}                         
+                            }
+                        ISServer.ProductService(deactivateCreditCard, args)
+class Search(object):
+    """Search
+    <p>The Search Service allows you to retrieve the results of saved searches and reports that have been saved within Infusionsoft. Saved searches/reports are tied to the User that created them. This service also allows you to utilize the quick search function found in the upper right hand corner of your Infusionsoft application.
+                    To retrieve the ID for a saved search, you will need to utilize the DataService.query method to query the SavedFilter table based with the ID of the user that created the saved search. Also note that UserId field on the SavedFilter table can contain multiple userId's separated by a comma, so if you are querying for a report created by userId 6, I recommend appending the wildcard to the end of the userId. Something like $query = array( 'UserId' =&gt; '6%' );</p>
+                """
+
+["Search"].retrieve-a-report-s-available-fields(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>savedSearchID:</b>   integer  (required)
+                            <p>ID of the saved search to retrieve columns for  </p>
+                            <b>userID:</b>   integer  (required)
+                            <p>ID of the user that created the saved search  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an array of the fields available on a saved search/report.</p>
+
+                        args = {
+                            "savedSearchID"                             : ""
+                            "userID"                                    : ""
+                            }
+                        ISServer.SearchService(getAllReportColumns, args)
+
+["Search"].retrieve-a-complete-report-from-a-saved-search():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>savedSearchID:</b>   integer  (required)
+                            <p>ID of the saved search to retrieve  </p>
+                            <b>userID:</b>   integer  (required)
+                            <p>ID of the user that created the saved search  </p>
+                            <b>pageNumber:</b>   integer  (required)
+                            <p>A zero-indexed page of results to return  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a struct with all available fields in a saved search</p>
+
+                        args = {
+                            "savedSearchID"                             : ""
+                            "userID"                                    : ""
+                            "pageNumber"                                : ""
+                            }
+                        ISServer.SearchService(getSavedSearchResultsAllFields, args)
+
+["Search"].retrieve-a-partial-report-from-a-saved-search():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>savedSearchID:</b>   integer  (required)
+                            <p>ID of the saved search to retrieve  </p>
+                            <b>userID:</b>   string  (required)
+                            <p>ID of the user that created the saved search  </p>
+                            <b>pageNumber:</b>   integer  (required)
+                            <p>A zero-indexed page of results to return  </p>
+                            <b>returnFields:</b>   array  (required)
+                            <p>An array of field names to return with the report  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a struct with the specified fields from a saved search</p>
+
+                        args = {
+                            "savedSearchID"                             : ""
+                            "userID"                                    : ""
+                            "pageNumber"                                : ""
+                            "returnFields"                              : ""
+                            }
+                        ISServer.SearchService(getSavedSearchResults, args)
+
+["Search"].retrieve-available-quick-searches():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>userID:</b>   integer  (required)
+                            <p>ID of the requesting user  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a struct of the requesting user's available quick searches.</p>
+
+                        args = {
+              "userID" : ""}                         
+                            }
+                        ISServer.SearchService(getAvailableQuickSearches, args)
+
+["Search"].retrieve-the-default-quick-search():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>userID:</b>   integer  (required)
+                            <p>ID of the user to retrieve the default search for  </p>
+                            <h4>Returns</h4>
+                            <p>Retrieves the requested user's default quick search type</p>
+
+                        args = {
+              "userID" : ""}                         
+                            }
+                        ISServer.SearchService(getDefaultQuickSearch, args)
+
+["Search"].retrieve-a-quick-search-report():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>searchType:</b>   integer  (required)
+                            <p>The type of search you are running. Person, Order, Opportunity, Company, Task, Subscription, or Affiliate  </p>
+                            <b>userID:</b>   integer  (required)
+                            <p>ID of the user running the search. Results are returned based upon the specified user's permissions.  </p>
+                            <b>searchData:</b>   string  (required)
+                            <p>Search query  </p>
+                            <b>page:</b>   integer  (required)
+                            <p>A zero-indexed page of results to return  </p>
+                            <b>limit:</b>   integer  (required)
+                            <p>Number of results to return; maximum of 1000  </p>
+                            <h4>Returns</h4>
+                            <p>Returns a struct of report results.</p>
+
+                        args = {
+                            "searchType"                                : ""
+                            "userID"                                    : ""
+                            "searchData"                                : ""
+                            "page"                                      : ""
+                            "limit"                                     : ""
+                            }
+                        ISServer.SearchService(quickSearch, args)
+class Shipping(object):
+    """Shipping
+    <p>The Shipping Service is used to retrieve available shipping options.</p>
+            """
+
+["Shipping"].retrieve-available-shipping-options():
+
+                        args = 
+                            [argsh
+                                ipping"].retrieve-weight-based-shipping-options(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>optionID:</b>   integer  (required)
+                            <p>ID of the shipping option  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the options and values of the requested weight based shipping option.</p>
+
+                        args = {
+            "optionID" : ""}                         
+                            }
+                        ISServer.ShippingService(getWeightBasedShippingOption, args)
+
+["Shipping"].retrieve-flat-rate-shipping-options():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>optionID:</b>   string  (required)
+                            <p>ID of the shipping option to retrieve  </p>
+                <div class="method-example">
+                    <pre><code style="display: none;" class="method-request lang-bash hljs ">
+                        $app 
+               = new iSDK();                                                 // perform authorization tasks
+                        $app-
+n&gt;getFlatRateShippingOption(1)                                               />                         
+                        args = {
+            "optionID" : ""}                         
+                            }
+                        ISServer.ShippingService(getFlatRateShippingOption, args)
+
+["Shipping"].retrieve-product-shipping-options():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>optionID:</b>   integer  (required)
+                            <p>ID of the requested shipping option  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an array of shipping options and values for the requested product shipping option.</p>
+
+                        args = {
+            "optionID" : ""}                         
+                            }
+                        ISServer.ShippingService(getProductBasedShippingOption, args)
+
+["Shipping"].retrieve-order-shipping-options():
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>optionID:</b>   integer  (required)
+                            <p>ID of the shipping option  </p>
+                            <h4>Returns</h4>
+                            <p>Returns an array of options and values for order shipping option.</p>
+
+                        args = {
+            "optionID" : ""}                         
+                            }
+                        ISServer.ShippingService(getOrderTotalShippingOption, args)
+
+["Shipping"].retrieve-order-quantity-shipping-options():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>optionID:</b>   integer  (required)
+                            <p>ID of the shipping option  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the options and values of the order quantity shipping option provided.</p>
+
+                        args = {
+            "optionID" : ""}                         
+                            }
+                        ISServer.ShippingService(getOrderQuantityShippingOption, args)
+
+["Shipping"].retrieve-order-shipping-ranges(): 
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>optionID:</b>   integer  (required)
+                            <p>ID of the requested shipping option  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the available values for order shipping ranges based on the requested shipping option.</p>
+
+                        args = {
+            "optionID" : ""}                         
+                            }
+                        ISServer.ShippingService(getOrderTotalShippingRanges, args)
+
+["Shipping"].retrieve-ups-shipping-option():   
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>optionID:</b>   integer  (required)
+                            <p>The ID of the requested option  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the options and values of the requested UPS shipping option.</p>
+                <div class="method-example">
+                    <pre><code style="display: none;" class="method-request lang-bash hljs ">
+                        $app 
+               = new iSDK();                                                 // perform authorization tasks
+                        $app-
+ &gt;getUpsShippingOption(1)                                               />                         
+                        args = {
+            "optionID" : ""}                         
+                            }
+                        ISServer.ShippingService(getUpsShippingOption, args)
+class Webform(object):
+    """Webform
+    <p>The Webform Service is used to retrieve available web forms created within Infusionsoft.</p>
+            """
+
+["Webform"].retrieve-a-form-s-html():  
+                    <h4>Arguments</h4>
+
+                            <b>privateKey:</b>   string  (required)
+                            <p>Your Infusionsoft API key  </p>
+                            <b>formID:</b>   integer  (required)
+                            <p>ID of the webform to retrieve  </p>
+                            <h4>Returns</h4>
+                            <p>Returns the HTML for the requested webform</p>
+
+                    args = {
+              "formID" : ""}                         
+                        }
+                    ISServer.WebFormService(getHTML, args)
+                </pre>
+["Webform"].retrieve-webform-ids():
+                        <h4>Returns</h4>
+                        <p>Returns all of the available webform name and ID pairs</p>

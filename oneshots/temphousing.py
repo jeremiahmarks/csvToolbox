@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-16 19:15:29
-# @Last Modified 2015-06-17
-# @Last Modified time: 2015-06-17 17:43:52
+# @Last Modified 2015-06-18
+# @Last Modified time: 2015-06-18 02:48:58
 import datetime
 import random
 import string
@@ -761,10 +761,22 @@ def getBuildRemote(force=False):
             for eachrecord in tabledata:
                 eachRecordObject=objectType(eachrecord)
                 thesevalues=eachRecordObject.prepare()
+                holder={}
+                for eachkey in thesevalues.keys():
+                    tmps=''
+                    if type(u'') is not type(thesevalues[eachkey]):
+                        for eachletter in str(thesevalues[eachkey]):
+                            if ord(eachletter)>127:
+                                print eachletter, ord(eachletter), 'Letter Dropped'
+                            else:
+                                tmps+=eachletter
+                    else:
+                        print thesevalues[eachkey]
+                    holder[eachkey] =  tmps
                 thiswriter.writerow(thesevalues)
                 for eachidentifier in tablesneeded[eachtable]:
                     if eachidentifier in thesevalues.keys():
-                        remotevalues[eachtable][eachidentifier][thesevalues[eachidentifier]]=eachRecordObject
+                        remotevalues[eachtable][eachidentifier][thesevalues[eachidentifier]]=str(eachRecordObject).decode()
             outfile.close()
 
 def getCatId(pathToCat):
@@ -1008,7 +1020,7 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
 
 if __name__ == '__main__':
     server=ISServer(pw.passwords['appname'], pw.passwords['apikey'])
-    getBuildRemote()
+    processImport()
 
 
 
