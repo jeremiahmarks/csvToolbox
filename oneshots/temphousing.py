@@ -3,7 +3,7 @@
 # @Author: Jeremiah Marks
 # @Date:   2015-06-16 19:15:29
 # @Last Modified 2015-06-18
-# @Last Modified time: 2015-06-18 02:48:58
+# @Last Modified time: 2015-06-18 17:58:38
 import datetime
 import random
 import string
@@ -614,15 +614,15 @@ class ISServer:
     def getMatchingRecords(self, tableName, criteria, desiredFields=None, orderedBy=None):
         """Search at table by criteria
         """
-        return getAllRecords(tableName, searchCriteria=criteria, interestingData=desiredFields, orderedBy=orderedBy)
+        return self.getAllRecords(tableName, searchCriteria=criteria, interestingData=desiredFields, orderedBy=orderedBy)
     def getTagCats(self):
-        return getAllRecords("ContactGroupCategory")
+        return self.getAllRecords("ContactGroupCategory")
     def getAllTags(self):
-        return getAllRecords("ContactGroup")
+        return self.getAllRecords("ContactGroup")
     def getAllProductCats(self):
-        return getAllRecords("ProductCategory")
+        return self.getAllRecords("ProductCategory")
     def getAllProducts(self):
-        return getAllRecords("Product")
+        return self.getAllRecords("Product")
     def getAllRecords(self, tableName, interestingData=None, searchCriteria=None, orderedBy=None):
         if interestingData is None:
             interestingData = tables[tableName]
@@ -776,7 +776,7 @@ def getBuildRemote(force=False):
                 thiswriter.writerow(thesevalues)
                 for eachidentifier in tablesneeded[eachtable]:
                     if eachidentifier in thesevalues.keys():
-                        remotevalues[eachtable][eachidentifier][thesevalues[eachidentifier]]=str(eachRecordObject).decode()
+                        remotevalues[eachtable][eachidentifier][thesevalues[eachidentifier]]=eachRecordObject
             outfile.close()
 
 def getCatId(pathToCat):
@@ -815,6 +815,25 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
     global productCatagories
     server = ISServer(pw.passwords['appname'], pw.passwords['apikey'])
 
+    # badpatterns holds different patterns that break parsing
+    #
+    # badpatterns
+
+    t='temp value'
+    r='replacement value'
+    badpatterns={}
+    badpatterns['\\,'] = {}
+    badpatterns['\\,'][t]="\\comma"
+    badpatterns['\\,'][r]=", "
+    badpatterns['= ']={}
+    badpatterns['= '][t]='eq_sp'
+    badpatterns['= '][r]="= "
+    badpatterns[', ']={}
+    badpatterns[', '][t]='com_sp'
+    badpatterns[', '][r]=", "
+
+
+
     getBuildRemote()
     thisProduct=None
     with open(productsfile) as datas:
@@ -827,61 +846,101 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
             if (len(thisrow["Name"]) == 0) or (len(thisrow["Name"])>0 and thisrow["Name"][0]=="["):
                 #This indicates that it is not a product
                 if (thisrow["Price"]==""):
+                    # If the price column is empty then that
+                    # will indicate that this is a option
+                    # not a pricing rule
                     thisProduct.optionrows.append(thisrow)
-                    ########################################
-                    ## For now we are going to just store the
-                    ## entire row in the correct product.
-                    ## after we parse the document, we will
-                    ## come back and parse them
-                    ##
-                    ##
-                    # # If the price value is blank, this means
-                    # # that it is an option, not a pricing rule
-                    # mycopy=row['Name']
-                    # while len(mycopy) > 0:
-                    #     mycopy=mycopy[ mycopy.find(']') + 1 : ]
-                    #     if '[' in mycopy:
-                    #         thisoption=mycopy[:mycopy.find('[')]
-                    #         mycopy=mycopy[mycopy.find('['):]
-                    #     else:
-                    #         thisoption=mycopy
-                    #         mycopy=mycopy[0:0]
-                    #         # Since we are using slices, we may
-                    #         # as well kill a string with a slice
-                    #     #Theoretically we should only have a comma separated list of different variations
-                    #     # on available options.
-                    #     for eachoptionvaluepair in mycopy.split(','):
-                    #         # optionname, optionvalue = eachoptionvaluepair.split("=")
-                    #         optionname = eachoptionvaluepair.split("=")
-                    #         if len(optionname)==1:
-                    #             optionname=optionname[0]
-                    #         else:
-                    #             optionname, optionvalue = optionname[0],optionname[1]
-                    #         if thisProduct.optionsSettings is None:
-                    #             thisProduct.optionsSettings={}
-                    #         if optionname not in thisProduct.optionsSettings.keys():
-                    #             thisProduct.optionsSettings[optionname] = set()
-                    #         thisProduct.optionsSettings[optionname].add(optionvalue)
+                    # Appending the row to the product object
+                    # Is probably not needed at all, but it
+                    # is only a memory hit and should not
+                    # meaningfully impact processing ability
+                    if thisProduct.optionsSettings is None:
+                        thisProduct.optionsSettings={}
+                    thisnamecol = thisrow['Name']
+                    # Now that we have the Name columns
+                    # pulled out to parse, we are going to
+                    # Replace the values that are giving us
+                    # issues during the parse
+                    for eachpattern in badpatterns.keys():
+                        thisnamecol = thisnamecol.replace(eachpattern, badpatterns[eachpattern][t])
+
+                    while len(thisnamecol)>0:
+                        thisnamecol=thisnamecol[thisnamecol.find(']')+1:]
+                        if thisnamecol.count('[')>0:
+                            thisoptionvalue=thisnamecol[:thisnamecol.find('[')].strip(',\n ')
+                            thisnamecol=thisnamecol[thisnamecol.find('['):]
+                        else:
+                            thisoptionvalue=thisnamecol.strip(',\n ')
+                            thisnamecol=''
+
+                        theseoptions = thisoptionvalue.split(',')
+                        for eachpair in theseoptions:
+                            eqcount = eachpair.count('=')
+                            if eqcount != 1:
+                                # Ya broke it
+                                print "You broke it!\t", thisrow, eachpair
+                            else:
+                                optionname, optionvalue = eachpair.split("=")
+                                optionvalue = optionvalue.split(':')[0]
+                                for eachpart in [optionname, optionvalue]:
+                                    # Now that we have the actual values and names
+                                    # Let's put the final replacement values
+                                    # back for the chars we replaced earlier.
+                                    for eachpattern in badpatterns.keys():
+                                        eachpart=eachpart.replace(badpatterns[eachpattern][t], badpatterns[eachpattern][r])
+                                    if optionname not in thisProduct.optionsSettings.keys():
+                                        thisProduct.optionsSettings[optionname] = set()
+                                        thisoptionvalues={}
+                                        thisoptionvalues['Name']=optionname
+                                        thisoptionvalues['IsRequired'] = '1'
+                                        thisoptionvalues['Label'] = optionname
+                                        thisoptionvalues['OptionType'] = 'FixedList'
+                                        thisoptionvalues['Order'] = len(thisProduct.options)
+                                        thisoptionvalues['ProductId'] = thisProduct.getid()
+                                        ###################################################
+                                        ## Since we have the values collected, we can
+                                        ## go ahead and query the server to see if this option
+                                        ## exists.  An option will be considered the same
+                                        ## option if it has the same name and product ID
+                                        ## of another option
+                                        ###################################################
+                                        matchingRecords = server.getMatchingRecords("ProductOption", {'Name': thisoptionvalues['Name'], 'ProductId': thisProduct.getid() }, ['Id'])
+                                        if len(matchingRecords)>0:
+                                            thisoptionvalues['Id']=matchingRecords[0]['Id']
+                                        else:
+                                            # It does not exist, lets create it
+                                            thisoptionvalues['Id']=server.createNewRecord("ProductOption", thisoptionvalues)
+                                        thispo = ProductOption(thisoptionvalues)
+                                        thisProduct.options[optionname]=thispo
+                                    thisProduct.optionsSettings[optionname].add(optionvalue)
+                                    thispo = thisProduct.options[optionname]
+                                    optval={}
+                                    optval["Name"] = optionvalue
+                                    optval["Label"] = optionvalue
+                                    if thisrow['SKU'] and len(thisrow['SKU'])>0:
+                                        optval['Sku'] = thisrow['SKU']
+                                    optval['ProductOptionId']=thispo.getid()
+                                    optval['OptionIndex']=len(thispo.optionvalues)
+                                    matchingRecords = server.getMatchingRecords( "ProductOptValue", {"Name": optval["Name"], "ProductOptionId": optval['ProductOptionId']}, ['Id'])
+                                    if len(matchingRecords)>0:
+                                        optval['Id'] = matchingRecords[0]['Id']
+                                    else:
+                                        optval['Id'] = server.createNewRecord("ProductOptValue", optval)
+                                    thisval = ProductOptValue(optval)
+                                    thispo.optionvalues.append(thisval)
+                                    ############################################################
+                                    ## Now that we have the option value created and handy    ##
+                                    ## We will take this opportunity to see if it is          ##
+                                    ## created on the server.  If it is not we will create it.##
+                                    ############################################################
                 else:
-                    # This is a pricing rule
+                    # Basically, if there is something in the
+                    # Price column, then it is pricing rule
                     thisProduct.pricingrows.append(thisrow)
-                    # changetype=row["Price"][1:row["Price"].find(']')]
-                    # priceChange = thisrow["Price"][row["Price"].find(']')+1:]
-                    # optionChoice, optionChoiceValue = thisrow["Name"][4:].split("=",1)
-                    # if thisProduct.optionsPriceChange is None:
-                    #     thisProduct.optionsPriceChange={}
-                    # if optionChoice not in thisProduct.optionsPriceChange.keys():
-                    #     thisProduct.optionsPriceChange[optionChoice]={}
-                    # thisProduct.optionsPriceChange[optionChoice][optionChoiceValue] = priceChange
-                    # thisProduct.optionsPriceChange[optionChoice][changetype]=changetype
             else:
                 #this is a product
                 if thisProduct is not None:
                     # This is to save the just completed product.
-                    # so that we can access it later, and assign its variable to
-                    # a different object. (Okay, really assign a different object
-                    # to this variable ) We do not want to call it before the first
-                    # product is created, hence the if to check.
                     products.append(thisProduct)
                 thisProduct = Product({"ProductName" : thisrow["Name"].strip(' \n')})
                 thisProduct.rowdata.append(thisrow)
@@ -904,17 +963,17 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
                             if "Product Image URL: " in eachVal:
                                 thisProduct.images.append(eachVal.replace("Product Image URL: ","").strip())
                 ############################################
-                ############################################
+                ## First we will check and see if this product
+                ## already exists.  While there are reasons to use
+                ## something more robust than only the name
+                ## it is not needed currently, and I need to
+                ## get this completed.
                 ##
-                ##  I need to make sure that I am checking
-                ## for existing product before just creating
-                ## one
+                ## Basically, though, what this will do is see if the product is already created.  If it is not
+                ## It will then create the product.
                 ##
-                ##  Actually, thinking about it, it makes more
-                ##  Sense to just pull everything down first
-
-                ## Now to check for the product and see if it exists
-
+                ## Basically from here on, the ID from the product should actually be a real product
+                ## id.
                 if thisProduct.ProductName.strip(' \n') in remotevalues['Product']["ProductName"].keys():
                     thisProduct.Id = remotevalues['Product']["ProductName"][thisProduct.ProductName].Id
                 else:
@@ -927,94 +986,83 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
                 # thisProduct.Id=iditerator.next()
     # we need to save the last product somewhere after it gets created.
     products.append(thisProduct)
+
     # Now that all of the rows have been processed into their
     # appropriate product object, lets take those apart and
     # put them together again.
-    # with open('productsoptionspricing.csv', 'wb') as sampleout:
-    #     samplewriter=csv.DictWriter(sampleout, filefields)
-    #     samplewriter.writeheader()
-    #     for eachproduct in products:
-    #         thisrow={}
-    #         samplewriter.writerow(eachproduct.rowdata)
-    #     for eachproduct in products:
-    #         thisrow={}
-    #         for eachoptionrow in eachproduct.optionrows:
-    #             samplewriter.write(eachoptionrow)
-    #     for eachproduct in products:
-    #         thisrow={}
-    #         for eachpricingrow in eachproduct.pricingrows:
-    #             samplewriter.write(eachpricingrow)
-
-    for eachproduct in products:
-        for eachoption in eachproduct.optionrows:
-            if eachproduct.optionsSettings is None:
-                eachproduct.optionsSettings={}
-            thisnamecol=eachoption['Name']
-            while len(thisnamecol)>0:
-                thisnamecol=thisnamecol[thisnamecol.find(']')+1:]
-                # This Basically strips off the first option class tag
-                # thing
-                if thisnamecol.count('[')>0:
-                    # basically if there is another option tag
-                    # thing we are going to deal with
-                    thisoptionvalue=thisnamecol[:thisnamecol.find('[')].strip(',\n ')
-                    thisnamecol=thisnamecol[thisnamecol.find('['):]
-                else:
-                    thisoptionvalue=thisnamecol.strip(',\n ')
-                    thisnamecol=''
-                ############################################
-                ## thisoptionvalue should be expected to be a coma separated
-                ## list of product options and option values
-                ##
-                if '\\,' in thisoptionvalue:
-                    thisoptionvalue = thisoptionvalue.replace('\\,', '\\coma')
-                    ########################################
-                    ## This is because we are going to split the
-                    ##  string with a coma and we do not want to lose
-                    ##  values when we do that.
-                theseoptions=thisoptionvalue.split(',')
-                ############################################
-                ## theseoptions should look like this:
-                ## theseoptions =[
-                ##                 "op1=val",
-                ##                 "op2=val",
-                ##                 "op3=val",
-                ##               ]
-                for eachpair in theseoptions:
-                    eachpair.replace('\\coma', '\\,')
-                    # as a note, these pairs should still be
-                    # joined with a "="
-                    eqcount=eachpair.count("=")
-                    if eqcount==0:
-                        print "this pair sucked ", eachpair
-                    elif eqcount>1:
-                        print "this pair has more then one! ", eachpair
-                    else:
-                        optionname, optionvalue = eachpair.split("=")
-                        optionvalue = optionvalue.split(':')[0]
-                        if optionname not in eachproduct.optionsSettings.keys():
-                            eachproduct.optionsSettings[optionname] = set()
-                            thisoptionvalues={}
-                            thisoptionvalues['Name']=optionname
-                            thisoptionvalues['IsRequired'] = '1'
-                            thisoptionvalues['Label'] = optionname
-                            thisoptionvalues['OptionType'] = 'FixedList'
-                            thisoptionvalues['Order'] = len(eachproduct.options)
-                            thisoptionvalues['ProductId'] = eachproduct.getid()
-                            thispo = ProductOption(thisoptionvalues)
-                            eachproduct.options[optionname]=thispo
-                        eachproduct.optionsSettings[optionname].add(optionvalue)
-                        thispo = eachproduct.options[optionname]
-                        optval={}
-                        optval["Name"]=optionvalue
-                        optval["Label"]=optionvalue
-                        if eachoption['SKU'] and len(eachoption['SKU'])>0:
-                            optval['Sku'] = eachoption['SKU']
-                        else:
-                            optval['Sku']=None
-                        optval['ProductOptionId']=thispo.getid()
-                        optval['OptionIndex']=len(thispo.optionvalues)
-                        thispo.optionvalues.append(ProductOptValue(optval))
+    # for eachproduct in products:
+    #     # I am sure that there is a much better way to do this than what I am about to do.
+    #     # Basically, though, if you are doing things right, you should only need to go
+    #     ## through all of the products one time.  This will
+    #     for eachoption in eachproduct.optionrows:
+    #         if eachproduct.optionsSettings is None:
+    #             eachproduct.optionsSettings={}
+    #         thisnamecol=eachoption['Name']
+    #         while len(thisnamecol)>0:
+    #             thisnamecol=thisnamecol[thisnamecol.find(']')+1:]
+    #             # This Basically strips off the first option class tag
+    #             # thing
+    #             if thisnamecol.count('[')>0:
+    #                 # basically if there is another option tag
+    #                 # thing we are going to deal with
+    #                 thisoptionvalue=thisnamecol[:thisnamecol.find('[')].strip(',\n ')
+    #                 thisnamecol=thisnamecol[thisnamecol.find('['):]
+    #             else:
+    #                 thisoptionvalue=thisnamecol.strip(',\n ')
+    #                 thisnamecol=''
+    #             ############################################
+    #             ## thisoptionvalue should be expected to be a coma separated
+    #             ## list of product options and option values
+    #             ##
+    #             if '\\,' in thisoptionvalue:
+    #                 thisoptionvalue = thisoptionvalue.replace('\\,', '\\coma')
+    #                 ########################################
+    #                 ## This is because we are going to split the
+    #                 ##  string with a coma and we do not want to lose
+    #                 ##  values when we do that.
+    #             theseoptions=thisoptionvalue.split(',')
+    #             ############################################
+    #             ## theseoptions should look like this:
+    #             ## theseoptions =[
+    #             ##                 "op1=val",
+    #             ##                 "op2=val",
+    #             ##                 "op3=val",
+    #             ##               ]
+    #             for eachpair in theseoptions:
+    #                 eachpair.replace('\\coma', '\\,')
+    #                 # as a note, these pairs should still be
+    #                 # joined with a "="
+    #                 eqcount=eachpair.count("=")
+    #                 if eqcount==0:
+    #                     print "this pair sucked ", eachpair
+    #                 elif eqcount>1:
+    #                     print "this pair has more then one! ", eachpair
+    #                 else:
+    #                     optionname, optionvalue = eachpair.split("=")
+    #                     optionvalue = optionvalue.split(':')[0]
+    #                     if optionname not in eachproduct.optionsSettings.keys():
+    #                         eachproduct.optionsSettings[optionname] = set()
+    #                         thisoptionvalues={}
+    #                         thisoptionvalues['Name']=optionname
+    #                         thisoptionvalues['IsRequired'] = '1'
+    #                         thisoptionvalues['Label'] = optionname
+    #                         thisoptionvalues['OptionType'] = 'FixedList'
+    #                         thisoptionvalues['Order'] = len(eachproduct.options)
+    #                         thisoptionvalues['ProductId'] = eachproduct.getid()
+    #                         thispo = ProductOption(thisoptionvalues)
+    #                         eachproduct.options[optionname]=thispo
+    #                     eachproduct.optionsSettings[optionname].add(optionvalue)
+    #                     thispo = eachproduct.options[optionname]
+    #                     optval={}
+    #                     optval["Name"]=optionvalue
+    #                     optval["Label"]=optionvalue
+    #                     if eachoption['SKU'] and len(eachoption['SKU'])>0:
+    #                         optval['Sku'] = eachoption['SKU']
+    #                     else:
+    #                         optval['Sku']=None
+    #                     optval['ProductOptionId']=thispo.getid()
+    #                     optval['OptionIndex']=len(thispo.optionvalues)
+    #                     thispo.optionvalues.append(ProductOptValue(optval))
     return products
 
 

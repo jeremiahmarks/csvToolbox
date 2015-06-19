@@ -1,5 +1,5 @@
-                   permissionsTable ={} 
-                                      
+                   permissionsTable ={}
+
 ActionSequence = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                               "TemplateName" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
@@ -14,7 +14,7 @@ AffResource = {
                                              "ResourceOrder" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                               "ResourceType" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                      "Title" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 Affiliate = {
                                                    "AffCode" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                    "AffName" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -42,7 +42,7 @@ CCharge = {
                                                   "OrderNum" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                  "PaymentId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                     "RefNum" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 CProgram = {
                                                     "Active" : { "related" : [], "type":   "Boolean", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                "BillingType" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
@@ -60,25 +60,25 @@ CProgram = {
                                                        "Sku" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                     "Status" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                    "Taxable" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 Campaign = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                       "Name" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                     "Status" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 CampaignStep = {
                                                 "CampaignId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                 "StepStatus" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                  "StepTitle" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                 "TemplateId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Campaignee = {
                                                   "Campaign" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                 "CampaignId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                  "ContactId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                     "Status" : { "related" : [], "type":      "Enum", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Company = {
                                                  "AccountId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                               "Address1Type" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -156,7 +156,7 @@ Company = {
                                                   "ZipFour1" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                   "ZipFour2" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                   "ZipFour3" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 Contact = {
                                                  "AccountId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                               "Address1Type" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -236,7 +236,7 @@ Contact = {
                                                   "ZipFour1" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                   "ZipFour2" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                   "ZipFour3" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 ContactAction = {
                                                   "Accepted" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                 "ActionDate" : { "related" : [], "type":  "DateTime", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -257,19 +257,19 @@ ContactAction = {
                                                  "PopupDate" : { "related" : [], "type":  "DateTime", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                   "Priority" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                     "UserID" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 ContactGroup = {
                                            "GroupCategoryId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                           "GroupDescription" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                  "GroupName" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 
 ContactGroupCategory = {
                                        "CategoryDescription" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                               "CategoryName" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 CreditCard = {
                                               "BillAddress1" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                               "BillAddress2" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
@@ -279,8 +279,8 @@ CreditCard = {
                                                  "BillState" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                    "BillZip" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                       "CVV2" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",           "Add"   , ]  }
- "CardNumber" : { "related" : [], "type":    "String",  'permissions' : [ "Add"           , ]  }
- "CardType" : { "related" : [], "type":    "String",  'permissions' : [ "Edit",         , "Add" "Read"              ]  }
+                                                "CardNumber" : { "related" : [], "type":    "String", 'permissions' : [ "Add"           , ]  }
+                                                  "CardType" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                  "ContactId" : { "related" : [], "type":        "Id", 'permissions' : [                 , "Add" "Read"                      ]  }
                                                      "Email" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                            "ExpirationMonth" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
@@ -307,7 +307,7 @@ CreditCard = {
                                             "StartDateMonth" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                              "StartDateYear" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                     "Status" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 DataFormField = {
                                                   "DataType" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
                                               "DefaultValue" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         ,       "Read"    ]  }
@@ -318,17 +318,17 @@ DataFormField = {
                                                   "ListRows" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         ,       "Read"    ]  }
                                                       "Name" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         ,       "Read"    ]  }
                                                     "Values" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         ,       "Read"    ]  }
-      } 
+      }
 DataFormGroup = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                       "Name" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                      "TabId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 DataFormTab = {
                                                     "FormId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                    "TabName" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Expense = {
                                                  "ContactId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                               "DateIncurred" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
@@ -336,7 +336,7 @@ Expense = {
                                                "ExpenseType" : { "related" : [], "type":      "Enum", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                     "TypeId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 FileBox = {
                                                  "ContactId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                  "Extension" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
@@ -344,13 +344,13 @@ FileBox = {
                                                   "FileSize" : { "related" : [], "type":      "Long", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                     "Public" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 GroupAssign = {
                                                      "Admin" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                    "GroupId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                     "UserId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Invoice = {
                                                "AffiliateId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                  "ContactId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
@@ -370,7 +370,7 @@ Invoice = {
                                                     "Synced" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
                                                   "TotalDue" : { "related" : [], "type":    "Double", 'permissions' : [                         "Read"    ]  }
                                                  "TotalPaid" : { "related" : [], "type":    "Double", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 InvoiceItem = {
                                           "CommissionStatus" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                "DateCreated" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
@@ -380,7 +380,7 @@ InvoiceItem = {
                                                 "InvoiceAmt" : { "related" : [], "type":    "Double", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                  "InvoiceId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                "OrderItemId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 InvoicePayment = {
                                                        "Amt" : { "related" : [], "type":    "Double", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
@@ -389,7 +389,7 @@ InvoicePayment = {
                                                  "PayStatus" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                  "PaymentId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                             "SkipCommission" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Job = {
                                                  "ContactId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                "DateCreated" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
@@ -414,7 +414,7 @@ Job = {
                                                "ShipStreet2" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                    "ShipZip" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                  "StartDate" : { "related" : [], "type":      "Date", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 JobRecurringInstance = {
                                                 "AutoCharge" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                "DateCreated" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
@@ -425,7 +425,7 @@ JobRecurringInstance = {
                                                "RecurringId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                  "StartDate" : { "related" : [], "type":      "Date", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                     "Status" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 Lead = {
                                                "AffiliateId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                  "ContactID" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -446,7 +446,7 @@ Lead = {
                                                    "StageID" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                   "StatusID" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                     "UserID" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 LeadSource = {
                                                "CostPerLead" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                "Description" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
@@ -459,12 +459,12 @@ LeadSource = {
                                                  "StartDate" : { "related" : [], "type":      "Date", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                     "Status" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                     "Vendor" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 LeadSourceCategory = {
                                                "Description" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                       "Name" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 LeadSourceExpense = {
                                                     "Amount" : { "related" : [], "type":    "Double", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                               "DateIncurred" : { "related" : [], "type":  "DateTime", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -473,7 +473,7 @@ LeadSourceExpense = {
                               "LeadSourceRecurringExpenseId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                      "Notes" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                      "Title" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 LeadSourceRecurringExpense = {
                                                     "Amount" : { "related" : [], "type":    "Double", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                    "EndDate" : { "related" : [], "type":  "DateTime", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -483,7 +483,7 @@ LeadSourceRecurringExpense = {
                                                      "Notes" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                  "StartDate" : { "related" : [], "type":  "DateTime", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                      "Title" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 MtgLead = {
                                            "ActualCloseDate" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
                                            "ApplicationDate" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
@@ -497,7 +497,7 @@ MtgLead = {
                                          "DateTitleReceived" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
                                                "FundingDate" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 OrderItem = {
                                                        "CPU" : { "related" : [], "type":    "Double", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
@@ -510,7 +510,7 @@ OrderItem = {
                                                  "ProductId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                        "Qty" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                         "SubscriptionPlanId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 PayPlan = {
                                                     "AmtDue" : { "related" : [], "type":    "Double", 'permissions' : [                         "Read"    ]  }
                                                    "DateDue" : { "related" : [], "type":      "Date", 'permissions' : [                         "Read"    ]  }
@@ -527,7 +527,7 @@ PayPlanItem = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                  "PayPlanId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                     "Status" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Payment = {
                                                   "ChargeId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                 "Commission" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
@@ -541,7 +541,7 @@ Payment = {
                                                   "RefundId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                     "Synced" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
                                                     "UserId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Product = {
                                                 "BottomHTML" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                "CityTaxable" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
@@ -565,19 +565,19 @@ Product = {
                                                    "Taxable" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                    "TopHTML" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                     "Weight" : { "related" : [], "type":    "Double", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 ProductCategory = {
                                        "CategoryDisplayName" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                              "CategoryImage" : { "related" : [], "type":      "Blob", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                              "CategoryOrder" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                   "ParentId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 ProductCategoryAssign = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                          "ProductCategoryId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                  "ProductId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 ProductInterest = {
                                            "DiscountPercent" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
@@ -586,12 +586,12 @@ ProductInterest = {
                                                  "ProductId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                "ProductType" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                        "Qty" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 ProductInterestBundle = {
                                                 "BundleName" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                "Description" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 ProductOptValue = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                  "IsDefault" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -601,7 +601,7 @@ ProductOptValue = {
                                            "PriceAdjustment" : { "related" : [], "type":    "Double", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                            "ProductOptionId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                        "Sku" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 ProductOption = {
                                                "AllowSpaces" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                 "CanContain" : { "related" : [], "type":    "String", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -617,7 +617,7 @@ ProductOption = {
                                                      "Order" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                  "ProductId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                "TextMessage" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 RecurringOrder = {
                                                "AffiliateId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                 "AutoCharge" : { "related" : [], "type":   "Integer", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
@@ -646,7 +646,7 @@ RecurringOrder = {
                                                  "StartDate" : { "related" : [], "type":      "Date", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                     "Status" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                         "SubscriptionPlanId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 RecurringOrderWithContact = {
                                                "AffiliateId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                 "AutoCharge" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
@@ -698,29 +698,29 @@ RecurringOrderWithContact = {
                                                     "Suffix" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                      "Title" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                   "ZipFour1" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Referral = {
                                                "AffiliateId" : { "related" : [], "type":        "Id", 'permissions' : [                 , "Add" "Read"                      ]  }
                                                  "ContactId" : { "related" : [], "type":        "Id", 'permissions' : [                 , "Add" "Read"                      ]  }
                                                "DateExpires" : { "related" : [], "type":      "Date", 'permissions' : [                 , "Add" "Read"                      ]  }
                                                    "DateSet" : { "related" : [], "type":      "Date", 'permissions' : [                 , "Add" "Read"                      ]  }
                                                  "IPAddress" : { "related" : [], "type":    "String", 'permissions' : [                 , "Add" "Read"                      ]  }
-                                                        "Id" : { "related" : [], "type":        "Id", 'permissions' : [ "", ]  }        , 
+                                                        "Id" : { "related" : [], "type":        "Id", 'permissions' : [ "", ]  }        ,
  "Info": { "related" : [], "type":    "String",  'permissions' : [                  , "Add" "Read",                                                              ]  }
                                                     "Source" : { "related" : [], "type":    "String", 'permissions' : [                 , "Add" "Read", ] },"related":[],  "": { "related": [],  "type": "Integer", 'permissions' : [                                                                                                                                                                                                                                                                                                                                                                                                                 "Add"                                                                                                                                                                                                        "Read",                                                              ]  }
-     } 
+     }
 SavedFilter = {
                                                 "FilterName" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                           "ReportStoredName" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                     "UserId" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Stage = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                  "StageName" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                 "StageOrder" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
                                              "TargetNumDays" : { "related" : [], "type":   "Integer", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 StageMove = {
                                                  "CreatedBy" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                "DateCreated" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
@@ -731,13 +731,13 @@ StageMove = {
                                              "OpportunityId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                          "PrevStageMoveDate" : { "related" : [], "type":  "DateTime", 'permissions' : [                         "Read"    ]  }
                                                     "UserId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Status = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                 "StatusName" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                "StatusOrder" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                              "TargetNumDays" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 SubscriptionPlan = {
                                                     "Active" : { "related" : [], "type":   "Boolean", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                      "Cycle" : { "related" : [], "type":    "String", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
@@ -747,13 +747,13 @@ SubscriptionPlan = {
                                         "PreAuthorizeAmount" : { "related" : [], "type":    "Double", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                  "ProductId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
                                                    "Prorate" : { "related" : [], "type":   "Boolean", 'permissions' : [ "Edit",         , "Add" "Read"              ]  }
-      } 
+      }
 Template = {
                                                 "Categories" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                 "PieceTitle" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                  "PieceType" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 Ticket = {
                                                  "CloseDate" : { "related" : [], "type":      "Date", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                  "ContactId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
@@ -778,16 +778,16 @@ Ticket = {
                                               "TicketTypeId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                  "TimeSpent" : { "related" : [], "type":    "Double", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
                                                     "UserId" : { "related" : [], "type":        "Id", 'permissions' : [ "Edit", "Delete", "Add" "Read"    ]  }
-      } 
+      }
 TicketStage = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                  "StageName" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 TicketType = {
                                                 "CategoryId" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                      "Label" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 User = {
                                                       "City" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                      "Email" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
@@ -812,7 +812,7 @@ User = {
                                                     "Suffix" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                      "Title" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
                                                   "ZipFour1" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
-      } 
+      }
 UserGroup = {
                                                         "Id" : { "related" : [], "type":        "Id", 'permissions' : [                         "Read"    ]  }
                                                       "Name" : { "related" : [], "type":    "String", 'permissions' : [                         "Read"    ]  }
