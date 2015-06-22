@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-16 19:15:29
-# @Last Modified 2015-06-18
-# @Last Modified time: 2015-06-18 17:58:38
+# @Last Modified 2015-06-20
+# @Last Modified time: 2015-06-20 22:09:46
 import datetime
 import random
 import string
@@ -173,8 +173,7 @@ class Product(object):
         if self.ProductName and other.ProductName:
             namesmatch=self.ProductName.lower().strip(' \n') is other.ProductName.lower().strip(' \n')
             return namesmatch and catsmatch
-        else:
-            return False
+        return False
 
     def getid(self):
         """Doing functionality like this allows things to be
@@ -434,8 +433,7 @@ class ProductOptValue(object):
         if self.Name and other.Name:
             namesmatch=self.Name.lower().strip(' \n') is other.Name.lower().strip(' \n')
             return namesmatch and (self.ProductOptionId is other.ProductOptionId)
-        else:
-            return False
+        return False
 
     def getid(self):
         """Doing functionality like this allows things to be
@@ -636,8 +634,8 @@ class ISServer:
             listOfDicts = self.connection.DataService.query(self.infusionsoftAPIKey, tableName, 1000, p, searchCriteria, interestingData, orderedBy, True)
             for each in listOfDicts:
                 thisRecord={}
-                for eachbit in interestingData:
-                    if not each.has_key(eachbit):
+                for eachbit in interestingData:   # this should be records.append(zip(interestingData, each)) perhaps
+                    if not each.has_key(eachbit):   # TODO: research THIS
                         each[eachbit]=None
                     thisRecord[eachbit] = each[eachbit]
                 records.append(thisRecord)
@@ -771,7 +769,7 @@ def getBuildRemote(force=False):
                             else:
                                 tmps+=eachletter
                     else:
-                        print thesevalues[eachkey]
+                        print eachkey, thesevalues[eachkey][0:50]
                     holder[eachkey] =  tmps
                 thiswriter.writerow(thesevalues)
                 for eachidentifier in tablesneeded[eachtable]:
@@ -823,7 +821,7 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
     r='replacement value'
     badpatterns={}
     badpatterns['\\,'] = {}
-    badpatterns['\\,'][t]="\\comma"
+    badpatterns['\\,'][t]="__comma"
     badpatterns['\\,'][r]=", "
     badpatterns['= ']={}
     badpatterns['= '][t]='eq_sp'
@@ -935,7 +933,68 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
                                     ############################################################
                 else:
                     # Basically, if there is something in the
-                    # Price column, then it is pricing rule
+                    # Price column and the Product name starts
+                    # with a '[' then this is a pricing rule
+                    # 
+                    thisnamecol = thisrow['Name']
+                    thispricecol = thisrow['Price']
+                    thisskucol = thisrow["SKU"]
+                    for eachpattern in badpatterns.keys():
+                        thisnamecol = thisnamecol.replace(eachpattern, badpatterns[eachpattern][t])
+
+                    while len(thisnamecol)>0:
+                        thisnamecol=thisnamecol[thisnamecol.find(']')+1:]
+                        if thisnamecol.count('[')>0:
+                            thisoptionvalue=thisnamecol[:thisnamecol.find('[')].strip(',\n ')
+                            thisnamecol=thisnamecol[thisnamecol.find('['):]
+                        else:
+                            thisoptionvalue=thisnamecol.strip(',\n ')
+                            thisnamecol=''
+
+                        theseoptions = thisoptionvalue.split(',')
+                        for eachpair in theseoptions:
+                            eqcount = eachpair.count('=')
+                            if eqcount != 1:
+                                # Ya broke it
+                                print "You broke it!\t", thisrow, eachpair
+                            else:
+                                optionname, optionvalue = eachpair.split("=")
+                                optionvalue = optionvalue.split(':')[0]
+                                for eachpart in [optionname, optionvalue]:
+                                    for eachpattern in badpatterns.keys():
+                                        eachpart=eachpart.replace(badpatterns[eachpattern][t], badpatterns[eachpattern][r])
+                                thisoptionval={}
+                                thisoptionval["Name"] = optionname
+                                if optionname not in thisProduct.options.keys():
+                                    thisProduct.options[optionname]=ProductOption({"Name": optionname})
+                                thisoptionval["ProductOptionId"] = thisProduct.options[optionname].getid()
+                                matchingRecords = server.getMatchingRecords("ProductOptValue", thisoptionval, ['Id'])
+                                if len(matchingRecords)>0:
+                                    thisoptionval.update(matchingRecords[0])
+                                else:
+                                    if len(thispricecol) > 0:
+                                        thisprice = thispricecol[thispricecol.find(']')+1:]
+                                        thispriceaction =  thispricecol[1:thisprice.find(']')]
+                                        thispricecol = ""
+                                    if len(thisskucol) > 0:
+                                        thissku = thisskucol
+                                        thisskucol = ""
+                                        thisoptionval["Sku"] = thissku
+                                    thisoptionval["OptionIndex"] = len(thisProduct.optionsPriceChange)
+                                    if thispriceaction == "ADD":
+                                        thisoptionval["PriceAdjustment"] = thisprice
+                                    elif thispriceaction == "REMOVE":
+                                        thisoptionval["PriceAdjustment"] = "-"+thisprice
+                                    elif thispriceaction == "FIXED":
+                                        targetprice = float(thisprice)
+                                        thisprice = str(targetprice - float(thisProduct.ProductPrice))
+                                        thisoptionval["PriceAdjustment"] = thisprice
+                                    thisoptionval["Label"] = optionvalue
+                                    thisobject=ProductOptValue(thisoptionval)
+                                    print "\n\n\n\n"
+                                    print thisobject.prepare()
+                                    thisoptionval["Id"]=server.createNewRecord("ProductOptValue", thisobject.prepare())
+                                thisProduct.optionsPriceChange[thisoptionval["Id"]]=ProductOptValue(thisoptionval)
                     thisProduct.pricingrows.append(thisrow)
             else:
                 #this is a product
@@ -943,6 +1002,7 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
                     # This is to save the just completed product.
                     products.append(thisProduct)
                 thisProduct = Product({"ProductName" : thisrow["Name"].strip(' \n')})
+                thisProduct.Status='1'
                 thisProduct.rowdata.append(thisrow)
                 for column in ["GPS Category", "Brand", "Category String"]:
                     thisProduct.catStrings.append(thisrow[column])
@@ -974,11 +1034,12 @@ def processImport(productsfile=pw.passwords['inputfilepath']):
                 ##
                 ## Basically from here on, the ID from the product should actually be a real product
                 ## id.
-                if thisProduct.ProductName.strip(' \n') in remotevalues['Product']["ProductName"].keys():
-                    thisProduct.Id = remotevalues['Product']["ProductName"][thisProduct.ProductName].Id
+                if thisProduct.ProductName.lower().strip(' \n') in remotevalues['Product']["ProductName"].keys():
+                    thisProduct.Id = remotevalues['Product']["ProductName"][thisProduct.ProductName.lower().strip(' \n')].Id
                 else:
                     thisProduct.Id = server.cnp(thisProduct.prepare())
                 values=thisProduct.prepare()
+                print values['Sku'], values['ProductName']
 
 
                 # if thisProduct.images:

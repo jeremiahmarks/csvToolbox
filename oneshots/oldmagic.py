@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-16 04:00:23
-# @Last Modified 2015-06-16
-# @Last Modified time: 2015-06-16 04:08:59
+# @Last Modified 2015-06-21
+# @Last Modified time: 2015-06-21 14:56:29
 
 ############################################################
 ###  Shortcut:  ctrl +k ctrl+1 to fold all
@@ -533,7 +533,7 @@ def getCatAssiggnId(productCatAssRecord):
     else:
         return server.createNewRecord("ProductCategoryAssign", productCatAssRecord.prepare())
 
-def sampleData(productsExport=pw.passwords['importFile']):
+def sampleData(productsExport=pw.passwords['inputfilepath']):
     global server
     global products
     global productCatagories
