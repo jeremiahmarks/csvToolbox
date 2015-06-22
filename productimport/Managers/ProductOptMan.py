@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-22 00:02:38
-# @Last Modified 2015-06-22>
-# @Last Modified time: 2015-06-22 00:03:16
+# @Last Modified 2015-06-22
+# @Last Modified time: 2015-06-22 00:26:14
 
 
 class ProductOption(object):
@@ -13,7 +13,6 @@ class ProductOption(object):
 
     def __init__(self,values):
         self.values=values
-        self.internalid=id_generator()
         if "AllowSpaces" in values.keys():
             self.AllowSpaces=values["AllowSpaces"]
         else:
@@ -89,10 +88,7 @@ class ProductOption(object):
         """Doing functionality like this allows things to be
         saved by a unique id, even if there is not one available
         """
-        if self.Id is None:
-            return self.internalid
-        else:
-            return self.Id
+        return self.Id
 
     def prepare(self):
         vals={}
@@ -131,82 +127,82 @@ class ProductOption(object):
             productoptions.append(self)
 
 
-class ProductCategoryAssignManager(object):
+class ProductOptionManager(object):
 
 
     def __init__(self, server):
         self.server=server
-        self.table="ProductCategoryAssign"
-        self.objectTemplate=ProductCategoryAssign
+        self.table="ProductOption"
+        self.objectTemplate=ProductOption
         self.downloadAllRecords()
         self.sortItems()
 
     def sortItems(self):
-        self.prodCatAssById={}
-        self.prodCatAssByProdId={}
-        self.prodCatAssByCatId={}
+        self.prodOptById={}
+        self.prodOptByProdId={}
+        self.prodOptByName={}
         for eachobject in self.allObjects:
             eachobject.register()
-            self.prodCatAssById[eachobject.Id]=eachobject
-            if eachobject.ProductId not in self.prodCatAssByProdId.keys():
-                self.prodCatAssByProdId[eachobject.ProductId]={}
-            self.prodCatAssByProdId[eachobject.ProductId][eachobject.ProductCategoryId]=eachobject
-            if eachobject.ProductCategoryId not in self.prodCatAssByCatId.keys():
-                self.prodCatAssByCatId[eachobject.ProductCategoryId]={}
-            self.prodCatAssByCatId[eachobject.ProductCategoryId][eachobject.ProductId]=eachobject
+            self.prodOptById[eachobject.Id]=eachobject
+            if eachobject.ProductId not in self.prodOptByProdId.keys():
+                self.prodOptByProdId[eachobject.ProductId]={}
+            self.prodOptByProdId[eachobject.ProductId][eachobject.Name]=eachobject
+            if eachobject.Name not in self.prodOptByName.keys():
+                self.prodOptByName[eachobject.Name]={}
+            self.prodOptByName[eachobject.Name][eachobject.ProductId]=eachobject
 
 
     def downloadAllRecords(self):
         self.allRecords=self.server.getAllRecords(self.table)
         self.allObjects=[self.objectTemplate(record) for record in self.allRecords]
 
-    def getObject(self, aProductCategoryAssignValues):
-        if "Id" in aProductCategoryAssignValues.keys():
-            if aProductCategoryAssignValues["Id"] in self.prodCatAssById.keys():
-                return self.prodCatAssById[aProductCategoryAssignValues["Id"]]
+    def getObject(self, aProductOptionValues):
+        if "Id" in aProductOptionValues.keys():
+            if aProductOptionValues["Id"] in self.prodOptById.keys():
+                return self.prodOptById[aProductOptionValues["Id"]]
             else:
-                matchingrecords=self.server.getMatchingRecords("ProductCategoryAssign", aProductCategoryAssignValues)
+                matchingrecords=self.server.getMatchingRecords("ProductOption", aProductOptionValues)
                 if len(matchingrecords)>0:
                     self.allRecords.append(matchingrecords[0])
-                    thisProductCategoryAssign=ProductCategoryAssign(matchingrecords[0])
-                    self.prodCatAssById[thisProductCategoryAssign.Id]=thisProductCategoryAssign
-                    if thisProductCategoryAssign.ProductId not in self.prodCatAssByProdId.keys():
-                        self.prodCatAssByProdId[thisProductCategoryAssign.ProductId]={}
-                    self.prodCatAssByProdId[thisProductCategoryAssign.ProductId][thisProductCategoryAssign.ProductCategoryId]=thisProductCategoryAssign
-                    if thisProductCategoryAssign.ProductCategoryId not in self.prodCatAssByCatId.keys():
-                        self.prodCatAssByCatId[thisProductCategoryAssign.ProductCategoryId]={}
-                    self.prodCatAssByCatId[thisProductCategoryAssign.ProductCategoryId][thisProductCategoryAssign.ProductId]=thisProductCategoryAssign
-                    thisProductCategoryAssign.register()
-                    return thisProductCategoryAssign
+                    thisProductOption=ProductOption(matchingrecords[0])
+                    self.prodOptById[thisProductOption.Id]=thisProductOption
+                    if thisProductOption.ProductId not in self.prodOptByProdId.keys():
+                        self.prodOptByProdId[thisProductOption.ProductId]={}
+                    self.prodOptByProdId[thisProductOption.ProductId][thisProductOption.Name]=thisProductOption
+                    if thisProductOption.Name not in self.prodOptByName.keys():
+                        self.prodOptByName[thisProductOption.Name]={}
+                    self.prodOptByName[thisProductOption.Name][thisProductOption.ProductId]=thisProductOption
+                    thisProductOption.register()
+                    return thisProductOption
                 else:
-                    thisid=self.server.createNewRecord("ProductCategoryAssign", aProductCategoryAssignValues)
-                    thisProductCategoryAssign=ProductCategoryAssign(aProductCategoryAssignValues)
-                    thisProductCategoryAssign.Id=thisid
-                    self.prodCatAssById[thisProductCategoryAssign.Id]=thisProductCategoryAssign
-                    if thisProductCategoryAssign.ProductId not in self.prodCatAssByProdId.keys():
-                        self.prodCatAssByProdId[thisProductCategoryAssign.ProductId]={}
-                    self.prodCatAssByProdId[thisProductCategoryAssign.ProductId][thisProductCategoryAssign.ProductCategoryId]=thisProductCategoryAssign
-                    if thisProductCategoryAssign.ProductCategoryId not in self.prodCatAssByCatId.keys():
-                        self.prodCatAssByCatId[thisProductCategoryAssign.ProductCategoryId]={}
-                    self.prodCatAssByCatId[thisProductCategoryAssign.ProductCategoryId][thisProductCategoryAssign.ProductId]=thisProductCategoryAssign
-                    thisProductCategoryAssign.register()
-                    return thisProductCategoryAssign
+                    thisid=self.server.createNewRecord("ProductOption", aProductOptionValues)
+                    thisProductOption=ProductOption(aProductOptionValues)
+                    thisProductOption.Id=thisid
+                    self.prodOptById[thisProductOption.Id]=thisProductOption
+                    if thisProductOption.ProductId not in self.prodOptByProdId.keys():
+                        self.prodOptByProdId[thisProductOption.ProductId]={}
+                    self.prodOptByProdId[thisProductOption.ProductId][thisProductOption.Name]=thisProductOption
+                    if thisProductOption.Name not in self.prodOptByName.keys():
+                        self.prodOptByName[thisProductOption.Name]={}
+                    self.prodOptByName[thisProductOption.Name][thisProductOption.ProductId]=thisProductOption
+                    thisProductOption.register()
+                    return thisProductOption
         else:
-            if not len(str(aProductCategoryAssignValues["ProductId"]).strip(' \n'))>0:
-                return "This is an invalid CatName name"
+            if not len(str(aProductOptionValues["Name"]).strip(' \n'))>0:
+                return "This is an invalid Option name"
             else:
-                if aProductCategoryAssignValues["ProductId"] in self.prodCatAssByProdId.keys():
-                    for eachpotential in self.prodCatAssByProdId[aProductCategoryAssignValues["ProductId"]].keys():
-                        if self.prodCatAssByProdId[aProductCategoryAssignValues["ProductId"]][eachpotential].ProductCategoryId == aProductCategoryAssignValues["ProductCategoryId"]:
-                            return self.prodCatAssByProdId[aProductCategoryAssignValues["ProductId"]][self.prodCatAssByProdId[aProductCategoryAssignValues["ProductId"]].keys()[0]]
-                thisProductCategoryAssign=ProductCategoryAssign(aProductCategoryAssignValues)
-                thisProductCategoryAssign.Id=self.server.createNewRecord("ProductCategoryAssign", thisProductCategoryAssign.prepare())
-                self.prodCatAssById[thisProductCategoryAssign.Id]=thisProductCategoryAssign
-                if thisProductCategoryAssign.ProductId not in self.prodCatAssByProdId.keys():
-                    self.prodCatAssByProdId[thisProductCategoryAssign.ProductId]={}
-                self.prodCatAssByProdId[thisProductCategoryAssign.ProductId][thisProductCategoryAssign.ProductCategoryId]=thisProductCategoryAssign
-                if thisProductCategoryAssign.ProductCategoryId not in self.prodCatAssByCatId.keys():
-                    self.prodCatAssByCatId[thisProductCategoryAssign.ProductCategoryId]={}
-                self.prodCatAssByCatId[thisProductCategoryAssign.ProductCategoryId][thisProductCategoryAssign.ProductId]=thisProductCategoryAssign
-                thisProductCategoryAssign.register()
-                return thisProductCategoryAssign
+                if aProductOptionValues["ProductId"] in self.prodOptByProdId.keys():
+                    for eachpotential in self.prodOptByProdId[aProductOptionValues["ProductId"]].keys():
+                        if self.prodOptByProdId[aProductOptionValues["ProductId"]][eachpotential].Name == aProductOptionValues["Name"]:
+                            return self.prodOptByProdId[aProductOptionValues["ProductId"]][self.prodOptByProdId[aProductOptionValues["ProductId"]].keys()[0]]
+                thisProductOption=ProductOption(aProductOptionValues)
+                thisProductOption.Id=self.server.createNewRecord("ProductOption", thisProductOption.prepare())
+                self.prodOptById[thisProductOption.Id]=thisProductOption
+                if thisProductOption.ProductId not in self.prodOptByProdId.keys():
+                    self.prodOptByProdId[thisProductOption.ProductId]={}
+                self.prodOptByProdId[thisProductOption.ProductId][thisProductOption.Name]=thisProductOption
+                if thisProductOption.Name not in self.prodOptByName.keys():
+                    self.prodOptByName[thisProductOption.Name]={}
+                self.prodOptByName[thisProductOption.Name][thisProductOption.ProductId]=thisProductOption
+                thisProductOption.register()
+                return thisProductOption
