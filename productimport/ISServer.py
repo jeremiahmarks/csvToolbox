@@ -3,7 +3,7 @@
 # @Author: Jeremiah Marks
 # @Date:   2015-06-21 20:28:48
 # @Last Modified 2015-06-21
-# @Last Modified time: 2015-06-21 20:37:23
+# @Last Modified time: 2015-06-22 17:07:03
 
 import xmlrpclib
 
@@ -92,14 +92,14 @@ class ISServer:
         except:
             return False
     def callTotal(self):
-        print callTotal + "Calls since initiated"
+        print self.calls + "Calls since initiated"
 
 tables={}
 # This is a dictionary of the tables accessiable through the API
 # It has not been fully sanitized with regards to permissions, so you
-# Will likely run into issues where you cannot read something 
+# Will likely run into issues where you cannot read something
 # but you may be able to write to it, or visa-versa.  Basically,
-# until you have worked with a specific table a couple of times, 
+# until you have worked with a specific table a couple of times,
 # expect to run into errors.
 tables["ActionSequence"] = ["Id", "TemplateName", "VisibleToTheseUsers"]
 tables["AffResource"] = ["Id", "Notes", "ProgramIds", "ResourceHREF", "ResourceHTML", "ResourceOrder", "ResourceType", "Title"]
