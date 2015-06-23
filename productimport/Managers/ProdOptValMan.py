@@ -2,55 +2,58 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-22 01:21:54
-# @Last Modified 2015-06-22
-# @Last Modified time: 2015-06-22 01:58:30
+# @Last Modified 2015-06-23
+# @Last Modified time: 2015-06-23 00:38:39
+import HTMLParser
+html_parser = HTMLParser.HTMLParser()
+import datetime
 
 class ProductOptValue(object):
     global productoptvalues
     if 'productoptvalues' not in globals():
         productoptvalues = []
 
-    def __init__(self,values):
-        self.values=values
+    def __init__(self, values):
+        self.values = values
         if "Id" in values.keys():
-            self.Id=values["Id"]
+            self.Id = values["Id"]
         else:
-            self.Id=None
+            self.Id = None
         if "IsDefault" in values.keys():
-            self.IsDefault=values["IsDefault"]
+            self.IsDefault = values["IsDefault"]
         else:
-            self.IsDefault=None
+            self.IsDefault = None
         if "Label" in values.keys():
-            self.Label=values["Label"]
+            self.Label = html_parser.unescape(values["Label"])
         else:
-            self.Label=None
+            self.Label = None
         if "Name" in values.keys():
-            self.Name=values["Name"]
+            self.Name = html_parser.unescape(values["Name"])
         else:
-            self.Name=None
+            self.Name = None
         if "OptionIndex" in values.keys():
-            self.OptionIndex=values["OptionIndex"]
+            self.OptionIndex = values["OptionIndex"]
         else:
-            self.OptionIndex=None
+            self.OptionIndex = None
         if "PriceAdjustment" in values.keys():
-            self.PriceAdjustment=values["PriceAdjustment"]
+            self.PriceAdjustment = values["PriceAdjustment"]
         else:
-            self.PriceAdjustment=None
+            self.PriceAdjustment = None
         if "ProductOptionId" in values.keys():
-            self.ProductOptionId=values["ProductOptionId"]
+            self.ProductOptionId = values["ProductOptionId"]
         else:
-            self.ProductOptionId=None
+            self.ProductOptionId = None
         if "Sku" in values.keys():
-            self.Sku=values["Sku"]
+            self.Sku = values["Sku"]
         else:
-            self.Sku=None
-
+            self.Sku = None
 
     def __eq__(self, other):
-        if self.getid()==other.getid():
+        if self.getid() == other.getid():
             return True
         if self.Name and other.Name:
-            namesmatch=self.Name.lower().strip(' \n') is other.Name.lower().strip(' \n')
+            namesmatch = self.Name.lower().strip(
+                ' \n') is other.Name.lower().strip(' \n')
             return namesmatch and (self.ProductOptionId is other.ProductOptionId)
         return False
 
@@ -61,7 +64,7 @@ class ProductOptValue(object):
         return self.Id
 
     def prepare(self):
-        vals={}
+        vals = {}
         if self.Id is not None:
             vals["Id"] = self.Id
         if self.IsDefault is not None:
@@ -79,11 +82,11 @@ class ProductOptValue(object):
         if self.Sku is not None:
             vals["Sku"] = self.Sku
         # for eachitem in vals.keys():
-        #     # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
+        # Since I cannot currently deal well with unicode, I must exclude it from writing to csv
         #     if type('str')==type(vals[eachitem]):
         #         for eachchr in vals[eachitem]:
         #             if ord(eachchr)>128:
-        #                 vals[eachitem]=vals[eachitem].replace(eachchr, 'replaced')
+        #                 vals[eachitem]= vals[eachitem].replace(eachchr, 'replaced')
         return vals
 
     def register(self):
@@ -91,80 +94,73 @@ class ProductOptValue(object):
             productoptvalues.append(self)
 
 
-
-
 class ProductOptValueManager(object):
+
     def __init__(self, server):
-        self.server=server
-        self.table="ProductOptValue"
-        self.objectTemplate=ProductOptValue
+        self.server = server
+        self.table = "ProductOptValue"
+        self.objectTemplate = ProductOptValue
         self.downloadAllRecords()
         self.sortItems()
 
     def sortItems(self):
-        self.ProdOptValById={}
-        self.ProdOptValByName={}
-        self.ProdOptValByProdOptId={}
+        print "ProductOptValueManager Sort Start " + datetime.datetime.now().strftime("%Y%d%m%H%M%S%s")
+        self.ProdOptValById = {}
+        self.ProdOptValByName = {}
+        self.ProdOptValByProdOptId = {}
         for eachobject in self.allObjects:
-            eachobject.register()
-            self.ProdOptValById[eachobject.Id]=eachobject
+            eachobject.Name = html_parser.unescape(eachobject.Name)
+            eachobject.Label = html_parser.unescape(eachobject.Label)
+            self.ProdOptValById[eachobject.Id] = eachobject
+        print "ProductOptValueManager Sort IDs Done " + datetime.datetime.now().strftime("%Y%d%m%H%M%S%s")
+
+        for eachobjectId in self.ProdOptValById.keys():
+            eachobject = self.ProdOptValById[eachobjectId]
             if eachobject.Name not in self.ProdOptValByName.keys():
-                self.ProdOptValByName[eachobject.Name]={}
-            self.ProdOptValByName[eachobject.Name][eachobject.ProductOptionId]=eachobject
+                self.ProdOptValByName[eachobject.Name] = {}
+            self.ProdOptValByName[eachobject.Name][
+                eachobject.ProductOptionId] = eachobject
             if eachobject.ProductOptionId not in self.ProdOptValByProdOptId.keys():
-                self.ProdOptValByProdOptId[eachobject.ProductOptionId]={}
-            self.ProdOptValByProdOptId[eachobject.ProductOptionId][eachobject.Name]=eachobject
+                self.ProdOptValByProdOptId[eachobject.ProductOptionId] = {}
+            self.ProdOptValByProdOptId[eachobject.ProductOptionId][
+                eachobject.Name] = eachobject
+        print "ProductOptValueManager Sort IDs Done " + datetime.datetime.now().strftime("%Y%d%m%H%M%S%s")
 
     def downloadAllRecords(self):
-        self.allRecords=self.server.getAllRecords(self.table)
-        self.allObjects=[self.objectTemplate(record) for record in self.allRecords]
+        print "ProductOptValueManager downloadAllRecords Start " + datetime.datetime.now().strftime("%Y%d%m%H%M%S%s")
+        self.allRecords = self.server.getAllRecords(self.table)
+        self.allObjects = [
+            self.objectTemplate(record) for record in self.allRecords]
+        print "ProductOptValueManager downloadAllRecords End " + datetime.datetime.now().strftime("%Y%d%m%H%M%S%s")
+        print "total objects: " + str(len(self.allObjects))
 
     def getObject(self, aProductOptValueValues):
         if "Id" in aProductOptValueValues.keys():
-            if aProductOptValueValues["Id"] in self.ProdOptValById.keys():
-                return self.ProdOptValById[aProductOptValueValues["Id"]]
-            else:
-                matchingrecords=self.server.getMatchingRecords("ProductOptValue", aProductOptValueValues)
-                if len(matchingrecords)>0:
-                    self.allRecords.append(matchingrecords[0])
-                    thisProductOptValue=ProductOptValue(matchingrecords[0])
-                    self.ProdOptValById[thisProductOptValue.Id]=thisProductOptValue
-                    if thisProductOptValue.Name not in self.ProdOptValByName.keys():
-                        self.ProdOptValByName[thisProductOptValue.Name]={}
-                    self.ProdOptValByName[thisProductOptValue.Name][thisProductOptValue.ProductOptionId]=thisProductOptValue
-                    if thisProductOptValue.ProductOptionId not in self.ProdOptValByProdOptId.keys():
-                        self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId]={}
-                    self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId][thisProductOptValue.Name]=thisProductOptValue
-                    thisProductOptValue.register()
-                    return thisProductOptValue
-                else:
-                    thisid=self.server.createNewRecord("ProductOptValue", aProductOptValueValues)
-                    thisProductOptValue=ProductOptValue(aProductOptValueValues)
-                    thisProductOptValue.Id=thisid
-                    self.ProdOptValById[thisProductOptValue.Id]=thisProductOptValue
-                    if thisProductOptValue.Name not in self.ProdOptValByName.keys():
-                        self.ProdOptValByName[thisProductOptValue.Name]={}
-                    self.ProdOptValByName[thisProductOptValue.Name][thisProductOptValue.ProductOptionId]=thisProductOptValue
-                    if thisProductOptValue.ProductOptionId not in self.ProdOptValByProdOptId.keys():
-                        self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId]={}
-                    self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId][thisProductOptValue.Name]=thisProductOptValue
-                    thisProductOptValue.register()
-                    return thisProductOptValue
+            return self.updateRemote(aProductOptValueValues)
         else:
-            if not len(aProductOptValueValues["Name"].strip(' \n'))>0:
+            if not len(aProductOptValueValues["Name"].strip(' \n')) > 0:
                 return "This is an invalid product name"
             else:
                 if aProductOptValueValues["Name"] not in self.ProdOptValByName.keys():
-                    self.ProdOptValByName[aProductOptValueValues["Name"]]={}
-                thisProductOptValue=ProductOptValue(aProductOptValueValues)
-                thisProductOptValue.Id=self.server.createNewRecord("ProductOptValue", thisProductOptValue.prepare())
-                self.ProdOptValById[thisProductOptValue.Id]=thisProductOptValue
+                    self.ProdOptValByName[aProductOptValueValues["Name"]] = {}
+                thisProductOptValue = ProductOptValue(aProductOptValueValues)
+                thisProductOptValue.Id = self.server.createNewRecord(
+                    "ProductOptValue", thisProductOptValue.prepare())
+                self.ProdOptValById[
+                    thisProductOptValue.Id] = thisProductOptValue
                 if thisProductOptValue.Name not in self.ProdOptValByName.keys():
-                    self.ProdOptValByName[thisProductOptValue.Name]={}
-                self.ProdOptValByName[thisProductOptValue.Name][thisProductOptValue.ProductOptionId]=thisProductOptValue
+                    self.ProdOptValByName[thisProductOptValue.Name] = {}
+                self.ProdOptValByName[thisProductOptValue.Name][
+                    thisProductOptValue.ProductOptionId] = thisProductOptValue
                 if thisProductOptValue.ProductOptionId not in self.ProdOptValByProdOptId.keys():
-                    self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId]={}
-                self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId][thisProductOptValue.Name]=thisProductOptValue
+                    self.ProdOptValByProdOptId[
+                        thisProductOptValue.ProductOptionId] = {}
+                self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId][
+                    thisProductOptValue.Name] = thisProductOptValue
                 thisProductOptValue.register()
                 return thisProductOptValue
-
+    def updateRemote(self, aProductOptValueValues):
+        thisobject=ProductOptValue(aProductOptValueValues)
+        updateValues=thisobject.prepare()
+        updateValues.pop("Id",None)
+        self.server.updateRecord(self.table, aProductOptValueValues["Id"], updateValues)

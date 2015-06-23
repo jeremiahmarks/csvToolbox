@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 # @Author: jeremiah.marks
 # @Date:   2015-06-22 12:15:57
-# @Last Modified by:   jeremiah.marks
-# @Last Modified time: 2015-06-22 14:33:23
+# @Last Modified 2015-06-22>
+# @Last Modified time: 2015-06-22 19:43:24
 import csv
-import my_pw as pw
+from productimport import my_pw as pw
 
 ############################################################
 ##                                                         #
