@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-22 01:21:54
-# @Last Modified 2015-06-23
-# @Last Modified time: 2015-06-23 00:38:39
+# @Last Modified 2015-06-24
+# @Last Modified time: 2015-06-24 23:49:47
 import HTMLParser
 html_parser = HTMLParser.HTMLParser()
 import datetime
@@ -144,6 +144,13 @@ class ProductOptValueManager(object):
                 if aProductOptValueValues["Name"] not in self.ProdOptValByName.keys():
                     self.ProdOptValByName[aProductOptValueValues["Name"]] = {}
                 thisProductOptValue = ProductOptValue(aProductOptValueValues)
+                if thisProductOptValue.ProductOptionId not in self.ProdOptValByProdOptId.keys():
+                    self.ProdOptValByProdOptId[
+                        thisProductOptValue.ProductOptionId] = {}
+                if aProductOptValueValues["Name"] in self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId]:
+                    thisProductOptValue.OptionIndex=self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId][aProductOptValueValues["Name"]].OptionIndex
+                else:
+                    thisProductOptValue.OptionIndex=len(self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId])
                 thisProductOptValue.Id = self.server.createNewRecord(
                     "ProductOptValue", thisProductOptValue.prepare())
                 self.ProdOptValById[
@@ -152,14 +159,12 @@ class ProductOptValueManager(object):
                     self.ProdOptValByName[thisProductOptValue.Name] = {}
                 self.ProdOptValByName[thisProductOptValue.Name][
                     thisProductOptValue.ProductOptionId] = thisProductOptValue
-                if thisProductOptValue.ProductOptionId not in self.ProdOptValByProdOptId.keys():
-                    self.ProdOptValByProdOptId[
-                        thisProductOptValue.ProductOptionId] = {}
                 self.ProdOptValByProdOptId[thisProductOptValue.ProductOptionId][
                     thisProductOptValue.Name] = thisProductOptValue
                 thisProductOptValue.register()
                 return thisProductOptValue
     def updateRemote(self, aProductOptValueValues):
+        print "I am updating remote"
         thisobject=ProductOptValue(aProductOptValueValues)
         updateValues=thisobject.prepare()
         updateValues.pop("Id",None)

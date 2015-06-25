@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-21 20:31:15
-# @Last Modified 2015-06-23
-# @Last Modified time: 2015-06-23 00:55:00
+# @Last Modified 2015-06-24
+# @Last Modified time: 2015-06-24 23:55:48
 import HTMLParser
 import my_pw
 import ISServer
@@ -44,12 +44,10 @@ for eachrow in thiscsvman:
     server.callTotal()
     if eachrow[0] == "Product":
         if len(thisproductsoptions.keys()) > 0:
-            # processTheOptions
             for eachoption in thisproductsoptions.keys():
                 for eachvalue in thisproductsoptions[eachoption].keys():
-                    thispovm.getObject(thisproductsoptions[eachoption][eachvalue])
+                    thisobject=thispovm.getObject(thisproductsoptions[eachoption][eachvalue])
             thisproductsoptions = {}
-            pass
 
         prodrow = eachrow[1]
         thisproduct = {}
@@ -149,7 +147,7 @@ for eachrow in thiscsvman:
             thisproductiontionvalue["ProductOptionId"] = thisProductOption.Id
             thisproductsoptions[optionname][
                 optionvalue] = thisproductiontionvalue
-            # thisProductOptVal = thispovm.getObject(thisproductiontionvalue)
+            thisProductOptVal = thispovm.getObject(thisproductiontionvalue)
             # This was removed in order to allow all of the pricing rules to be
             # factored in first
     elif eachrow[0] == "PricingRule":
@@ -161,12 +159,8 @@ for eachrow in thiscsvman:
             print '\n\n' + eachoptionname
             if eachoptionname[0] == '[':
                 eachoptionname = eachoptionname[eachoptionname.find(']') + 1:]
-            print eachoptionname
             eachoptionname = eachoptionname.replace(
                 '_', ',').replace("::", ", ")
-            print eachoptionname
-            if eachoptionname.count("=") == 0:
-                print eachoptionname
             optionname, optionvalue = eachoptionname.split("=", 1)
             optionvalue = optionvalue.split(':')[0]
             thisproductoption = {}

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-22 00:02:38
-# @Last Modified 2015-06-23
-# @Last Modified time: 2015-06-23 01:07:19
+# @Last Modified 2015-06-24
+# @Last Modified time: 2015-06-24 23:17:06
 import HTMLParser
 html_parser = HTMLParser.HTMLParser()
 
@@ -207,7 +207,7 @@ class ProductOptionManager(object):
                 if aProductOptionValues["ProductId"] in self.prodOptByProdId.keys():
                     for eachpotential in self.prodOptByProdId[aProductOptionValues["ProductId"]].keys():
                         if self.prodOptByProdId[aProductOptionValues["ProductId"]][eachpotential].Name == aProductOptionValues["Name"]:
-                            return self.prodOptByProdId[aProductOptionValues["ProductId"]][self.prodOptByProdId[aProductOptionValues["ProductId"]].keys()[0]]
+                            return self.prodOptByProdId[aProductOptionValues["ProductId"]][eachpotential]
                 thisProductOption = ProductOption(aProductOptionValues)
                 thisProductOption.Name = html_parser.unescape(thisProductOption.Name)
                 thisProductOption.Label = html_parser.unescape(thisProductOption.Label)
