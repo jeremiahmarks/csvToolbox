@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: jeremiah.marks
 # @Date:   2015-06-15 17:46:35
-# @Last Modified 2015-06-17
-# @Last Modified time: 2015-06-17 04:35:26
+# @Last Modified 2015-06-29
+# @Last Modified time: 2015-06-29 20:21:46
 
 # This script will open a csv file and go through it
 # cell-by-cell, row-by-row and count the number of characters
@@ -140,6 +140,16 @@ def expandcells():
 
 
 
-
-
-
+def reductlengthandremovenewlines():
+    with open(infilename) as infile:
+        thisreader=csv.DictReader(infile)
+        theseheadings=[k[:30].rjust(50, ' ') for k in thisreader.fieldnames]
+        with open(outfilename, 'wb') as outfile:
+            thiswriter=csv.DictWriter(outfile, theseheadings)
+            thiswriter.writeheader()
+            for eachline in thisreader:
+                thisline={}
+                for eachfieldname in thisreader.fieldnames:
+                    thisline[eachfieldname[:30].rjust(50, ' ')]=eachline[eachfieldname].replace('\n', '\\n')[:30].rjust(50, ' ')
+                thiswriter.writerow(thisline)
+        

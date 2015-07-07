@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-28 15:43:34
-# @Last Modified 2015-06-28
-# @Last Modified time: 2015-06-28 21:17:00
+# @Last Modified 2015-06-29
+# @Last Modified time: 2015-06-29 20:36:05
 
 ############################################################
 ##  This script is designed to import a folder full of YAML
@@ -69,6 +69,17 @@ for eachthing in convertedtoDicts:
                     for eachnewkey in eachitem.keys():
                         eachthing[thisthing+str('%03i' %thiscounter[thisthing])+"-"+eachnewkey]= eachitem.pop(eachnewkey)
             eachthing.pop(eachkey)
+
+def thatthingaboveinamethod():
+    for eachthing in convertedtoDicts:
+        for eachkey in eachthing.keys():
+            if type(eachthing[eachkey]) is type(list()):
+                thisthing=eachkey
+                for eachitem in eachthing[eachkey]:
+                    if type(eachitem) is type(dict()):
+                        for eachnewkey in eachitem.keys():
+                            eachthing[thisthing+str(eachnewkey)]= eachitem.pop(eachnewkey)
+                eachthing.pop(eachkey)
 
 headings=set()
 for eachthingthistime in convertedtoDicts:
