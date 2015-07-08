@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-06-21 15:00:03
-# @Last Modified 2015-06-21>
-# @Last Modified time: 2015-06-21 15:07:55
+# @Last Modified 2015-07-08
+# @Last Modified time: 2015-07-08 00:38:53
 
 import xmlrpclib
 
@@ -73,6 +73,13 @@ class ISServer:
                 self.connection.DataService.delete(tablename, eachid)
             except:
                 print "Cannot Delete " + str(eachid)
+
+    ########################################################
+    ## Method to create a new contact record, or updates an existing
+    ## potential values for checktype are 
+    ## ['Email', 'EmailAndName', 'EmailAndNameAndCompany']
+    def dupeCreate(self, contactData={}, checktype='Email'):
+        return self.connection.ContactService.addWithDupCheck(self.infusionsoftAPIKey, contactData, checktype)
 
     ########################################################
     ## Methods to get meta-data about records
