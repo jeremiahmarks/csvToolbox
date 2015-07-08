@@ -14,7 +14,7 @@ class ISServer:
 
     def __init__(self, infusionsoftapp, infusionsoftAPIKey):
         self.starttime = datetime.datetime.now()
-        self.stime = self.starttime.strftime("%Y%d%m%H%M%S%s")
+        self.stime = self.starttime.strftime("%Y%d%m%H%M%S")
         self.calls = 0
         self.infusionsoftapp = infusionsoftapp
         self.infusionsoftAPIKey = infusionsoftAPIKey
