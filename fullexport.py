@@ -34,8 +34,8 @@ class fullexporter():
 		return raw_input("Please enter appname:").strip('\n \t')
 
 	def getapikey(self):
-		username='jeremiah.marks@infusionsoft.com'
-		password='x46PekWxu3ULl7dO'
+		username='yourusername'
+		password='yourpassword'
 		self.browser = RoboBrowser(history=True)
 		self.browser.open(self.baseurl)
 		logform = self.browser.get_form()
