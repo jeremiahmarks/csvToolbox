@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: Jeremiah Marks
 # @Date:   2015-05-16 18:47:35
-# @Last Modified 2015-05-16
-# @Last Modified time: 2015-05-16 21:34:56
+# @Last Modified 2015-08-18
+# @Last Modified time: 2015-08-18 01:18:38
 
 from my_pw import passwords
 
@@ -20,7 +20,7 @@ def login():
     global driver
     global passwords
     if not loggedIn:
-        driver = webdriver.Firefox()
+        driver = webdriver.Chrome()
         driver.maximize_window()
         driver.get("https://" + passwords['appname'] + ".infusionsoft.com")
         elem = driver.find_element_by_id('username')
