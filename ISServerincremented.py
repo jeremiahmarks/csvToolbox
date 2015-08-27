@@ -6,7 +6,7 @@
 # @Last Modified time: 2015-07-08 00:38:53
 
 import xmlrpclib
-import csv
+
 class ISServer:
     def __init__(self, infusionsoftapp, infusionsoftAPIKey):
         self.infusionsoftapp=infusionsoftapp
@@ -51,46 +51,8 @@ class ISServer:
             if not(len(listOfDicts)==1000):
                 break
             p+=1
+            if
         return records
-
-    def incrementlyGetRecords(self, tableName, interestingData=None, searchCriteria=None, orderedBy=None):
-        if interestingData is None:
-            interestingData = tables[tableName]
-        if searchCriteria is None:
-            searchCriteria={}
-        if orderedBy is None:
-            orderedBy = interestingData[0]
-        records = []
-        p=0
-        while True:
-            print tableName, p
-            listOfDicts = self.connection.DataService.query(self.infusionsoftAPIKey, tableName, 1000, p, searchCriteria, interestingData, orderedBy, True)
-            for each in listOfDicts:
-                thisRecord={}
-                for eachbit in interestingData:   # this should be records.append(zip(interestingData, each)) perhaps
-                    if not each.has_key(eachbit):   # TODO: research THIS
-                        each[eachbit]=None
-                    thisRecord[eachbit] = each[eachbit]
-                records.append(thisRecord)
-            if not(len(listOfDicts)==1000):
-                break
-            p+=1
-            if p%10==0:
-                fname = tableName + "%010d" %(p) + ".csv"
-                print 'writing', p, fname
-                with open(fname, 'wb') as outfile:
-                    thisWriter = csv.DictWriter(outfile, records[0])
-                    thisWriter.writeheader()
-                    thisWriter.writerows(records)
-                records=[]
-        fname = tableName + "%010d" %(p) + ".csv"
-        print 'writing', p, fname
-        with open(fname, 'wb') as outfile:
-            thisWriter = csv.DictWriter(outfile, records[0])
-            thisWriter.writeheader()
-            thisWriter.writerows(records)
-
-
 
     ########################################################
     ## Methods to create records
@@ -162,11 +124,7 @@ tables["GroupAssign"] = ["Admin", "GroupId", "Id", "UserId"]
 tables["Invoice"] = ["AffiliateId", "ContactId", "CreditStatus", "DateCreated", "Description", "Id", "InvoiceTotal", "InvoiceType", "JobId", "LeadAffiliateId", "PayPlanStatus", "PayStatus", "ProductSold", "PromoCode", "RefundStatus", "Synced", "TotalDue", "TotalPaid"]
 tables["InvoiceItem"] = ["CommissionStatus", "DateCreated", "Description", "Discount", "Id", "InvoiceAmt", "InvoiceId", "OrderItemId"]
 tables["InvoicePayment"] = ["Amt", "Id", "InvoiceId", "PayDate", "PayStatus", "PaymentId", "SkipCommission"]
-
-
-tables["Job"] = ["ContactId", "DateCreated", "DueDate", "Id", "JobNotes", "JobRecurringId", "JobStatus", "JobTitle", "OrderStatus", "OrderType", "ProductId", "StartDate"]
-
-
+tables["Job"] = ["ContactId", "DateCreated", "DueDate", "Id", "JobNotes", "JobRecurringId", "JobStatus", "JobTitle", "OrderStatus", "OrderType", "ProductId", "ShipCity", "ShipCompany", "ShipCountry", "ShipFirstName", "ShipLastName", "ShipMiddleName", "ShipPhone", "ShipState", "ShipStreet1", "ShipStreet2", "ShipZip", "StartDate"]
 tables["JobRecurringInstance"] = ["AutoCharge", "DateCreated", "Description", "EndDate", "Id", "InvoiceItemId", "RecurringId", "StartDate", "Status"]
 tables["Lead"] = ["AffiliateId", "ContactID", "CreatedBy", "DateCreated", "EstimatedCloseDate", "Id", "LastUpdated", "LastUpdatedBy", "Leadsource", "NextActionDate", "NextActionNotes", "Objection", "OpportunityNotes", "OpportunityTitle", "ProjectedRevenueHigh", "ProjectedRevenueLow", "StageID", "StatusID", "UserID"]
 tables["LeadSource"] = ["CostPerLead", "Description", "EndDate", "Id", "LeadSourceCategoryId", "Medium", "Message", "Name", "StartDate", "Status", "Vendor"]
