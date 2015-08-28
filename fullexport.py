@@ -122,6 +122,17 @@ class fullexporter():
                 print "already completed "+ eachtable
         self.apidata = apidata
 
+
+    def inchandleAPItable(self, tablename):
+        self.customfields=self.svr.getAllRecords('DataFormField')
+        if tablename not in self.mapping.keys():
+            self.mapping[tablename]=99
+        fields = ISServer.tables[tablename] +  ['_'+fld['Name'] for fld in self.customfields if fld['FormId'] is self.mapping[tablename]]
+        self.svr.incrementlyGetRecords(tablename, interestingData=fields)
+        print "done writing " + tablename
+
+
+
     def inchandlefiles(self):
         os.chdir(self.startingpath)
         if not os.path.exists('files'):
