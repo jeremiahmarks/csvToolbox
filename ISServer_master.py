@@ -64,7 +64,11 @@ class ISServer:
         p=0
         while True:
             print tableName, p
-            listOfDicts = self.connection.DataService.query(self.infusionsoftAPIKey, tableName, 1000, p, searchCriteria, interestingData, orderedBy, True)
+            print "trying!"
+            try:
+                listOfDicts = self.connection.DataService.query(self.infusionsoftAPIKey, tableName, 1000, p, searchCriteria, interestingData, orderedBy, True)
+            except Exception e:
+                print e
             for each in listOfDicts:
                 thisRecord={}
                 for eachbit in interestingData:   # this should be records.append(zip(interestingData, each)) perhaps
@@ -90,13 +94,13 @@ class ISServer:
             thisWriter.writeheader()
             thisWriter.writerows(records)
 
-    def incrementGetFiles(self):
-        totalfiles = self.getCount('FileBox', query={})
-        p=0
-        while True:
-            print "page = " + str(p) + " starting"
-            thesefiles=self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {}, tables["FileBox"], 'Id', False)
-            for eachfile in thesefiles:
+    # def incrementGetFiles(self):
+    #     totalfiles = self.getCount('FileBox', query={})
+    #     p=0
+    #     while True:
+    #         print "page = " + str(p) + " starting"
+    #         thesefiles=self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {}, tables["FileBox"], 'Id', False)
+    #         for eachfile in thesefiles:
 
 
     ########################################################
