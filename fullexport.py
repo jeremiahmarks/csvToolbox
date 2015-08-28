@@ -107,6 +107,36 @@ class fullexporter():
             fout.write(self.browser.response.content)
             fout.close()
 
+    def inchandleAPItables(self):
+        apidata={}
+        self.customfields=self.svr.getAllRecords('DataFormField')
+        for eachtable in ISServer.tables.keys():
+            if eachtable not in ["LeadSourceExpense", "DataFormTab", "GroupAssign", "AffResource", "InvoiceItem", "UserGroup", "CProgram", "ActionSequence", "Template", "LeadSource", "Status", "Campaignee", "DataFormField", "OrderItem", "DataFormGroup", "ProductOptValue", "ContactGroup", "Company", "TicketStage", "ProductCategoryAssign", "ContactGroupAssign"]:
+                print "starting " + eachtable
+                if eachtable not in self.mapping.keys():
+                    self.mapping[eachtable]=99
+                fields = ISServer.tables[eachtable] +  ['_'+fld['Name'] for fld in self.customfields if fld['FormId'] is self.mapping[eachtable]]
+                self.svr.incrementlyGetRecords(eachtable, interestingData=fields)
+                print "done writing " + eachtable
+            else:
+                print "already completed "+ eachtable
+        self.apidata = apidata
+
+    def inchandlefiles(self):
+        os.chdir(self.startingpath)
+        if not os.path.exists('files'):
+            os.mkdir('files')
+        os.chdir('files')
+        allfiles = self.svr.getAllRecords('FileBox')
+        for eachfile in allfiles:
+            downloadurl = self.baseurl+"Download?Id="+str(eachfile['Id'])
+            self.browser.open(downloadurl)
+            fileoutpath = os.path.join(self.startingpath, 'files', eachfile['ContactId'], eachfile['FileName'])
+            if not os.path.exists(os.path.dirname(fileoutpath)):
+                os.makedirs(fileoutpath)
+            fout = open(fileoutpath, 'wb')
+            fout.write(self.browser.response.content)
+            fout.close()
 
     def play(self):
         print "she's all yours captain!"
@@ -167,20 +197,6 @@ class fullexporter():
             print "done writing " + eachtable
         self.apidata = apidata
 
-    def inchandleAPItables(self):
-        apidata={}
-        self.customfields=self.svr.getAllRecords('DataFormField')
-        for eachtable in ISServer.tables.keys():
-            if eachtable not in ["LeadSourceExpense", "DataFormTab", "GroupAssign", "AffResource", "InvoiceItem", "UserGroup", "CProgram", "ActionSequence", "Template", "LeadSource", "Status", "Campaignee", "DataFormField", "OrderItem", "DataFormGroup", "ProductOptValue", "ContactGroup", "Company", "TicketStage", "ProductCategoryAssign", "ContactGroupAssign"]:
-                print "starting " + eachtable
-                if eachtable not in self.mapping.keys():
-                    self.mapping[eachtable]=99
-                fields = ISServer.tables[eachtable] +  ['_'+fld['Name'] for fld in self.customfields if fld['FormId'] is self.mapping[eachtable]]
-                self.svr.incrementlyGetRecords(eachtable, interestingData=fields)
-                print "done writing " + eachtable
-            else:
-                print "already completed "+ eachtable
-        self.apidata = apidata
 
 
 

@@ -90,6 +90,13 @@ class ISServer:
             thisWriter.writeheader()
             thisWriter.writerows(records)
 
+    def incrementGetFiles(self):
+        totalfiles = self.getCount('FileBox', query={})
+        p=0
+        while True:
+            print "page = " + str(p) + " starting"
+            thesefiles=self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {}, tables["FileBox"], 'Id', False)
+            for eachfile in thesefiles:
 
 
     ########################################################
