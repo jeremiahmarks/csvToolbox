@@ -67,8 +67,8 @@ class ISServer:
             print "trying!"
             try:
                 listOfDicts = self.connection.DataService.query(self.infusionsoftAPIKey, tableName, 1000, p, searchCriteria, interestingData, orderedBy, True)
-            except Exception e:
-                print e
+            except Exception, e:
+                print e ,p
             for each in listOfDicts:
                 thisRecord={}
                 for eachbit in interestingData:   # this should be records.append(zip(interestingData, each)) perhaps
@@ -102,15 +102,20 @@ class ISServer:
             try:
                 listofdicts =  self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {}, tables["FileBox"], 'Id', False)
                 for eachfile in listofdicts:
-                    downloadurl = self.baseurl + "/Download?Id=" + str(eachfile['Id'])
-                    browser.open(downloadurl)
-                    fileoutpath = os.path.join(self.curdir, 'files', eachfile['ContactId'], eachfile['FileName'])
-                    if not os.path.exists(os.path.dirname(fileoutpath)):
-                        os.makedirs(fileoutpath)
-                    fout = open(fileoutpath, 'wb')
-                    fout.write(browser.response.content)
-                    fout.close()
-            except Exception e:
+                    try:
+                        downloadurl = self.baseurl + "/Download?Id=" + str(eachfile['Id'])
+                        browser.open(downloadurl)
+                        # folderpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId']) ))
+
+                        fileoutpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId']), eachfile['FileName']))
+                        if not os.path.exists(os.path.dirname(fileoutpath)):
+                            os.makedirs(os.path.dirname(fileoutpath))
+                        fout = open(fileoutpath, 'wb')
+                        fout.write(browser.response.content)
+                        fout.close()
+                    except Exception, e:
+                        print eachfile,'\n', e
+            except Exception, e:
                 print p, e
             finally:
                 if not (len(listofdicts)==1000):
@@ -119,22 +124,6 @@ class ISServer:
                     p+=1
 
 
-
-            except Exception e:
-                print p, e
-
-    # def incrementGetFiles(self):
-    #     totalfiles = self.getCount('FileBox', query={})
-    #     p=0
-    #     while True:
-    #         print "page = " + str(p) + " starting"
-    #         thesefiles=self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {}, tables["FileBox"], 'Id', False)
-    #         for eachfile in thesefiles:
-
-
-    ########################################################
-    ## Methods to create records
-    ##
     def cnp(self, productValues):
         return self.createNewRecord('Product', productValues)
     def createNewRecord(self, table, recordvalues):

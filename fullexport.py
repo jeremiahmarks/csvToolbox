@@ -89,7 +89,7 @@ class fullexporter():
         elif thisChoice == 'rpts':
             self.downloadAllReports()
         else:
-            self.menu()
+            self.inchandlefiles()
 
     def handlefiles(self):
         os.chdir(self.startingpath)
