@@ -135,19 +135,7 @@ class fullexporter():
 
     def inchandlefiles(self):
         os.chdir(self.startingpath)
-        if not os.path.exists('files'):
-            os.mkdir('files')
-        os.chdir('files')
-        allfiles = self.svr.getAllRecords('FileBox')
-        for eachfile in allfiles:
-            downloadurl = self.baseurl+"Download?Id="+str(eachfile['Id'])
-            self.browser.open(downloadurl)
-            fileoutpath = os.path.join(self.startingpath, 'files', eachfile['ContactId'], eachfile['FileName'])
-            if not os.path.exists(os.path.dirname(fileoutpath)):
-                os.makedirs(fileoutpath)
-            fout = open(fileoutpath, 'wb')
-            fout.write(self.browser.response.content)
-            fout.close()
+        self.svr.incgetfiles(self.browser)
 
     def play(self):
         print "she's all yours captain!"

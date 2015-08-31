@@ -4,7 +4,7 @@
 # @Date:   2015-06-21 15:00:03
 # @Last Modified 2015-07-08
 # @Last Modified time: 2015-07-08 00:38:53
-
+import os
 import xmlrpclib
 import csv
 class ISServer:
@@ -12,6 +12,7 @@ class ISServer:
         self.infusionsoftapp=infusionsoftapp
         self.infusionsoftAPIKey=infusionsoftAPIKey
         self.appurl = "https://" + self.infusionsoftapp + ".infusionsoft.com:443/api/xmlrpc"
+        self.baseurl = 'https://' + self.infusionsoftapp + '.infusionsoft.com/'
         self.connection = xmlrpclib.ServerProxy(self.appurl)
 
     ########################################################
@@ -52,7 +53,6 @@ class ISServer:
                 break
             p+=1
         return records
-
     def incrementlyGetRecords(self, tableName, interestingData=None, searchCriteria=None, orderedBy=None):
         if interestingData is None:
             interestingData = tables[tableName]
@@ -93,6 +93,35 @@ class ISServer:
             thisWriter = csv.DictWriter(outfile, records[0])
             thisWriter.writeheader()
             thisWriter.writerows(records)
+
+    def incgetfiles(self, browser):
+        self.curdir = os.path.abspath(os.path.curdir)
+        p=0
+        while True:
+            print "Doing page " + str(p)
+            try:
+                listofdicts =  self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {}, tables["FileBox"], 'Id', False)
+                for eachfile in listofdicts:
+                    downloadurl = self.baseurl + "/Download?Id=" + str(eachfile['Id'])
+                    browser.open(downloadurl)
+                    fileoutpath = os.path.join(self.curdir, 'files', eachfile['ContactId'], eachfile['FileName'])
+                    if not os.path.exists(os.path.dirname(fileoutpath)):
+                        os.makedirs(fileoutpath)
+                    fout = open(fileoutpath, 'wb')
+                    fout.write(browser.response.content)
+                    fout.close()
+            except Exception e:
+                print p, e
+            finally:
+                if not (len(listofdicts)==1000):
+                    break
+                else:
+                    p+=1
+
+
+
+            except Exception e:
+                print p, e
 
     # def incrementGetFiles(self):
     #     totalfiles = self.getCount('FileBox', query={})
