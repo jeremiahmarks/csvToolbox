@@ -30,22 +30,23 @@ def main():
 	chat['abandonedpct'] = generalresults.find('div', {'id': 'asa'}).find('div', {'class': 'data'}).text.strip('\r\n ')
 	browser.open("http://support.infusiontest.com/csdashboard/stats.php")
 	statsresults = BeautifulSoup(browser.response.content, 'html.parser')
-	phone['asa'] = statsresults.find('div', {'id': 'phone'}).find('div', {'class': 'data'})
-	chat['asa'] = statsresults.find('div', {'id': 'phone'}).find('div', {'class': 'data'})
+	phone['asa'] = statsresults.find('div', {'id': 'phone'}).find('div', {'class': 'data'}).text.strip('\r\n ')
+	chat['asa'] = statsresults.find('div', {'id': 'phone'}).find('div', {'class': 'data'}).text.strip('\r\n ')
 	browser.open("https://docs.google.com/forms/d/1UvD_au-S6YaDGQ-u23Lth5l-JFrrpUiQT6yVFrj64BA/viewform")
-	submitform = browser.get_form()
+	submitform = browser.get_form()	
+	submitform.fields['entry.1210668230'].value = '5pm'
 	submitform.fields['entry.339838906'].value = phone['asa']
 	submitform.fields['entry.335804195'].value = phone['presented']
 	submitform.fields['entry.950389349'].value = phone['handled']
 	submitform.fields['entry.125377286'].value = phone['abandoned']
 	submitform.fields['entry.73700777'].value = phone['abandonedpct']
-
-
 	submitform.fields['entry.941849183'].value = chat['asa']
 	submitform.fields['entry.1083299158'].value = chat['presented']
 	submitform.fields['entry.487211652'].value = chat['handled']
 	submitform.fields['entry.1724578827'].value = chat['abandoned']
 	submitform.fields['entry.1590181783'].value = chat['abandonedpct']
+	browser.submit_form(submitform)
 
-	print phone, chat
 
+if __name__ == '__main__':
+	main()
