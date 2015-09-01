@@ -10,7 +10,8 @@ pages['stats'] = "http://support.infusiontest.com/csdashboard/stats.php"
 pages['submit'] = "https://docs.google.com/forms/d/1UvD_au-S6YaDGQ-u23Lth5l-JFrrpUiQT6yVFrj64BA/viewform"
 chat={}
 phone={}
-
+# 1210668230 = 5pm
+# 1210668230 = 6pm
 def main():
 	browser = RoboBrowser(history=True)
 	##
@@ -27,5 +28,24 @@ def main():
 	chat['abandoned'] = generalresults.find('div', {'id': 'sla'}).find('div', {'class': 'data'}).text.strip('\r\n ')
 	chat['handled'] = generalresults.find('div', {'id': 'abandoned'}).find('div', {'class': 'data'}).text.strip('\r\n ')
 	chat['abandonedpct'] = generalresults.find('div', {'id': 'asa'}).find('div', {'class': 'data'}).text.strip('\r\n ')
+	browser.open("http://support.infusiontest.com/csdashboard/stats.php")
+	statsresults = BeautifulSoup(browser.response.content, 'html.parser')
+	phone['asa'] = statsresults.find('div', {'id': 'phone'}).find('div', {'class': 'data'})
+	chat['asa'] = statsresults.find('div', {'id': 'phone'}).find('div', {'class': 'data'})
+	browser.open("https://docs.google.com/forms/d/1UvD_au-S6YaDGQ-u23Lth5l-JFrrpUiQT6yVFrj64BA/viewform")
+	submitform = browser.get_form()
+	submitform.fields['entry.339838906'].value = phone['asa']
+	submitform.fields['entry.335804195'].value = phone['presented']
+	submitform.fields['entry.950389349'].value = phone['handled']
+	submitform.fields['entry.125377286'].value = phone['abandoned']
+	submitform.fields['entry.73700777'].value = phone['abandonedpct']
+
+
+	submitform.fields['entry.941849183'].value = chat['asa']
+	submitform.fields['entry.1083299158'].value = chat['presented']
+	submitform.fields['entry.487211652'].value = chat['handled']
+	submitform.fields['entry.1724578827'].value = chat['abandoned']
+	submitform.fields['entry.1590181783'].value = chat['abandonedpct']
+
 	print phone, chat
 
