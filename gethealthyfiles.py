@@ -1,6 +1,6 @@
 pw={}
-pw['username']=''
-pw['password']=''
+pw['username']='jeremiah.marks@infusionsoft.com'
+pw['password']='x46PekWxu3ULl7dO'
 
 import os
 import xmlrpclib
@@ -135,9 +135,10 @@ class ISServer:
                         browser.open(downloadurl)
                         # folderpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId']) ))
 
-                        fileoutpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId']), eachfile['FileName']))
-                        if not os.path.exists(os.path.dirname(fileoutpath)):
-                            os.makedirs(os.path.dirname(fileoutpath))
+                        fileoutpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId'])))
+                        if not os.path.exists(fileoutpath):
+                            os.makedirs(fileoutpath)
+                        fileoutpath = os.path.abspath(os.path.join(fileoutpath, eachfile['FileName']))
                         fout = open(fileoutpath, 'wb')
                         fout.write(browser.response.content)
                         fout.close()
