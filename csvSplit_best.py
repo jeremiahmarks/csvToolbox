@@ -26,6 +26,7 @@ def main():
         columns = reader.fieldnames
         currentfile = open(filename(filecounter),'w+')
         currentwriter = csv.DictWriter(currentfile, columns)
+        currentwriter.writeheader()
         currentsize = 0
         for eachrow in reader:
             thislength=0
@@ -48,6 +49,7 @@ def main():
                 currentwriter.writeheader()
                 currentsize=thislength
                 currentwriter.writerow(rowsub)
+        removeblanklines(filename(filecounter))
     currentfile.close()
 
 
