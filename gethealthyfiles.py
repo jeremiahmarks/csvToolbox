@@ -252,3 +252,8 @@ tables["TicketStage"] = ["Id", "StageName"]
 tables["TicketType"] = ["CategoryId", "Id", "Label"]
 tables["User"] = ["City", "Email", "EmailAddress2", "EmailAddress3", "FirstName", "HTMLSignature", "Id", "LastName", "MiddleName", "Nickname", "Phone1", "Phone1Ext", "Phone1Type", "Phone2", "Phone2Ext", "Phone2Type", "PostalCode", "Signature", "SpouseName", "State", "StreetAddress1", "StreetAddress2", "Suffix", "Title", "ZipFour1"]
 tables["UserGroup"] = ["Id", "Name", "OwnerId"]
+
+
+if __name__ == '__main__':
+    thisconnection=ISServer()
+    thisconnection.incgetfiles()
