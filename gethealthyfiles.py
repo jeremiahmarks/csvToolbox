@@ -128,13 +128,12 @@ class ISServer:
         while True:
             print "Doing page " + str(p)
             try:
-                listofdicts =  self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {}, tables["FileBox"], 'Id', False)
+                listofdicts =  self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {'Extension': 'pdf'}, tables["FileBox"], 'Id', False)
                 for eachfile in listofdicts:
                     try:
                         downloadurl = self.baseurl + "/Download?Id=" + str(eachfile['Id'])
                         browser.open(downloadurl)
                         # folderpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId']) ))
-
                         fileoutpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId'])))
                         if not os.path.exists(fileoutpath):
                             os.makedirs(fileoutpath)

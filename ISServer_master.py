@@ -191,11 +191,7 @@ tables["GroupAssign"] = ["Admin", "GroupId", "Id", "UserId"]
 tables["Invoice"] = ["AffiliateId", "ContactId", "CreditStatus", "DateCreated", "Description", "Id", "InvoiceTotal", "InvoiceType", "JobId", "LeadAffiliateId", "PayPlanStatus", "PayStatus", "ProductSold", "PromoCode", "RefundStatus", "Synced", "TotalDue", "TotalPaid"]
 tables["InvoiceItem"] = ["CommissionStatus", "DateCreated", "Description", "Discount", "Id", "InvoiceAmt", "InvoiceId", "OrderItemId"]
 tables["InvoicePayment"] = ["Amt", "Id", "InvoiceId", "PayDate", "PayStatus", "PaymentId", "SkipCommission"]
-
-
 tables["Job"] = ["ContactId", "DateCreated", "DueDate", "Id", "JobNotes", "JobRecurringId", "JobStatus", "JobTitle", "OrderStatus", "OrderType", "ProductId", "StartDate"]
-
-
 tables["JobRecurringInstance"] = ["AutoCharge", "DateCreated", "Description", "EndDate", "Id", "InvoiceItemId", "RecurringId", "StartDate", "Status"]
 tables["Lead"] = ["AffiliateId", "ContactID", "CreatedBy", "DateCreated", "EstimatedCloseDate", "Id", "LastUpdated", "LastUpdatedBy", "Leadsource", "NextActionDate", "NextActionNotes", "Objection", "OpportunityNotes", "OpportunityTitle", "ProjectedRevenueHigh", "ProjectedRevenueLow", "StageID", "StatusID", "UserID"]
 tables["LeadSource"] = ["CostPerLead", "Description", "EndDate", "Id", "LeadSourceCategoryId", "Medium", "Message", "Name", "StartDate", "Status", "Vendor"]
