@@ -93,7 +93,6 @@ class ISServer:
             thisWriter = csv.DictWriter(outfile, records[0])
             thisWriter.writeheader()
             thisWriter.writerows(records)
-
     def incgetfiles(self, browser):
         self.curdir = os.path.abspath(os.path.curdir)
         p=0
@@ -122,13 +121,10 @@ class ISServer:
                     break
                 else:
                     p+=1
-
-
     def cnp(self, productValues):
         return self.createNewRecord('Product', productValues)
     def createNewRecord(self, table, recordvalues):
         return self.connection.DataService.add(self.infusionsoftAPIKey, table, recordvalues)
-
     ########################################################
     ## Methods to updating existing records
     ##
@@ -141,14 +137,12 @@ class ISServer:
                 self.connection.DataService.delete(tablename, eachid)
             except:
                 print "Cannot Delete " + str(eachid)
-
     ########################################################
     ## Method to create a new contact record, or updates an existing
     ## potential values for checktype are
     ## ['Email', 'EmailAndName', 'EmailAndNameAndCompany']
     def dupeCreate(self, contactData={}, checktype='Email'):
         return self.connection.ContactService.addWithDupCheck(self.infusionsoftAPIKey, contactData, checktype)
-
     ########################################################
     ## Methods to get meta-data about records
     def getCount(self, tableName, query):
@@ -159,7 +153,8 @@ class ISServer:
             return True
         except:
             return False
-
+    def applyTag(self, contactid, tagid):
+        return self.connection.DataService.addToGroup(self.infusionsoftAPIKey, contactid, tagid)
 tables={}
 # This is a dictionary of the tables accessiable through the API
 # It has not been fully sanitized with regards to permissions, so you
