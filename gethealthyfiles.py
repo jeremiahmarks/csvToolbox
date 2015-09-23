@@ -1,6 +1,6 @@
 pw={}
-pw['username']='jeremiah.marks@infusionsoft.com'
-pw['password']='x46PekWxu3ULl7dO'
+pw['username']=''
+pw['password']=''
 
 import os
 import xmlrpclib
@@ -128,7 +128,7 @@ class ISServer:
         while True:
             print "Doing page " + str(p)
             try:
-                listofdicts =  self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {'Extension': 'pdf'}, tables["FileBox"], 'Id', False)
+                listofdicts =  self.connection.DataService.query(self.infusionsoftAPIKey, 'FileBox', 1000, p, {}, tables["FileBox"], 'Id', False)
                 for eachfile in listofdicts:
                     try:
                         downloadurl = self.baseurl + "/Download?Id=" + str(eachfile['Id'])
@@ -137,7 +137,7 @@ class ISServer:
                         fileoutpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId'])))
                         if not os.path.exists(fileoutpath):
                             os.makedirs(fileoutpath)
-                        fileoutpath = os.path.abspath(os.path.join(fileoutpath, eachfile['FileName']))
+                        fileoutpath = os.path.abspath(os.path.join(fileoutpath, '%09d' %(int(eachfile['Id'])) + eachfile['FileName']))
                         fout = open(fileoutpath, 'wb')
                         fout.write(browser.response.content)
                         fout.close()
@@ -256,4 +256,9 @@ tables["UserGroup"] = ["Id", "Name", "OwnerId"]
 
 if __name__ == '__main__':
     thisconnection=ISServer()
+    for eachtable in tables.keys():
+        allresults = thisconnection.getAllRecords(eachtable)
+        with open(eachtable + ".csv" as outfile):
+            thiswriter = csv.DictWriter(outfile, allresults[0].keys())
+            thiswriter.write(allresults)
     thisconnection.incgetfiles()

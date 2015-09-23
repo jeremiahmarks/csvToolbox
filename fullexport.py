@@ -3,7 +3,7 @@
 # @Author: Jeremiah Marks
 # @Date:   2015-08-20
 # @Last Modified
-# @Last Modified 2015-08-23
+# @Last Modified 2015-09-22
 
 import os
 import sys
@@ -34,7 +34,6 @@ class DownloadThread(threading.Thread):
         self.destfolder = destfolder
         self.daemon = True
         self.owner=owner
-
     def run(self):
         while True:
             url = self.queue.get()
@@ -43,7 +42,6 @@ class DownloadThread(threading.Thread):
             except Exception,e:
                 print "   Error: %s"%e
             self.queue.task_done()
-
     def download_url(self, url):
         # change it to a different way if you require
         fileoutpath = os.path.join(self.basedir, contactId, str(fileId)+fileName)
@@ -51,9 +49,16 @@ class DownloadThread(threading.Thread):
 
 class fullexporter():
     global pw
-    def __init__(self):
+    def __init__(self, appname=None):
         self.startingpath = os.path.abspath(os.curdir)
-        self.appname=self.getappname()
+        if not appname:
+            self.appname=self.getappname()
+        else:
+            self.appname = appname
+        self.apppath = os.path.join(self.startingpath, self.appname)
+        if not os.path.exists(self.apppath):
+            os.mkdir(self.apppath)
+        os.chdir(self.apppath)
         self.mapping={}
         self.mapping['Contact']=-1
         self.mapping['Affiliate']=-3
@@ -62,13 +67,11 @@ class fullexporter():
         self.mapping['OrderItem']=-9
 
         self.menu()
-
     def menu(self, context="initial"):
         if context is "initial":
             self.baseurl = 'https://' + self.appname + '.infusionsoft.com/'
             self.apikey=self.getapikey()
             self.svr = ISServer.ISServer(self.appname, self.apikey)
-            self.apppath = os.path.join(self.startingpath, self.appname)
             if not os.path.exists(self.apppath):
                 os.mkdir(self.apppath)
             os.chdir(self.apppath)
@@ -79,9 +82,10 @@ class fullexporter():
             self.usermenu['downloadAPITables'] = 'apit'
             self.usermenu['play'] = 'play'
             self.usermenu['reports'] = 'rpts'
-        for eachitem in self.usermenu.keys():
-            print eachitem + ":\t" + self.usermenu[eachitem]
-        thisChoice = raw_input('please make a choice: ').strip(' \n\t')
+        # for eachitem in self.usermenu.keys():
+        #     print eachitem + ":\t" + self.usermenu[eachitem]
+        # thisChoice = raw_input('please make a choice: ').strip(' \n\t')
+        thisChoice = 'play'
         if thisChoice == 'apit':
             self.handleAPItables()
         elif thisChoice == 'play':
@@ -90,7 +94,6 @@ class fullexporter():
             self.downloadAllReports()
         else:
             self.inchandlefiles()
-
     def handlefiles(self):
         os.chdir(self.startingpath)
         if not os.path.exists('files'):
@@ -106,7 +109,6 @@ class fullexporter():
             fout = open(fileoutpath, 'wb')
             fout.write(self.browser.response.content)
             fout.close()
-
     def inchandleAPItables(self):
         apidata={}
         self.customfields=self.svr.getAllRecords('DataFormField')
@@ -121,8 +123,6 @@ class fullexporter():
             else:
                 print "already completed "+ eachtable
         self.apidata = apidata
-
-
     def inchandleAPItable(self, tablename):
         self.customfields=self.svr.getAllRecords('DataFormField')
         if tablename not in self.mapping.keys():
@@ -130,16 +130,16 @@ class fullexporter():
         fields = ISServer.tables[tablename] +  ['_'+fld['Name'] for fld in self.customfields if fld['FormId'] is self.mapping[tablename]]
         self.svr.incrementlyGetRecords(tablename, interestingData=fields)
         print "done writing " + tablename
-
-
-
     def inchandlefiles(self):
         os.chdir(self.startingpath)
         self.svr.incgetfiles(self.browser)
-
+    def downloadContact0files(self, numberofmostrecentfilestodownload):
+        thesefiles = self.svr.getAllRecords('FileBox', searchCriteria={'ContactId': 0})
+        for eachfile in thesefiles[-int(numberofmostrecentfilestodownload):]:
+            print "doing " + str(eachfile)
+            self.svr.getfile(self.browser, eachfile)
     def play(self):
         print "she's all yours captain!"
-
     def downloadAReport(self, reportname):
         self.browser.open(self.baseurl + "Reports/exportResults.jsp?reportClass=" + reportname)
         reportForm = [eachform for eachform in self.browser.get_forms() if eachform.action == 'qbExport.jsp']
@@ -149,20 +149,15 @@ class fullexporter():
                 outfile.write(self.browser.response.content)
         else:
             print "no " + reportname
-
     def downloadAllReports(self):
         for reportname in [ "AffiliateActivitySummary", "AffiliateLedger", "AffiliateRedirectActivity", "AffiliateReferral", "AffPayout", "AllOrders", "AllSales", "AllSalesItemized", "ARAgingReport", "CampaigneeBasic", "CampaigneeByDay", "CampaignProductConversion", "ClickThroughPercentage", "ClickThroughPercentageByEmail", "ContactDistributed", "CProgramRevenueSummary", "CreditCard", "CreditsIssued", "CustomerLifetimeValue", "DailyPayments", "DailyReceivables", "DailySalesTotals", "DashboardCampaign", "DashboardEmail", "DashboardLeads", "DashboardOrders", "DashboardUsers", "DigitalProductKey", "EmailBatchSearch", "EmailBroadcastConversionReport", "EmailConversion", "EmailSentSearch", "FailedCharge", "FaxBatchSearch", "FollowUpSequenceConversionReport", "FunnelFlowRecipient", "FunnelFlowRecipientWaiting", "FunnelGoalAchieved", "FunnelQueuedFlowItem", "FunnelUniqueContacts", "GroupAdds", "HabeasDetail", "InvoiceNetIncome", "LeadSourceConversion", "LeadSourceIncome", "LeadSourceROI", "LeadSourceROIByCategory", "MonthlyPayments", "MonthlyReceivables", "MonthlySalesTotals", "MonthlySalesTotalsByProduct", "OptOutSearch", "PaymentsReport", "PieceResponse", "ProductNetIncome", "Receivables", "RevenueForecastReport", "TaskSearch", "VoiceBatchSearch", "VoiceOptOutSearch", "WebformActivitySummary", "WebFormTracking" ]:
             self.downloadAReport(reportname)
-
     def getFilePath(self):
         return tkFileDialog.askopenfilename()
-
     def getFolderPath(self):
         return tkFileDialog.askdirectory()
-
     def getappname(self):
         return raw_input("Please enter appname:").strip('\n \t')
-
     def getapikey(self):
         global pw
         username = pw['username']
@@ -179,7 +174,6 @@ class fullexporter():
         self.browser.open(self.baseurl + 'app/miscSetting/itemWrapper?systemId=nav.admin&settingModuleName=Application&settingTabName=Application')
         pageSoup = BeautifulSoup(self.browser.response.content, 'html.parser')
         return pageSoup.findAll(id='Application_Encrypted_Key:_data')[0].text
-
     def handleAPItables(self):
         apidata={}
         self.customfields=self.svr.getAllRecords('DataFormField')
@@ -195,14 +189,34 @@ class fullexporter():
                 writer.writerows(apidata[eachtable])
             print "done writing " + eachtable
         self.apidata = apidata
-
-
-
-
     def handlewebforms(self):
         # for eachid
         # webformsubmissionpath="https://" + self.appname + ".infusionsoft.com/app/webformSubmission/contactTabDetails?customFormWebResultId=" + str(x)
         pass
+    def creditCardsToCSV(self):
+        ccs = self.svr.getAllRecords('CreditCard', interestingData=['Id', 'ContactId', "CardType", "Last4", "ExpirationMonth", "ExpirationYear", "Email",  "StartDateMonth", "StartDateYear", "Status"])
+        os.chdir(self.startingpath)
+        if not os.path.exists('pyDatas'):
+            os.mkdir('pyDatas')
+        os.chdir('pyDatas')
+        with open('ccs.csv', 'wb') as outfile:
+            thiswriter = csv.DictWriter(outfile, ccs[0].keys())
+            thiswriter.writeheader()
+            thiswriter.writerows(ccs)
+        print "File written to " + str(os.path.abspath(os.curdir))
+        os.chdir(self.startingpath)
+    def contactsToCSV(self):
+        os.chdir(self.startingpath)
+        self.customfields = self.svr.getAllRecords('DataFormField')
+        fields = ISServer.tables['Contact'] +  ['_'+fld['Name'] for fld in self.customfields if fld['FormId'] == -1]
+        cons = self.svr.getAllRecords('Contact', interestingData = fields)
+        if not os.path.exists('pyDatas'):
+            os.mkdir('pyDatas')
+        os.chdir('pyDatas')
+        with open('contacts.csv', 'wb')as outfile:
+            thiswriter = csv.DictWriter(outfile, cons[0].keys())
+            thiswriter.writeheader()
+            thiswriter.writerows(cons)
 
 
 

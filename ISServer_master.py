@@ -9,6 +9,7 @@ import xmlrpclib
 import csv
 class ISServer:
     def __init__(self, infusionsoftapp, infusionsoftAPIKey):
+        self.curdir = os.path.abspath(os.path.curdir)
         self.infusionsoftapp=infusionsoftapp
         self.infusionsoftAPIKey=infusionsoftAPIKey
         self.appurl = "https://" + self.infusionsoftapp + ".infusionsoft.com:443/api/xmlrpc"
@@ -121,6 +122,21 @@ class ISServer:
                     break
                 else:
                     p+=1
+
+    def getfile(self, browser, eachfile):
+        while True:
+            try:
+                downloadurl = self.baseurl + "/Download?Id=" + str(eachfile['Id'])
+                browser.open(downloadurl)
+                fileoutpath = os.path.abspath(os.path.join(self.curdir, 'files', str(eachfile['ContactId']), eachfile['FileName']))
+                if not os.path.exists(os.path.dirname(fileoutpath)):
+                    os.makedirs(os.path.dirname(fileoutpath))
+                fout = open(fileoutpath, 'wb')
+                fout.write(browser.response.content)
+                fout.close()
+            except Exception, e:
+                print eachfile,'\n', e
+
     def cnp(self, productValues):
         return self.createNewRecord('Product', productValues)
     def createNewRecord(self, table, recordvalues):
@@ -154,7 +170,7 @@ class ISServer:
         except:
             return False
     def applyTag(self, contactid, tagid):
-        return self.connection.DataService.addToGroup(self.infusionsoftAPIKey, contactid, tagid)
+        return self.connection.ContactService.addToGroup(self.infusionsoftAPIKey, contactid, tagid)
 tables={}
 # This is a dictionary of the tables accessiable through the API
 # It has not been fully sanitized with regards to permissions, so you
