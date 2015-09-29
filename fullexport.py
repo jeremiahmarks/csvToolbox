@@ -3,7 +3,7 @@
 # @Author: Jeremiah Marks
 # @Date:   2015-08-20
 # @Last Modified
-# @Last Modified 2015-09-22
+# @Last Modified 2015-09-26
 
 import os
 import sys
@@ -70,7 +70,10 @@ class fullexporter():
     def menu(self, context="initial"):
         if context is "initial":
             self.baseurl = 'https://' + self.appname + '.infusionsoft.com/'
-            self.apikey=self.getapikey()
+            if 'apikey' not in pw.keys():
+                self.apikey=self.getapikey()
+            else:
+                self.apikey = pw['apikey']
             self.svr = ISServer.ISServer(self.appname, self.apikey)
             if not os.path.exists(self.apppath):
                 os.mkdir(self.apppath)
@@ -170,7 +173,8 @@ class fullexporter():
         logform.fields['username'].value = username
         logform.fields['password'].value = password
         self.browser.submit_form(logform)
-        self.browser.follow_link(self.browser.get_links()[1])
+        if '@infusionsoft.com' in pw['username']:
+            self.browser.follow_link(self.browser.get_links()[1])
         self.browser.open(self.baseurl + 'app/miscSetting/itemWrapper?systemId=nav.admin&settingModuleName=Application&settingTabName=Application')
         pageSoup = BeautifulSoup(self.browser.response.content, 'html.parser')
         return pageSoup.findAll(id='Application_Encrypted_Key:_data')[0].text
