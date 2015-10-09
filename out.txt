@@ -1,0 +1,150 @@
+************* Module ISServer_master
+W: 72, 0: TODO: research THIS (fixme)
+W:113, 0: TODO: research THIS (fixme)
+C: 76, 0: Unnecessary parens after u'not' keyword (superfluous-parens)
+C:117, 0: Unnecessary parens after u'not' keyword (superfluous-parens)
+C:183, 0: Unnecessary parens after u'not' keyword (superfluous-parens)
+C:  1, 0: Invalid module name "ISServer_master" (invalid-name)
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 13, 0: Missing class docstring (missing-docstring)
+C: 36, 4: Missing method docstring (missing-docstring)
+C: 39, 4: Missing method docstring (missing-docstring)
+C: 42, 4: Missing method docstring (missing-docstring)
+C: 45, 4: Missing method docstring (missing-docstring)
+C: 48, 4: Missing method docstring (missing-docstring)
+C: 57, 8: Invalid variable name "p" (invalid-name)
+C: 78,12: Invalid variable name "p" (invalid-name)
+C: 81, 4: Missing method docstring (missing-docstring)
+C: 93, 8: Invalid variable name "p" (invalid-name)
+W:107,19: Catching too general exception Exception (broad-except)
+C:107,30: Invalid variable name "e" (invalid-name)
+C:119,12: Invalid variable name "p" (invalid-name)
+C:135, 4: Missing method docstring (missing-docstring)
+C:137, 8: Invalid variable name "p" (invalid-name)
+W:180,19: Catching too general exception Exception (broad-except)
+W:178,27: Catching too general exception Exception (broad-except)
+C:178,38: Invalid variable name "e" (invalid-name)
+C:180,30: Invalid variable name "e" (invalid-name)
+W:184,20: break statement in finally block may swallow exception (lost-exception)
+C:186,20: Invalid variable name "p" (invalid-name)
+C:188, 4: Missing method docstring (missing-docstring)
+W:204,19: Catching too general exception Exception (broad-except)
+C:204,30: Invalid variable name "e" (invalid-name)
+C:207, 4: Missing method docstring (missing-docstring)
+C:210, 4: Missing method docstring (missing-docstring)
+C:218, 4: Missing method docstring (missing-docstring)
+C:224, 4: Missing method docstring (missing-docstring)
+W:229,12: No exception type(s) specified (bare-except)
+W:236, 4: Dangerous default value {} as argument (dangerous-default-value)
+C:236, 4: Missing method docstring (missing-docstring)
+C:243, 4: Missing method docstring (missing-docstring)
+C:248, 4: Missing method docstring (missing-docstring)
+W:259, 8: No exception type(s) specified (bare-except)
+C:262, 4: Missing method docstring (missing-docstring)
+
+
+Report
+======
+148 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |1          |=          |0.00        |100.00   |
++---------+-------+-----------+-----------+------------+---------+
+|class    |1      |1          |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |18     |18         |=          |11.11       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |0          |=          |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    dataStructures (ISServer_master)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |202    |80.48 |202      |=          |
++----------+-------+------+---------+-----------+
+|docstring |12     |4.78  |12       |=          |
++----------+-------+------+---------+-----------+
+|comment   |25     |9.96  |25       |=          |
++----------+-------+------+---------+-----------+
+|empty     |12     |4.78  |12       |=          |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |0        |=          |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |0.000    |=          |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |32     |32       |=          |
++-----------+-------+---------+-----------+
+|refactor   |0      |0        |=          |
++-----------+-------+---------+-----------+
+|warning    |10     |10       |=          |
++-----------+-------+---------+-----------+
+|error      |0      |0        |=          |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++------------------------+------------+
+|message id              |occurrences |
++========================+============+
+|missing-docstring       |18          |
++------------------------+------------+
+|invalid-name            |11          |
++------------------------+------------+
+|broad-except            |4           |
++------------------------+------------+
+|superfluous-parens      |3           |
++------------------------+------------+
+|fixme                   |2           |
++------------------------+------------+
+|bare-except             |2           |
++------------------------+------------+
+|lost-exception          |1           |
++------------------------+------------+
+|dangerous-default-value |1           |
++------------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 7.16/10 (previous run: 7.16/10, +0.00)
+
