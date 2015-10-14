@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Author: jeremiah.marks
 # @Date:   2015-10-12 18:26:03
-# @Last Modified 2015-10-12
+# @Last Modified 2015-10-13
 
 # This is basically just a quick example of 
 # some basic csv functionality with a gui.
@@ -12,12 +12,14 @@ from Tkinter import *
 import tkFileDialog
 import os
 import ISServer_master as ISServer
+import datetime
 
 class csvDisplay:
     def __init__(self, parent):
         self.parent = parent
-        self.appname = None
-
+        self.appname = 'if188'
+        self.apikey = 'f1a4ac7f9dbe2341ad0b84b52581c93e'
+        self.svr = ISServer.ISServer(self.appname, self.apikey)
         self.currentbuttons=[]
         self.currentframes=[]
 
@@ -33,6 +35,8 @@ class csvDisplay:
 
         self.greeting = Label(parent, text = "Welcome to the CIA.")
         self.greeting.pack()
+
+
 
         self.addcsvfunctions()
 
@@ -73,8 +77,8 @@ class csvDisplay:
         self.currentbuttons = []
         if type(self.csvFunctionsOptionFrame) == type(Frame(self.parent)):
             self.csvFunctionsOptionFrame.pack_forget()
-        pathtocsv = tkFileDialog.askopenfilename()
-        with open(pathtocsv, 'rbU') as infile:
+        self.pathtocsv = tkFileDialog.askopenfilename()
+        with open(self.pathtocsv, 'rbU') as infile:
             thisreader = csv.DictReader(infile)
             thesecols = list(thisreader.fieldnames)
         self.chooseframe = Frame(self.parent)
@@ -87,7 +91,31 @@ class csvDisplay:
             self.currentbuttons.append(thisbutton)
 
     def setFKID(self, fkidColumn):
+        self.thistime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         self.fkidcol = fkidColumn
+        allcontacts = self.svr.getallrecords('Contact', interestingdata = ['Id', '_FKID'])
+        self.contactsbyfkid={}
+        for eachcon in allcontacts:
+            self.contactsbyfkid[eachcon['_FKID']] = eachcon['Id']
+        with open(self.pathtocsv, 'rbU') as infile:
+            thisreader = csv.DictReader(infile)
+            outputcolumnname = 'InfusionsoftContactId' + str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+            newcolumnnames = list(thisreader.fieldnames)
+            newcolumnnames.append(outputcolumnname)
+            with open(str(datetime.datetime.now().strftime('%Y%m%d%H%M%S')) + ".csv", 'wb') as outfile:
+                thiswriter = csv.DictWriter(outfile, newcolumnnames)
+                thiswriter.writeheader()
+                for eachrow in thisreader:
+                    print eachrow
+                    newrow = dict(eachrow)
+                    if newrow[self.fkidcol] in self.contactsbyfkid.keys():
+                        newrow[outputcolumnname] = self.contactsbyfkid[eachrow[self.fkidcol]]
+                    else:
+                        newrow[outputcolumnname]=''
+                    thiswriter.writerow(newrow)
+
+
+
 
 
 
