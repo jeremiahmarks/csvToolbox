@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Author: jeremiah.marks
 # @Date:   2015-10-12 18:26:03
-# @Last Modified 2015-10-13
+# @Last Modified 2015-10-14
 
 # This is basically just a quick example of 
 # some basic csv functionality with a gui.
@@ -17,8 +17,8 @@ import datetime
 class csvDisplay:
     def __init__(self, parent):
         self.parent = parent
-        self.appname = 'if188'
-        self.apikey = 'f1a4ac7f9dbe2341ad0b84b52581c93e'
+        self.appname = 'xo263'
+        self.apikey = '9e0a9f3b60b39b40c463075062468496ed5c0aa2a164482e70822f70444ea259'
         self.svr = ISServer.ISServer(self.appname, self.apikey)
         self.currentbuttons=[]
         self.currentframes=[]
@@ -84,19 +84,19 @@ class csvDisplay:
         self.chooseframe = Frame(self.parent)
         self.chooseframe.pack()
 
-        for colnum, eachcolumn in enumerate(thesecols):
+        for colnum, eachcolumn in enumerate(sorted(thesecols)):
             colcount = int(colnum) % 5
-            thisbutton = Button(self.chooseframe, text = eachcolumn, command=lambda: self.setFKID(eachcolumn))
+            thisbutton = Button(self.chooseframe, text = eachcolumn, command=lambda: self.setFKID(str(eachcolumn)))
             thisbutton.grid(column = colcount, row = colnum/5)
             self.currentbuttons.append(thisbutton)
 
     def setFKID(self, fkidColumn):
         self.thistime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         self.fkidcol = fkidColumn
-        allcontacts = self.svr.getallrecords('Contact', interestingdata = ['Id', '_FKID'])
+        allcontacts = self.svr.getallrecords('Contact', interestingdata = ['Id', '_AccountId'])
         self.contactsbyfkid={}
         for eachcon in allcontacts:
-            self.contactsbyfkid[eachcon['_FKID']] = eachcon['Id']
+            self.contactsbyfkid[eachcon['_AccountId']] = eachcon['Id']
         with open(self.pathtocsv, 'rbU') as infile:
             thisreader = csv.DictReader(infile)
             outputcolumnname = 'InfusionsoftContactId' + str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
@@ -106,12 +106,13 @@ class csvDisplay:
                 thiswriter = csv.DictWriter(outfile, newcolumnnames)
                 thiswriter.writeheader()
                 for eachrow in thisreader:
-                    print eachrow
                     newrow = dict(eachrow)
                     if newrow[self.fkidcol] in self.contactsbyfkid.keys():
                         newrow[outputcolumnname] = self.contactsbyfkid[eachrow[self.fkidcol]]
                     else:
                         newrow[outputcolumnname]=''
+                    print newrow[outputcolumnname], newrow[self.fkidcol], self.fkidcol
+
                     thiswriter.writerow(newrow)
 
 
