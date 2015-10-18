@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 # @Author: jeremiah.marks
 # @Date:   2015-10-12 18:26:03
-# @Last Modified 2015-10-13
+# @Last Modified 2015-10-14
 
-# This is basically just a quick example of 
+# This is basically just a quick example of
 # some basic csv functionality with a gui.
 
 import csv
@@ -86,7 +86,7 @@ class csvDisplay:
 
         for colnum, eachcolumn in enumerate(thesecols):
             colcount = int(colnum) % 5
-            thisbutton = Button(self.chooseframe, text = eachcolumn, command=lambda: self.setFKID(eachcolumn))
+            thisbutton = Button(self.chooseframe, text = eachcolumn, command=lambda x=eachcolumn: self.setFKID(x))
             thisbutton.grid(column = colcount, row = colnum/5)
             self.currentbuttons.append(thisbutton)
 
