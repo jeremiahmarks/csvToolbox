@@ -1,0 +1,2 @@
+contactId,fromName,fromAddress,toAddress,ccAddresses,bccAddresses,contentType,subject,htmlBody,textBody,header,receivedDate,sentDate,emailSentType
+60801,CSVImport,JFDA@til.la,JFDA@til.la,,,HTML,This was a csvfile,<h1>Hello</h1>,hello?,,01-01-2001,01-01-2001,1
