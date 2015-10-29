@@ -16,7 +16,7 @@ def getFolderPath():
 def main():
     filepath = getFilePath()
     filecounter=1
-    maxsize = 19000000
+    maxsize = 9000000
     currentsize = 0
     basefilename = os.path.basename(filepath)
     basedirectory = os.path.dirname(filepath)
