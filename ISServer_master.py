@@ -3,7 +3,7 @@
 # @Author: Jeremiah Marks
 # @Date:   2015-06-21 15:00:03
 # @Last Modified 2015-10-08
-# @Last Modified time: 2015-10-08 21:43:46
+# @Last Modified time: 2016-04-05 10:09:47
 import os
 import xmlrpclib
 import csv
@@ -263,3 +263,6 @@ class ISServer(object):
         return self.connection.ContactService.addToGroup(self.infusionsoftapikey,
                                                          contactid,
                                                          tagid)
+
+    def getTemplate(self, templateId):
+      return self.connection.APIEmailService.getEmailTemplate(self.infusionsoftapikey, templateId)
